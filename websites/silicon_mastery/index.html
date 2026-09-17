@@ -197,13 +197,16 @@
                     </div>
                     
                     <div class="heap-canvas" id="heap-objects-container">
-                        <div class="heap-label">SCATTERED HEAP RAM (Random Memory Addresses)</div>
+                        <div class="heap-header">
+                            <span class="heap-title">SCATTERED HEAP RAM (Random 64-Bit Pointer Addresses)</span>
+                            <span class="heap-tag red">NON-CONTIGUOUS POINTERS</span>
+                        </div>
                         <div id="heap-objects"></div>
                         <div id="cpu-cursor" class="cpu-cursor">CPU CORE</div>
-                    </div>
 
-                    <div id="cache-miss-flash" class="flash-banner red hidden">
-                        <span class="flash-icon">⚠️</span> CACHE MISS! CPU Stalled waiting for RAM fetch! (+200ns)
+                        <div id="cache-miss-flash" class="flash-banner red overlay-flash hidden">
+                            <span class="flash-icon">⚠️</span> CACHE MISS! CPU Stalled waiting for RAM fetch (+200ns)
+                        </div>
                     </div>
 
                     <div class="stats-counter-bar">

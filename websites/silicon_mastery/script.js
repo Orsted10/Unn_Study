@@ -428,12 +428,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (ho.children.length === 0) {
                 const values = ['10.0', '20.0', '30.0', '40.0', '50.0', '60.0'];
+                const coords = [
+                    { top: 55, left: 40 },
+                    { top: 125, left: 165 },
+                    { top: 65, left: 300 },
+                    { top: 135, left: 425 },
+                    { top: 55, left: 560 },
+                    { top: 125, left: 685 }
+                ];
                 values.forEach((val, i) => {
                     let el = document.createElement('div');
                     el.className = 'heap-obj';
                     el.innerText = `0x7F${Math.floor(Math.random()*90+10)} -> ${val}`;
-                    el.style.top = `${(i * 35) + 20}px`;
-                    el.style.left = `${(i * 110) + 30}px`;
+                    el.style.top = `${coords[i].top}px`;
+                    el.style.left = `${coords[i].left}px`;
                     ho.appendChild(el);
                 });
             }
@@ -450,11 +458,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const tl = gsap.timeline();
                 objs.forEach((obj, i) => {
+                    const targetX = obj.offsetLeft + (obj.offsetWidth / 2) - 30;
+                    const targetY = obj.offsetTop + (obj.offsetHeight / 2) - 30;
+
                     tl.to(cursor, {
-                        x: obj.offsetLeft + 10,
-                        y: obj.offsetTop + 10,
-                        duration: 0.4,
-                        ease: "power2.out",
+                        x: targetX,
+                        y: targetY,
+                        duration: 0.5,
+                        ease: "power2.inOut",
                         onStart: () => {
                             if (i > 0) {
                                 misses++;
@@ -462,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 missCountDisp.innerText = misses;
                                 latencyDisp.innerText = `${latency} ns`;
                                 document.getElementById('cache-miss-flash').classList.remove('hidden');
-                                setTimeout(() => document.getElementById('cache-miss-flash').classList.add('hidden'), 250);
+                                setTimeout(() => document.getElementById('cache-miss-flash').classList.add('hidden'), 350);
                             }
                         }
                     });
