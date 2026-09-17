@@ -1,4 +1,65 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Silicon Mastery Hub Interactive Script
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Silicon Mastery Platform Hub initialized.');
+
+    // Search input handling
+    const searchInput = document.getElementById('hub-search-input');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const trackCards = document.querySelectorAll('.track-launch-card');
+    const moduleCards = document.querySelectorAll('.module-card');
+
+    let activeFilter = 'all';
+
+    function filterCards() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+        moduleCards.forEach(modCard => {
+            let modHasVisibleTracks = false;
+            const cards = modCard.querySelectorAll('.track-launch-card');
+
+            cards.forEach(card => {
+                const isTrackA = card.classList.contains('track-a-card');
+                const isTrackB = card.classList.contains('track-b-card');
+                const isTrackC = card.classList.contains('track-c-card');
+
+                let matchesTab = false;
+                if (activeFilter === 'all') matchesTab = true;
+                else if (activeFilter === 'track-a' && isTrackA) matchesTab = true;
+                else if (activeFilter === 'track-b' && isTrackB) matchesTab = true;
+                else if (activeFilter === 'track-c' && isTrackC) matchesTab = true;
+
+                const textContent = card.textContent.toLowerCase();
+                const matchesSearch = query === '' || textContent.includes(query);
+
+                if (matchesTab && matchesSearch) {
+                    card.style.display = 'flex';
+                    modHasVisibleTracks = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (modHasVisibleTracks) {
+                modCard.style.display = 'block';
+            } else {
+                modCard.style.display = 'none';
+            }
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterCards);
+    }
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.track;
+            filterCards();
+        });
+    });
     
     // --- TRACK TAB FILTERING ---
     const tabs = document.querySelectorAll('.track-tab');

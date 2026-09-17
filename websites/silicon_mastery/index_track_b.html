@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon Mastery: Track B — Deep Learning, Tensor Internals & Autograd Lab</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style_track_b.css">
+    
+    <!-- GSAP Animation Suite -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <!-- TOP HEADER / PROGRESS HUD -->
+    <header id="top-hud">
+        <div class="hud-left">
+            <a href="../../index.html" class="hub-return-link">⌂ PLATFORM HUB</a>
+            <span class="brand-title">SILICON MASTERY</span>
+            <span class="act-badge track-b-badge" id="act-badge">TRACK B: AI & AUTOGRAD</span>
+        </div>
+        
+        <!-- SCENE DOTS NAVIGATION -->
+        <div class="scene-dots-container" id="scene-dots">
+            <!-- 12 dots generated dynamically -->
+        </div>
+
+        <div class="hud-right">
+            <div class="shortcut-pill"><span class="key">←/→</span> Navigate</div>
+            <div class="shortcut-pill"><span class="key">D</span> Deep Dive</div>
+            <div class="shortcut-pill"><span class="key">Space</span> Action</div>
+        </div>
+    </header>
+
+    <!-- DEEP DIVE MODAL / DRAWER -->
+    <div id="deep-dive-modal" class="hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-drawer">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-act-tag" id="modal-act-tag">TRACK B</span>
+                    <h2 id="modal-title">Technical Deep Dive</h2>
+                </div>
+                <button class="close-modal-btn" id="close-modal-btn">&times; CLOSE</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Injected via script_track_b.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="viewport">
+
+        <!-- SCENE 1: THE TENSOR MEMORY ILLUSION -->
+        <section class="scene active" id="scene-1" data-act="PHASE 1.5: TENSOR MEMORY">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.5</span>
+                <span class="scene-number">SCENE 01 / 12</span>
+            </div>
+            <h1 class="scene-title">The Tensor Memory Illusion</h1>
+            <p class="scene-subtitle">Physical RAM is strictly a 1D linear byte strip. Multidimensional tensors are an illusion created by Shape & Stride Coordinate Glasses.</p>
+            
+            <div class="massive-diagram">
+                <div class="tensor-stage">
+                    <div class="ctrl-panel">
+                        <label>Shape: <select id="sel-shape">
+                            <option value="2x3">(2, 3) Matrix [2 Rows, 3 Cols]</option>
+                            <option value="3x2">(3, 2) Matrix [3 Rows, 2 Cols]</option>
+                            <option value="6x1">(6, 1) Vector [6 Rows, 1 Col]</option>
+                        </select></label>
+                        <div class="stride-readout">Computed Strides: <strong id="strides-val">(3, 1)</strong></div>
+                    </div>
+
+                    <div class="ram-view-container">
+                        <div class="ram-header">💾 1D PHYSICAL STORAGE (C-Contiguous Float32 RAM)</div>
+                        <div class="ram-cells-row" id="tb-ram-cells">
+                            <div class="ram-cell"><span class="addr">0x00</span><span class="val">10.0</span></div>
+                            <div class="ram-cell"><span class="addr">0x04</span><span class="val">20.0</span></div>
+                            <div class="ram-cell"><span class="addr">0x08</span><span class="val">30.0</span></div>
+                            <div class="ram-cell"><span class="addr">0x0C</span><span class="val">40.0</span></div>
+                            <div class="ram-cell"><span class="addr">0x10</span><span class="val">50.0</span></div>
+                            <div class="ram-cell"><span class="addr">0x14</span><span class="val">60.0</span></div>
+                        </div>
+                    </div>
+
+                    <div class="coord-view-container">
+                        <div class="coord-header">🕶️ 2D COORDINATE GLASSES VIRTUAL VIEW</div>
+                        <div class="grid-2d" id="tb-grid-2d"></div>
+                    </div>
+
+                    <div class="formula-box">
+                        $$\text{Linear Address} = \text{Offset} + (row \times \text{stride}[0]) + (col \times \text{stride}[1])$$
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-inspect-coord">▶ HOVER/TEST COORDINATE INDEXING</button>
+                <button class="deep-dive-btn" data-target="content-b1">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 2: ZERO-COPY TRANSPOSITION (t.T) -->
+        <section class="scene" id="scene-2" data-act="PHASE 1.5: TENSOR MEMORY">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.5</span>
+                <span class="scene-number">SCENE 02 / 12</span>
+            </div>
+            <h1 class="scene-title">Zero-Copy Transposition (t.T)</h1>
+            <p class="scene-subtitle">Why PyTorch transpose takes 0.000001 seconds on a 100GB tensor: Bytes in RAM never move!</p>
+            
+            <div class="massive-diagram">
+                <div class="transpose-stage">
+                    <div class="t-comparison">
+                        <div class="t-box" id="t-orig-box">
+                            <h3>Original Tensor `t`</h3>
+                            <div class="t-meta">Shape: (2, 3) | Strides: (3, 1)</div>
+                            <div class="t-grid" id="grid-orig"></div>
+                        </div>
+                        <div class="t-arrow">⇄ `t.T` Swaps Metadata Only!</div>
+                        <div class="t-box" id="t-trans-box">
+                            <h3>Transposed Tensor `t.T`</h3>
+                            <div class="t-meta">Shape: (3, 2) | Strides: (1, 3)</div>
+                            <div class="t-grid" id="grid-trans"></div>
+                        </div>
+                    </div>
+
+                    <div class="storage-pointer-box">
+                        <span class="badge">SAME PHYSICAL STORAGE POINTER</span>
+                        <code>t.storage.data_ptr() == t.T.storage.data_ptr() ➔ True</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-trigger-transpose">▶ EXECUTE t.T TRANSPOSITION</button>
+                <button class="deep-dive-btn" data-target="content-b2">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 3: CONTIGUOUS VS NON-CONTIGUOUS VIEWS -->
+        <section class="scene" id="scene-3" data-act="PHASE 1.5: TENSOR MEMORY">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.5</span>
+                <span class="scene-number">SCENE 03 / 12</span>
+            </div>
+            <h1 class="scene-title">Contiguous vs Non-Contiguous Views & .view()</h1>
+            <p class="scene-subtitle">Understanding why <code>.view()</code> raises <code>RuntimeError</code> on transposed tensors and how <code>.contiguous()</code> fixes it.</p>
+            
+            <div class="massive-diagram">
+                <div class="contig-stage">
+                    <div class="contig-banner" id="contig-status-banner">
+                        STATUS: Tensor is TRANSPOSED (Non-Contiguous). Strides (1, 3) != C-Contiguous (2, 1).
+                    </div>
+
+                    <div class="code-terminal">
+                        <pre><code># Attempting .view(6) on transposed tensor:
+>>> t_trans = t.T
+>>> t_trans.is_contiguous()  # False!
+>>> t_trans.view(6)
+<span class="err-text" id="err-code-text">RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .contiguous() first!</span></code></pre>
+                    </div>
+
+                    <div class="ram-realloc-box" id="ram-realloc">
+                        <div class="r-label">After calling `.contiguous()`: Fresh memory buffer allocated in consecutive reading order!</div>
+                        <div class="ram-cells-row" id="realloc-cells">
+                            <div class="ram-cell green"><span class="val">10.0</span></div>
+                            <div class="ram-cell green"><span class="val">40.0</span></div>
+                            <div class="ram-cell green"><span class="val">20.0</span></div>
+                            <div class="ram-cell green"><span class="val">50.0</span></div>
+                            <div class="ram-cell green"><span class="val">30.0</span></div>
+                            <div class="ram-cell green"><span class="val">60.0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-try-view">▶ TEST .view(6) [RAISE ERROR]</button>
+                <button class="interaction-btn green-btn" id="btn-fix-contiguous">▶ CALL .contiguous().view(6)</button>
+                <button class="deep-dive-btn" data-target="content-b3">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 4: CUDA GPU ARCHITECTURE & WARPS -->
+        <section class="scene" id="scene-4" data-act="PHASE 1.6: CUDA GPU ARCHITECTURE">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.6</span>
+                <span class="scene-number">SCENE 04 / 12</span>
+            </div>
+            <h1 class="scene-title">CUDA Programming Model & GPU Architecture</h1>
+            <p class="scene-subtitle">Inside an NVIDIA GPU: Streaming Multiprocessors (SMs), Thread Blocks, and 32-Thread SIMT Warps.</p>
+            
+            <div class="massive-diagram">
+                <div class="cuda-stage">
+                    <div class="gpu-grid">
+                        <div class="sm-card">
+                            <div class="sm-title">Streaming Multiprocessor (SM 0)</div>
+                            <div class="sm-sub">128KB SRAM / Shared Memory • L1 Cache</div>
+                            <div class="warp-container">
+                                <div class="warp-title">Warp 0 (32 SIMT Threads)</div>
+                                <div class="threads-grid" id="threads-grid">
+                                    <!-- 32 thread cells injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vram-block">
+                            <div class="vram-title">NVIDIA H100 High Bandwidth Memory (HBM3 VRAM)</div>
+                            <div class="vram-sub">3.35 Terabytes/sec Bandwidth • Global Memory</div>
+                            <div class="vram-pipe" id="vram-pipe">
+                                <span class="pipe-particle"></span>
+                                <span class="pipe-particle"></span>
+                                <span class="pipe-particle"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-exec-kernel">▶ EXECUTE CUDA KERNEL (WARP SIMT LOCKSTEP)</button>
+                <button class="deep-dive-btn" data-target="content-b4">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 5: COALESCED VS UNCOALESCED GPU MEMORY -->
+        <section class="scene" id="scene-5" data-act="PHASE 1.6: CUDA GPU ARCHITECTURE">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.6</span>
+                <span class="scene-number">SCENE 05 / 12</span>
+            </div>
+            <h1 class="scene-title">Coalesced vs Uncoalesced Memory Access</h1>
+            <p class="scene-subtitle">Why non-contiguous strided accesses destroy GPU throughput by 97%: 1 Memory Transaction vs 32 Memory Transactions!</p>
+            
+            <div class="massive-diagram">
+                <div class="coalesced-stage">
+                    <div class="mode-selector">
+                        <button class="mode-btn active" id="btn-mode-coal">🟢 Coalesced Access (Contiguous Strides)</button>
+                        <button class="mode-btn" id="btn-mode-uncoal">🔴 Uncoalesced Access (Strided/Transposed)</button>
+                    </div>
+
+                    <div class="transaction-monitor" id="trans-mon">
+                        <div class="tm-stat">VRAM Transactions: <strong id="tm-count">1 Transaction</strong></div>
+                        <div class="tm-stat">Bytes Fetched: <strong id="tm-bytes">128 Bytes</strong></div>
+                        <div class="tm-stat">Effective Bandwidth: <strong id="tm-bw" style="color:#2E7D4E">100% (3,350 GB/s)</strong></div>
+                    </div>
+
+                    <div class="vram-line-visualizer" id="vram-visualizer">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-run-gpu-mem">▶ SIMULATE WARP MEMORY FETCH</button>
+                <button class="deep-dive-btn" data-target="content-b5">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 6: AUTOGRAD TAPE & VALUE OBJECT -->
+        <section class="scene" id="scene-6" data-act="PHASE 1.7: AUTOGRAD ENGINE">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.7</span>
+                <span class="scene-number">SCENE 06 / 12</span>
+            </div>
+            <h1 class="scene-title">Autograd Tape & Scalar `Value` Anatomy</h1>
+            <p class="scene-subtitle">Inside PyTorch autograd: Decomposing a <code>Value</code> instance into data payload, accumulated gradient, parent pointers, and backward closure.</p>
+            
+            <div class="massive-diagram">
+                <div class="value-anatomy-stage">
+                    <div class="struct-card">
+                        <div class="struct-head">class Value (Autograd Node)</div>
+                        <div class="struct-fields">
+                            <div class="sf-item"><code>self.data: float</code> ➔ Raw scalar numerical value</div>
+                            <div class="sf-item"><code>self.grad: float</code> ➔ Accumulated derivative dLoss/dValue (Initialized to 0.0)</div>
+                            <div class="sf-item"><code>self._prev: Set[Value]</code> ➔ Set of direct parent operand nodes</div>
+                            <div class="sf-item"><code>self._op: str</code> ➔ Operation symbol ('+', '*', '**', 'ReLU')</div>
+                            <div class="sf-item"><code>self._backward: Callable</code> ➔ Local chain-rule derivative closure</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-instantiate-value">▶ INSTANTIATE VALUE(data=5.0)</button>
+                <button class="deep-dive-btn" data-target="content-b6">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 7: FORWARD GRAPH DAG CONSTRUCTION -->
+        <section class="scene" id="scene-7" data-act="PHASE 1.7: AUTOGRAD ENGINE">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.7</span>
+                <span class="scene-number">SCENE 07 / 12</span>
+            </div>
+            <h1 class="scene-title">Dynamic Computational Graph Construction</h1>
+            <p class="scene-subtitle">As Python executes operations, the Directed Acyclic Graph (DAG) builds itself dynamically in memory on the autograd tape.</p>
+            
+            <div class="massive-diagram">
+                <div class="dag-wrapper">
+                    <div class="dag-canvas" id="forward-dag-b"></div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-build-dag-b">▶ BUILD FORWARD GRAPH L = (a*b + c)^2</button>
+                <button class="deep-dive-btn" data-target="content-b7">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 8: REVERSE-MODE AUTOGRAD & TOPOLOGICAL SORT -->
+        <section class="scene" id="scene-8" data-act="PHASE 1.7: AUTOGRAD ENGINE">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.7</span>
+                <span class="scene-number">SCENE 08 / 12</span>
+            </div>
+            <h1 class="scene-title">Reverse-Mode Autograd & Topological DFS</h1>
+            <p class="scene-subtitle">DFS post-order traversal guarantees parent gradients accumulate completely before children propagate backwards.</p>
+            
+            <div class="massive-diagram">
+                <div class="topo-stage">
+                    <div class="huge-equation">y = x + x &nbsp;|&nbsp; Loss = y × 3 &nbsp;(x branches into 2 paths)</div>
+                    <div class="dag-canvas topo-dag-canvas" id="topo-dag-b"></div>
+                    <div class="topo-monitor-bar">
+                        <div class="mon-item">🔍 DFS Stack: <span class="mon-val" id="tb-stack-text">[]</span></div>
+                        <div class="mon-item">🧠 Visited Set: <span class="mon-val" id="tb-visited-text">{}</span></div>
+                        <div class="mon-item">⚡ Topo Order: <span class="mon-val highlight" id="tb-order-text">[]</span></div>
+                    </div>
+                    <div class="topo-timeline" id="tb-topo-timeline">
+                        <div class="tl-empty">Click an execution order below to test gradient accumulation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-tb-wrong">WRONG EXECUTION ORDER</button>
+                <button class="interaction-btn green-btn" id="btn-tb-right">TOPOLOGICAL DFS ORDER</button>
+                <button class="deep-dive-btn" data-target="content-b8">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 9: BABY OPERATIONS CALCULUS CATALOG -->
+        <section class="scene" id="scene-9" data-act="PHASE 1.8: VECTOR & MATRIX CALCULUS">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.8</span>
+                <span class="scene-number">SCENE 09 / 12</span>
+            </div>
+            <h1 class="scene-title">The Baby Operations Calculus Catalog</h1>
+            <p class="scene-subtitle">First-principles derivatives for Addition, Multiplication, Power Rule, ReLU, Sigmoid, Exp, and Tanh.</p>
+            
+            <div class="massive-diagram">
+                <div class="ops-catalog-grid">
+                    <div class="op-card active" data-op="add">
+                        <div class="op-symbol">+</div>
+                        <div class="op-name">Addition</div>
+                        <div class="op-formula">out = a + b</div>
+                    </div>
+                    <div class="op-card" data-op="mul">
+                        <div class="op-symbol">×</div>
+                        <div class="op-name">Multiplication</div>
+                        <div class="op-formula">out = a * b</div>
+                    </div>
+                    <div class="op-card" data-op="pow">
+                        <div class="op-symbol">xⁿ</div>
+                        <div class="op-name">Power Rule</div>
+                        <div class="op-formula">out = xⁿ</div>
+                    </div>
+                    <div class="op-card" data-op="relu">
+                        <div class="op-symbol">ReLU</div>
+                        <div class="op-name">ReLU Activation</div>
+                        <div class="op-formula">max(0, x)</div>
+                    </div>
+                </div>
+
+                <div class="op-detail-box" id="op-detail-box">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-test-op-calc">▶ TEST DERIVATIVE COMPUTATION</button>
+                <button class="deep-dive-btn" data-target="content-b9">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 10: VECTOR CALCULUS & JACOBIAN MATRICES -->
+        <section class="scene" id="scene-10" data-act="PHASE 1.8: VECTOR & MATRIX CALCULUS">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.8</span>
+                <span class="scene-number">SCENE 10 / 12</span>
+            </div>
+            <h1 class="scene-title">Vector Calculus & Jacobian Matrices</h1>
+            <p class="scene-subtitle">Mapping vector-valued function changes: The Jacobian matrix J ∈ ℝ^(M×N) containing all partial derivatives.</p>
+            
+            <div class="massive-diagram">
+                <div class="jacobian-stage">
+                    <div class="j-eq">
+                        $$\mathbf{y} = f(\mathbf{x}), \quad J = \begin{bmatrix} \frac{\partial y_1}{\partial x_1} & \frac{\partial y_1}{\partial x_2} \\ \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2} \end{bmatrix}$$
+                    </div>
+                    <div class="j-matrix-display" id="j-matrix-display">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-calc-jacobian">▶ COMPUTE JACOBIAN MATRIX J</button>
+                <button class="deep-dive-btn" data-target="content-b10">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 11: BICYCLE GEAR CHAIN RULE & MATRIX MATMUL GRADIENT -->
+        <section class="scene" id="scene-11" data-act="PHASE 1.8: VECTOR & MATRIX CALCULUS">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.8</span>
+                <span class="scene-number">SCENE 11 / 12</span>
+            </div>
+            <h1 class="scene-title">The Chain Rule & Matrix Matmul Gradient</h1>
+            <p class="scene-subtitle">The Bicycle Gear Analogy (dC/dA = dB/dA × dC/dB) & Matrix Gradient Derivation: dL/dW = Xᵀ · dL/dY.</p>
+            
+            <div class="massive-diagram">
+                <div class="chain-stage">
+                    <div class="gear-visualizer">
+                        <div class="gear" id="gear-a">⚙️ Gear A (d B/d A = 2)</div>
+                        <div class="gear-conn">➔</div>
+                        <div class="gear" id="gear-b">⚙️ Gear B (d C/d B = 3)</div>
+                        <div class="gear-conn">➔</div>
+                        <div class="gear" id="gear-c">⚙️ Gear C (Total d C/d A = 6)</div>
+                    </div>
+                    <div class="matmul-grad-card">
+                        <code>∂L/∂W = Xᵀ · ∂L/∂Y &nbsp;|&nbsp; Shape: (in_features × out_features)</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn purple-btn" id="btn-spin-gears">▶ SPIN CHAIN RULE GEARS</button>
+                <button class="deep-dive-btn" data-target="content-b11">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 12: THE FULL MICROGRAD ENGINE LABORATORY -->
+        <section class="scene" id="scene-12" data-act="PHASE 1.8: VECTOR & MATRIX CALCULUS">
+            <div class="scene-meta">
+                <span class="scene-act">TRACK B • PHASE 1.8</span>
+                <span class="scene-number">SCENE 12 / 12</span>
+            </div>
+            <h1 class="scene-title">The Full Micrograd Engine Laboratory</h1>
+            <p class="scene-subtitle">Step through forward pass, loss calculation, and backward pass on a live 2-input neuron with weights w1, w2, bias b!</p>
+            
+            <div class="massive-diagram">
+                <div class="micrograd-lab">
+                    <div class="lab-inputs">
+                        <label>x1: <input type="number" id="inp-x1" value="2.0" step="0.1"></label>
+                        <label>w1: <input type="number" id="inp-w1" value="-3.0" step="0.1"></label>
+                        <label>x2: <input type="number" id="inp-x2" value="1.0" step="0.1"></label>
+                        <label>w2: <input type="number" id="inp-w2" value="1.0" step="0.1"></label>
+                        <label>b: <input type="number" id="inp-b" value="6.88137" step="0.1"></label>
+                    </div>
+
+                    <div class="lab-results" id="lab-results">
+                        <div class="res-item">n = (x1*w1 + x2*w2 + b): <strong id="res-n">-</strong></div>
+                        <div class="res-item">o = tanh(n): <strong id="res-o">-</strong></div>
+                        <div class="res-item">w1.grad: <strong id="res-w1grad">-</strong></div>
+                        <div class="res-item">w2.grad: <strong id="res-w2grad">-</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn green-btn" id="btn-run-lab">▶ RUN FORWARD & BACKWARD PASS</button>
+                <button class="deep-dive-btn" data-target="content-b12">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER NAV -->
+    <footer id="bottom-hud">
+        <button class="hud-nav-btn" id="btn-prev-b">← PREVIOUS CONCEPT</button>
+        <div class="scene-title-hud" id="hud-scene-title">Track B: Deep Learning & AI</div>
+        <button class="hud-nav-btn primary" id="btn-next-b">NEXT CONCEPT →</button>
+    </footer>
+
+    <script src="script_track_b.js"></script>
+</body>
+</html>

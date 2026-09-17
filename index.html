@@ -125,41 +125,93 @@
             </div>
         </section>
 
-        <!-- TRACK FILTER TABS -->
-        <section class="track-tabs-bar">
-            <div class="tabs-label">FILTER CURRICULUM:</div>
-            <button class="track-tab active" data-filter="all">ALL 15 MODULES</button>
-            <button class="track-tab track-c-tab" data-filter="track-c">TRACK C: UNIFIED STORY & FOUNDATIONS</button>
-            <button class="track-tab track-a-tab" data-filter="track-a">TRACK A: DISTRIBUTED BACKEND</button>
-            <button class="track-tab track-b-tab" data-filter="track-b">TRACK B: DEEP LEARNING & AI</button>
+        <!-- SEARCH & TRACK FILTER TABS -->
+        <section class="filter-and-search-section">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="hub-search-input" placeholder="Search syllabus, concepts, tools, or phases (e.g., 'epoll', 'CUDA', 'autograd', 'strides', 'GIL')...">
+            </div>
+
+            <div class="track-tabs-bar">
+                <button class="track-tab active" data-filter="all">ALL 15 MODULES</button>
+                <button class="track-tab track-a-tab" data-filter="track-a">TRACK A: DISTRIBUTED BACKEND</button>
+                <button class="track-tab track-b-tab" data-filter="track-b">TRACK B: DEEP LEARNING & AI</button>
+                <button class="track-tab track-c-tab" data-filter="track-c">TRACK C: UNIFIED STORY & FOUNDATIONS</button>
+            </div>
         </section>
 
         <!-- 15 MODULES CATALOG GRID -->
-        <section class="chapters-grid">
+        <section class="chapters-grid" id="modules-catalog">
 
-            <!-- MODULE 01 (ACTIVE / CHAPTER 0) -->
-            <article class="chapter-card active-chapter" data-track="track-c">
+            <!-- MODULE 01 (ACTIVE / ALL TRACKS AVAILABLE) -->
+            <article class="chapter-card active-chapter" data-tracks="track-a track-b track-c">
                 <div class="card-header">
-                    <div class="track-badge track-c">TRACK C • UNIFIED FOUNDATION</div>
-                    <div class="status-pill active">🚀 COMPLETED & VERIFIED</div>
+                    <div class="module-number-badge">MODULE 01</div>
+                    <div class="status-pill active">🚀 100% COMPLETED & VERIFIED (ALL 3 TRACKS)</div>
                 </div>
 
-                <div class="chapter-num">MODULE 01</div>
                 <h3 class="chapter-title">The Engine Room — Async Systems, Tensor Internals & Silicon Realities</h3>
                 <p class="chapter-summary">
-                    Connect network sockets to GPU tensor autograd operations. Master Linux <code>epoll</code>, <code>asyncio</code> custom loops, raw C float contiguous RAM, zero-copy strides, and reverse-mode autograd.
+                    Connect raw network sockets to GPU tensor autograd operations. Master Linux <code>epoll</code>, <code>asyncio</code> custom loops, raw C float contiguous RAM, zero-copy strides, CUDA warps, and reverse-mode autograd.
                 </p>
 
-                <div class="track-breakdown">
-                    <div class="tb-item"><strong>Track A:</strong> Linux epoll multiplexing, uvloop, custom async HTTP/1.1 server, GIL deep-dive.</div>
-                    <div class="tb-item"><strong>Track B:</strong> Tensor memory layouts, CUDA GPU model, dynamic autograd DAG, vector calculus.</div>
-                    <div class="tb-item"><strong>Track C:</strong> The Cat Image Crisis, packet-to-tensor pipeline, hardware latency human scale.</div>
-                </div>
+                <!-- TRI-TRACK LAUNCH GRID -->
+                <div class="tri-track-grid">
 
-                <div class="card-footer">
-                    <a href="websites/silicon_mastery/index.html" class="launch-btn primary">
-                        ▶ LAUNCH INTERACTIVE PRESENTATION (CHAPTER 0)
-                    </a>
+                    <!-- TRACK A CARD -->
+                    <div class="track-launch-card track-a-card">
+                        <div class="tl-header">
+                            <span class="tl-badge track-a">TRACK A • DISTRIBUTED BACKEND</span>
+                            <span class="tl-status">VERIFIED</span>
+                        </div>
+                        <h4 class="tl-title">Linux I/O Multiplexing & Async Engines</h4>
+                        <ul class="tl-phases">
+                            <li><strong>Phase 1.1:</strong> Linux epoll(), select(), poll(), kqueue()</li>
+                            <li><strong>Phase 1.2:</strong> Python asyncio & uvloop custom event loop</li>
+                            <li><strong>Phase 1.3:</strong> Raw OS Socket Async HTTP/1.1 Web Server</li>
+                            <li><strong>Phase 1.4:</strong> Threads vs Coroutines & CPython GIL Deep-Dive</li>
+                        </ul>
+                        <a href="websites/silicon_mastery/index.html#scene-15" class="track-launch-btn btn-track-a">
+                            ▶ LAUNCH TRACK A INTERACTIVE LAB
+                        </a>
+                    </div>
+
+                    <!-- TRACK B CARD -->
+                    <div class="track-launch-card track-b-card">
+                        <div class="tl-header">
+                            <span class="tl-badge track-b">TRACK B • DEEP LEARNING & AI</span>
+                            <span class="tl-status">VERIFIED</span>
+                        </div>
+                        <h4 class="tl-title">Tensor Internals, CUDA & Autograd Engine</h4>
+                        <ul class="tl-phases">
+                            <li><strong>Phase 1.5:</strong> Tensor Memory, Strides, Offset & .view()</li>
+                            <li><strong>Phase 1.6:</strong> CUDA GPU SMs, Warps & Coalesced VRAM</li>
+                            <li><strong>Phase 1.7:</strong> Dynamic Autograd Engine from Scratch (DAG)</li>
+                            <li><strong>Phase 1.8:</strong> Vector Calculus, Jacobians & Chain Rule</li>
+                        </ul>
+                        <a href="websites/silicon_mastery/index_track_b.html" class="track-launch-btn btn-track-b">
+                            ▶ LAUNCH TRACK B INTERACTIVE LAB
+                        </a>
+                    </div>
+
+                    <!-- TRACK C CARD -->
+                    <div class="track-launch-card track-c-card">
+                        <div class="tl-header">
+                            <span class="tl-badge track-c">TRACK C • UNIFIED STORY & FOUNDATIONS</span>
+                            <span class="tl-status">VERIFIED</span>
+                        </div>
+                        <h4 class="tl-title">The Cat Image Crisis & 360° Systems Story</h4>
+                        <ul class="tl-phases">
+                            <li><strong>Phase 1.9:</strong> The Cat Image Crisis & RAM Hardware Realities</li>
+                            <li><strong>Phase 1.10:</strong> End-to-End Packet-to-Tensor Pipeline</li>
+                            <li><strong>Phase 1.11:</strong> Hardware Latency Human Scale & Ring 0 vs 3</li>
+                            <li><strong>Phase 1.12:</strong> Production War Stories (10k Crash & OOM)</li>
+                        </ul>
+                        <a href="websites/silicon_mastery/index.html" class="track-launch-btn btn-track-c">
+                            ▶ LAUNCH TRACK C MASTER PRESENTATION
+                        </a>
+                    </div>
+
                 </div>
             </article>
 

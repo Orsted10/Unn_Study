@@ -1,0 +1,20 @@
+MODULE 1: The Engine Room — Async Systems, Tensor Internals & Silicon Realities
+Track A (Backend):
+Phase 1.1: Linux I/O Multiplexing: select(), poll(), Linux epoll(), BSD/macOS kqueue().
+Phase 1.2: Python asyncio & uvloop internals: Coroutines, Tasks, Futures, and custom event loops from scratch.
+Phase 1.3: Building an Asynchronous HTTP/1.1 Web Server from raw OS sockets without third-party frameworks.
+Phase 1.4: Concurrency vs Parallelism: OS Preemptive Threads, Cooperative Coroutines, IPC Multiprocessing, and GIL deep-dive.
+Track B (ML & AI):
+Phase 1.5: Physical Memory Layout of Tensors: Storage pointers, byte strides, shapes, contiguous vs non-contiguous views.
+Phase 1.6: CUDA Programming Model & GPU Architecture: SMs, Warps, Thread Blocks, Global Memory, and Shared Memory.
+Phase 1.7: Building a Dynamic Autograd Engine from scratch: Forward pass, Directed Acyclic Graph (DAG) construction, backward pass via topological sort.
+Phase 1.8: Vector Calculus & Matrix Calculus: Jacobian matrices, gradient accumulation, and chain rule verification.
+Track C (Unified Story, Foundations & Systems Integration):
+Phase 1.9: The Master Story: The Cat Image Crisis, why Python lists bloat memory by 800%, and how RAM hardware is a 1D street.
+Phase 1.10: The Packet-to-Tensor Pipeline: Tracing an HTTP prompt from undersea fiber optics to socket descriptors, into 1D memory buffers, and through autograd matrix multiplications.
+Phase 1.11: The 360° Foundation Suite: Hardware latency human scale (CPU register = 1s 
+  
+⟹
+  
+⟹ network packet = 5 years), Protection Rings (Ring 0 vs 3), and IEEE 754 floating-point underflow/overflow.
+Phase 1.12: Production War Stories: The 10,000 connection crash, synchronous requests.get freezing async event loops, and non-contiguous CUDA kernel corruption.
