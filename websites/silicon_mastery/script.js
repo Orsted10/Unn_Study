@@ -674,28 +674,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // SCENE 10: Baby Operations Catalog
         if (sceneIdx === 10) {
-            document.querySelectorAll('.op-block').forEach(op => {
+            const blocks = document.querySelectorAll('.op-block');
+            const insp = document.getElementById('op-inspector');
+
+            blocks.forEach(op => {
                 op.onclick = () => {
-                    const insp = document.getElementById('op-inspector');
+                    blocks.forEach(b => b.classList.remove('active-op'));
+                    op.classList.add('active-op');
+
                     insp.classList.remove('hidden');
+                    gsap.fromTo(insp, 
+                        { y: 20, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.5)" }
+                    );
+
                     const type = op.dataset.op;
 
                     if (type === 'add') {
-                        document.getElementById('op-title-text').innerText = "ADDITION: out = a + b";
-                        document.getElementById('op-deriv-text').innerText = "∂out/∂a = 1.0\n∂out/∂b = 1.0";
-                        document.getElementById('op-code-text').innerText = "a.grad += 1.0 * out.grad\nb.grad += 1.0 * out.grad";
+                        document.getElementById('op-title-text').innerText = "➕ ADDITION: out = a + b";
+                        document.getElementById('op-deriv-text').innerText = "∂out/∂a = 1.0   |   ∂out/∂b = 1.0";
+                        document.getElementById('op-code-text').innerHTML = `<span class="vo-code-kw">a.grad</span> += 1.0 * out.grad<br><span class="vo-code-kw">b.grad</span> += 1.0 * out.grad`;
+                        document.getElementById('op-explain-text').innerText = "Gradient Router: Addition passes incoming gradient (out.grad) 100% equally to both inputs without modifying its scale!";
                     } else if (type === 'mul') {
-                        document.getElementById('op-title-text').innerText = "MULTIPLICATION: out = a * b";
-                        document.getElementById('op-deriv-text').innerText = "∂out/∂a = b\n∂out/∂b = a";
-                        document.getElementById('op-code-text').innerText = "a.grad += b.data * out.grad\nb.grad += a.data * out.grad";
+                        document.getElementById('op-title-text').innerText = "✖ MULTIPLICATION: out = a * b";
+                        document.getElementById('op-deriv-text').innerText = "∂out/∂a = b.data   |   ∂out/∂b = a.data";
+                        document.getElementById('op-code-text').innerHTML = `<span class="vo-code-kw">a.grad</span> += b.data * out.grad<br><span class="vo-code-kw">b.grad</span> += a.data * out.grad`;
+                        document.getElementById('op-explain-text').innerText = "Gradient Switcher: Multiplication swaps parent values! Input 'a' gets scaled by 'b.data', and input 'b' gets scaled by 'a.data'.";
                     } else if (type === 'pow') {
-                        document.getElementById('op-title-text').innerText = "POWER: out = x ** n";
+                        document.getElementById('op-title-text').innerText = "⚡ POWER: out = x ** n";
                         document.getElementById('op-deriv-text').innerText = "∂out/∂x = n * (x ** (n - 1))";
-                        document.getElementById('op-code-text').innerText = "x.grad += (n * (x.data ** (n - 1))) * out.grad";
+                        document.getElementById('op-code-text').innerHTML = `<span class="vo-code-kw">x.grad</span> += (n * (x.data ** (n - 1))) * out.grad`;
+                        document.getElementById('op-explain-text').innerText = "Polynomial Scaler: Applies calculus power rule! Scales derivative by exponent 'n' and reduces power index by 1.";
                     } else if (type === 'relu') {
-                        document.getElementById('op-title-text').innerText = "ACTIVATION: out = ReLU(x)";
-                        document.getElementById('op-deriv-text').innerText = "∂out/∂x = 1.0 if x > 0 else 0.0";
-                        document.getElementById('op-code-text').innerText = "x.grad += (1.0 if out.data > 0 else 0.0) * out.grad";
+                        document.getElementById('op-title-text').innerText = "🛡️ ACTIVATION: out = ReLU(x)";
+                        document.getElementById('op-deriv-text').innerText = "∂out/∂x = 1.0 (if x > 0) else 0.0";
+                        document.getElementById('op-code-text').innerHTML = `<span class="vo-code-kw">x.grad</span> += (1.0 if out.data > 0 else 0.0) * out.grad`;
+                        document.getElementById('op-explain-text').innerText = "Valve Gate: If input x > 0, gradient flows through unchanged (1.0). If x <= 0, gradient is blocked completely (0.0).";
                     }
                 };
             });

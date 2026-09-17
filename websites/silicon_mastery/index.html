@@ -552,10 +552,22 @@
                     </div>
                 </div>
 
-                <div id="op-inspector" class="inspector-box hidden mt-4">
-                    <div class="op-title" id="op-title-text">Select an Operation</div>
-                    <div class="op-deriv" id="op-deriv-text">Click any math operation above to reveal its backward derivative formula.</div>
-                    <div class="op-code" id="op-code-text"></div>
+                <div id="op-inspector" class="op-inspector-card hidden">
+                    <div class="op-insp-header" id="op-title-text">Select an Operation</div>
+                    <div class="op-insp-body">
+                        <div class="op-section">
+                            <span class="op-sec-label">📐 CALCULUS DERIVATIVE FORMULA:</span>
+                            <div class="op-formula-box" id="op-deriv-text">Click any math operation above to reveal its backward derivative.</div>
+                        </div>
+                        <div class="op-section">
+                            <span class="op-sec-label">⚡ BACKWARD TAPE CODE (`_backward`):</span>
+                            <div class="vo-code-box" id="op-code-text"></div>
+                        </div>
+                        <div class="op-section">
+                            <span class="op-sec-label">💡 INTUITIVE BEHAVIOR & EXPLANATION:</span>
+                            <div class="op-explain-box" id="op-explain-text"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
