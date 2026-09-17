@@ -586,10 +586,10 @@
                             <div class="vo-row"><span>GRAD:</span> <strong id="vo-grad">0.0</strong> (accumulated during backward)</div>
                             <div class="vo-row"><span>PARENTS:</span> <strong>(a, b)</strong></div>
                             <div class="vo-row"><span>OP:</span> <strong>'*'</strong></div>
-                            <div class="code-font mt-2">
-                                <span class="code-kw">def</span> _backward():<br>
-                                &nbsp;&nbsp;a.grad += b.data * c.grad<br>
-                                &nbsp;&nbsp;b.grad += a.data * c.grad
+                            <div class="vo-code-box">
+                                <span class="vo-code-kw">def</span> <strong style="color:#FAF7F2;">_backward</strong>():<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;a.grad += b.data * c.grad<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;b.grad += a.data * c.grad
                             </div>
                         </div>
                     </div>
