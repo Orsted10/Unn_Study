@@ -520,15 +520,53 @@ document.addEventListener("DOMContentLoaded", () => {
         if (sceneIdx === 6) {
             const btn = document.getElementById('btn-bind-storage');
             const box = document.getElementById('s6-storage-layer');
+            const arrow = document.getElementById('s6-bind-arrow');
+            const cells = document.querySelectorAll('#s6-ram-rail .s6-cell');
+            const statusText = document.getElementById('s6-status-text');
+            const statusBar = document.getElementById('s6-status-bar');
 
-            btn.onclick = () => {
-                gsap.to(box, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "back.out(1.7)"
-                });
-            };
+            if (btn && box) {
+                btn.onclick = () => {
+                    // Activate class Storage box with spring bounce
+                    box.classList.remove('unbound');
+                    box.classList.add('bound');
+                    
+                    gsap.fromTo(box, 
+                        { y: -30, scale: 0.95, opacity: 0.4 }, 
+                        { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.8)" }
+                    );
+
+                    // Animate arrow indicator pulse
+                    if (arrow) {
+                        gsap.fromTo(arrow, 
+                            { scale: 0.9, color: "#2E7D4E" },
+                            { scale: 1.15, color: "#1B4D2E", duration: 0.4, yoyo: true, repeat: 1 }
+                        );
+                    }
+
+                    // Sequentially illuminate 1D RAM cells with green highlight & scale pulse
+                    cells.forEach((cell, idx) => {
+                        setTimeout(() => {
+                            cell.classList.add('highlighted');
+                            gsap.fromTo(cell, 
+                                { scale: 0.88, backgroundColor: '#E2F9E8' },
+                                { scale: 1.08, backgroundColor: '#E8F8F5', duration: 0.35, ease: "back.out(2)" }
+                            ).then(() => {
+                                gsap.to(cell, { scale: 1, duration: 0.15 });
+                            });
+                        }, idx * 90);
+                    });
+
+                    // Update status bar text and border styling
+                    if (statusText && statusBar) {
+                        statusText.innerHTML = "<strong>✅ BOUND SUCCESS:</strong> <code>class Storage</code> allocated at <code>c_ptr = 0x7FFF0000</code> → 24-byte physical RAM buffer (6 × float32 continuous)!";
+                        statusBar.style.borderColor = "#2E7D4E";
+                        statusBar.style.background = "#E8F8F5";
+                    }
+
+                    btn.innerText = "✓ STORAGE BOUND TO RAM (CLICK TO RE-ANIMATE)";
+                };
+            }
         }
 
         // SCENE 7: Strides Equation & Vector Lines
@@ -549,19 +587,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('eq-res').innerText = idx;
 
                 // Matrix highlight
-                document.querySelectorAll('.matrix-view .m-cell').forEach(el => el.style.background = '#F4EFE6');
+                document.querySelectorAll('.matrix-view .m-cell').forEach(el => {
+                    el.style.background = '#F4EFE6';
+                    el.style.color = '#1A1D20';
+                });
                 const targetMatrixCell = document.getElementById(`mc-${r}-${c}`);
-                if (targetMatrixCell) targetMatrixCell.style.background = '#D96B27';
+                if (targetMatrixCell) {
+                    targetMatrixCell.style.background = '#D96B27';
+                    targetMatrixCell.style.color = 'white';
+                    gsap.fromTo(targetMatrixCell, { scale: 0.9 }, { scale: 1.05, duration: 0.2, ease: "back.out(2)" });
+                }
 
                 // Storage highlight
-                document.querySelectorAll('#s7-mem-rail .mem-cell').forEach(el => el.style.background = 'white');
+                document.querySelectorAll('#s7-mem-rail .mem-cell').forEach(el => {
+                    el.style.background = 'white';
+                    el.style.color = '#1A1D20';
+                });
                 const targetStorageCell = document.querySelector(`.s7-${idx}`);
-                if (targetStorageCell) targetStorageCell.style.background = '#D96B27';
+                if (targetStorageCell) {
+                    targetStorageCell.style.background = '#D96B27';
+                    targetStorageCell.style.color = 'white';
+                    gsap.fromTo(targetStorageCell, { scale: 0.9 }, { scale: 1.1, duration: 0.25, ease: "back.out(2)" });
+                }
             }
 
-            rSlider.oninput = updateStrides;
-            cSlider.oninput = updateStrides;
-            updateStrides();
+            if (rSlider && cSlider) {
+                rSlider.oninput = updateStrides;
+                cSlider.oninput = updateStrides;
+                updateStrides();
+            }
         }
 
         // SCENE 8: Zero-Copy Transpose

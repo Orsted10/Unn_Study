@@ -927,16 +927,31 @@ body {
 }
 
 .storage-class-box {
-    width: 90%;
-    background: var(--c-dark);
+    width: 100%;
+    max-width: 750px;
+    background: #1E232A;
     color: white;
     border: var(--border-thick);
     border-radius: var(--radius-sm);
     padding: 1.2rem;
     text-align: center;
     box-shadow: var(--shadow-tactile);
-    opacity: 0.4;
-    transform: translateY(-20px);
+    transition: all 0.5s ease;
+}
+
+.storage-class-box.unbound {
+    opacity: 0.35;
+    transform: translateY(-40px);
+    filter: grayscale(1);
+    border-color: #8C949E;
+}
+
+.storage-class-box.bound {
+    opacity: 1;
+    transform: translateY(0);
+    filter: grayscale(0);
+    border-color: var(--c-accent-amber);
+    box-shadow: 0 0 20px rgba(217, 107, 39, 0.4), var(--shadow-tactile);
 }
 
 .storage-class-box .box-title {
@@ -949,7 +964,7 @@ body {
 .storage-class-box .box-sub {
     font-family: var(--font-mono);
     font-size: 0.85rem;
-    opacity: 0.8;
+    opacity: 0.9;
     margin-top: 0.3rem;
 }
 
@@ -958,6 +973,7 @@ body {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--c-accent-emerald);
+    transition: all 0.3s ease;
 }
 
 /* -------------------------------------------------------------
@@ -966,8 +982,65 @@ body {
 .split-vertical {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: space-between;
+    width: 100%;
     height: 100%;
+}
+
+.top-half, .bottom-half {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#scene-7 .bottom-half {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+#scene-7 .ram-street-wrapper {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#scene-7 #s7-mem-rail {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    border: var(--border-thick);
+    background: #EBE5DB;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-tactile);
+}
+
+#scene-7 #s7-mem-rail .mem-cell {
+    flex: 1 1 0px;
+    min-width: 75px;
+    height: 75px;
+    background: white;
+    border: 2px solid var(--c-text-primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--c-text-primary);
+    transition: all 0.2s ease;
+    margin: 0;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.12);
 }
 
 .tensor-glass {

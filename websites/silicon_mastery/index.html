@@ -330,28 +330,33 @@
             
             <div class="massive-diagram">
                 <div class="storage-diagram-wrapper">
-                    <div class="storage-class-box" id="s6-storage-layer">
+                    <div class="storage-class-box unbound" id="s6-storage-layer">
                         <div class="box-title">class Storage</div>
-                        <div class="box-sub">Allocates a single contiguous block of C floats (ptr, size=6)</div>
+                        <div class="box-sub">Allocates a single contiguous block of C floats (c_ptr=0x7FFF0000, size=6)</div>
                     </div>
                     
-                    <div class="down-arrow-indicator">⬇️ Binds directly onto physical hardware RAM</div>
+                    <div class="down-arrow-indicator" id="s6-bind-arrow">⬇️ Binds directly onto physical hardware RAM</div>
 
                     <div class="ram-street-wrapper">
-                        <div class="memory-rail">
-                            <div class="mem-cell highlighted">10.0</div>
-                            <div class="mem-cell highlighted">20.0</div>
-                            <div class="mem-cell highlighted">30.0</div>
-                            <div class="mem-cell highlighted">40.0</div>
-                            <div class="mem-cell highlighted">50.0</div>
-                            <div class="mem-cell highlighted">60.0</div>
+                        <div class="memory-rail" id="s6-ram-rail">
+                            <div class="mem-cell s6-cell">10.0</div>
+                            <div class="mem-cell s6-cell">20.0</div>
+                            <div class="mem-cell s6-cell">30.0</div>
+                            <div class="mem-cell s6-cell">40.0</div>
+                            <div class="mem-cell s6-cell">50.0</div>
+                            <div class="mem-cell s6-cell">60.0</div>
                         </div>
+                    </div>
+
+                    <div class="info-card-bar" id="s6-status-bar">
+                        <span class="info-icon">ℹ️</span>
+                        <span id="s6-status-text">Click '▶ BIND STORAGE TO RAM' to allocate the C memory pointer onto physical hardware RAM.</span>
                     </div>
                 </div>
             </div>
 
             <div class="scene-actions">
-                <button class="interaction-btn" id="btn-bind-storage">▶ BIND STORAGE TO RAM</button>
+                <button class="interaction-btn green-btn" id="btn-bind-storage">▶ BIND STORAGE TO RAM</button>
                 <button class="deep-dive-btn" data-target="content-6">📖 READ DEEP DIVE</button>
             </div>
         </section>
