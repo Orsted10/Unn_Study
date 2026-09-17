@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon Mastery: Interactive Engineering Lab</title>
+    
+    <!-- Google Fonts: Playfair Display (Cinematic), Outfit (Clean Sans), Fira Code (Technical Monospace), Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- GSAP Animation Suite -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <!-- TOP HEADER / PROGRESS HUD -->
+    <header id="top-hud">
+        <div class="hud-left">
+            <span class="brand-title">SILICON MASTERY</span>
+            <span class="act-badge" id="act-badge">PROLOGUE</span>
+        </div>
+        
+        <!-- SCENE DOTS NAVIGATION -->
+        <div class="scene-dots-container" id="scene-dots">
+            <!-- 21 dots generated dynamically -->
+        </div>
+
+        <div class="hud-right">
+            <div class="shortcut-pill"><span class="key">←/→</span> Navigate</div>
+            <div class="shortcut-pill"><span class="key">D</span> Deep Dive</div>
+            <div class="shortcut-pill"><span class="key">Space</span> Action</div>
+        </div>
+    </header>
+
+    <!-- DEEP DIVE MODAL / DRAWER -->
+    <div id="deep-dive-modal" class="hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-drawer">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-act-tag" id="modal-act-tag">ACT I</span>
+                    <h2 id="modal-title">Technical Deep Dive</h2>
+                </div>
+                <button class="close-modal-btn" id="close-modal-btn">&times; CLOSE</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Injected via script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="viewport">
+
+        <!-- SCENE 1: THE REQUEST -->
+        <section class="scene active" id="scene-1" data-act="PROLOGUE">
+            <div class="scene-meta">
+                <span class="scene-act">PROLOGUE</span>
+                <span class="scene-number">SCENE 01 / 21</span>
+            </div>
+            <h1 class="scene-title">The Grand Architecture of AI</h1>
+            <p class="scene-subtitle">How a chat prompt on a phone in Mumbai becomes matrix operations on a server in Frankfurt</p>
+            
+            <div class="massive-diagram" id="diag-request">
+                <div class="pipeline-wrapper">
+                    <svg class="pipeline-lines" id="pipeline-svg">
+                        <line class="pipe-line" id="line-1" x1="12%" y1="50%" x2="28%" y2="50%" />
+                        <line class="pipe-line" id="line-2" x1="32%" y1="50%" x2="48%" y2="50%" />
+                        <line class="pipe-line" id="line-3" x1="52%" y1="50%" x2="68%" y2="50%" />
+                        <line class="pipe-line" id="line-4" x1="72%" y1="50%" x2="88%" y2="50%" />
+                    </svg>
+
+                    <div class="diagram-flow">
+                        <div class="df-node phone active-node" id="node-phone" data-info="Client Device: User enters 'What is the capital of France?'">
+                            <div class="node-icon">📱</div>
+                            <div class="node-title">USER PHONE</div>
+                            <div class="node-sub">Mumbai, India</div>
+                        </div>
+                        <div class="df-node nic" id="node-nic" data-info="Network Interface Card: Receives electrical TCP packets from fiber optic cable.">
+                            <div class="node-icon">🖧</div>
+                            <div class="node-title">HARDWARE NIC</div>
+                            <div class="node-sub">Fiber Network</div>
+                        </div>
+                        <div class="df-node kernel" id="node-kernel" data-info="Linux Kernel: Triggers epoll_wait interrupt to wake up Python event loop.">
+                            <div class="node-icon">⚙️</div>
+                            <div class="node-title">OS KERNEL</div>
+                            <div class="node-sub">epoll / kqueue</div>
+                        </div>
+                        <div class="df-node backend" id="node-backend" data-info="Async Backend: Python Event Loop parses HTTP headers & tokenizes prompt.">
+                            <div class="node-icon">⚡</div>
+                            <div class="node-title">ASYNC EVENT LOOP</div>
+                            <div class="node-sub">Single-Threaded</div>
+                        </div>
+                        <div class="df-node tensor" id="node-tensor" data-info="Tensor Core: Loads numbers into contiguous GPU RAM for Autograd matrix multiplication.">
+                            <div class="node-icon">🔢</div>
+                            <div class="node-title">TENSOR & AUTOGRAD</div>
+                            <div class="node-sub">GPU Memory</div>
+                        </div>
+                    </div>
+
+                    <div class="moving-packet" id="hero-packet-1">
+                        <span class="packet-label">HTTP Req</span>
+                    </div>
+                </div>
+
+                <div class="info-card-bar" id="pipeline-info-bar">
+                    <span class="info-icon">ℹ️</span>
+                    <span id="pipeline-info-text">Click any node or click 'DISPATCH REQUEST' to trace the unbroken engineering narrative.</span>
+                </div>
+            </div>
+            
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-dispatch-req">▶ DISPATCH REQUEST</button>
+                <button class="deep-dive-btn" data-target="content-1">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 2: THE CAT IMAGE -->
+        <section class="scene" id="scene-2" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 02 / 21</span>
+            </div>
+            <h1 class="scene-title">How Should Python Store Data?</h1>
+            <p class="scene-subtitle">A grayscale image is just a 2D matrix of pixel intensity values from 0 to 255.</p>
+            
+            <div class="massive-diagram">
+                <div class="cat-matrix-container">
+                    <div class="matrix-header-label">2D Pixel Matrix (2 × 3)</div>
+                    <div id="cat-grid" class="cat-grid">
+                        <div class="cat-row">
+                            <div class="cat-pixel" data-row="0" data-col="0" data-val="10.0">
+                                <span class="px-coord">(0,0)</span>
+                                <span class="px-val">10</span>
+                            </div>
+                            <div class="cat-pixel" data-row="0" data-col="1" data-val="20.0">
+                                <span class="px-coord">(0,1)</span>
+                                <span class="px-val">20</span>
+                            </div>
+                            <div class="cat-pixel" data-row="0" data-col="2" data-val="30.0">
+                                <span class="px-coord">(0,2)</span>
+                                <span class="px-val">30</span>
+                            </div>
+                        </div>
+                        <div class="cat-row">
+                            <div class="cat-pixel" data-row="1" data-col="0" data-val="40.0">
+                                <span class="px-coord">(1,0)</span>
+                                <span class="px-val">40</span>
+                            </div>
+                            <div class="cat-pixel" data-row="1" data-col="1" data-val="50.0">
+                                <span class="px-coord">(1,1)</span>
+                                <span class="px-val">50</span>
+                            </div>
+                            <div class="cat-pixel" data-row="1" data-col="2" data-val="60.0">
+                                <span class="px-coord">(1,2)</span>
+                                <span class="px-val">60</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pixel-inspector" class="inspector-box">
+                        <div class="insp-title">PIXEL INSPECTOR</div>
+                        <div class="insp-details">
+                            <span>Row: <strong id="pi-row">0</strong></span>
+                            <span>Col: <strong id="pi-col">0</strong></span>
+                            <span>Value: <strong id="pi-val">10.0</strong></span>
+                            <span>Flat Index: <strong id="pi-flat">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <div class="hint-text">Hover over any pixel cell to inspect its coordinates and value.</div>
+                <button class="deep-dive-btn" data-target="content-2">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 3: POINTER NIGHTMARE -->
+        <section class="scene" id="scene-3" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 03 / 21</span>
+            </div>
+            <h1 class="scene-title">The Pointer Nightmare</h1>
+            <p class="scene-subtitle">Python nested lists store pointers scattered randomly across heap RAM, destroying L1 CPU cache performance.</p>
+            
+            <div class="massive-diagram">
+                <div class="pointer-stage">
+                    <div id="python-list-block" class="code-block">
+                        <span class="code-kw">cat_image</span> = [[<span class="code-num">10.0</span>, <span class="code-num">20.0</span>, <span class="code-num">30.0</span>], [<span class="code-num">40.0</span>, <span class="code-num">50.0</span>, <span class="code-num">60.0</span>]]
+                    </div>
+                    
+                    <div class="heap-canvas" id="heap-objects-container">
+                        <div class="heap-label">SCATTERED HEAP RAM (Random Memory Addresses)</div>
+                        <div id="heap-objects"></div>
+                        <div id="cpu-cursor" class="cpu-cursor">CPU CORE</div>
+                    </div>
+
+                    <div id="cache-miss-flash" class="flash-banner red hidden">
+                        <span class="flash-icon">⚠️</span> CACHE MISS! CPU Stalled waiting for RAM fetch! (+200ns)
+                    </div>
+
+                    <div class="stats-counter-bar">
+                        <div class="stat-pill">Cache Misses: <span id="miss-count">0</span></div>
+                        <div class="stat-pill">Total Latency: <span id="latency-count">0 ns</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-run-cpu">▶ RUN CPU TRAVERSAL</button>
+                <button class="deep-dive-btn" data-target="content-3">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 4: MEMORY BLOAT -->
+        <section class="scene" id="scene-4" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 04 / 21</span>
+            </div>
+            <h1 class="scene-title">The 8x Memory Bloat Crisis</h1>
+            <p class="scene-subtitle">Why PyTorch banned Python float objects: 32 bytes per number vs 4 bytes in raw C memory.</p>
+            
+            <div class="massive-diagram">
+                <div class="memory-comparison-wrapper">
+                    <div class="memory-comparison">
+                        <div class="mem-card raw-float">
+                            <div class="card-badge green">HARDWARE OPTIMAL</div>
+                            <div class="mem-label">RAW C FLOAT32</div>
+                            <div class="mem-visual-block c-block">4 BYTES</div>
+                            <div class="mem-desc">Just 32 bits of binary floating-point data in contiguous RAM.</div>
+                        </div>
+
+                        <div class="mem-vs">VS</div>
+
+                        <div class="mem-card py-float">
+                            <div class="card-badge red">800% OVERHEAD</div>
+                            <div class="mem-label">PYTHON FLOAT OBJECT</div>
+                            <div class="py-struct">
+                                <div class="py-part">8B RefCount (GC)</div>
+                                <div class="py-part">8B TypePtr (*PyFloat_Type)</div>
+                                <div class="py-part">8B Value (double)</div>
+                                <div class="py-part">8B List Pointer</div>
+                            </div>
+                            <div class="mem-size-tag">32 BYTES PER NUMBER</div>
+                        </div>
+                    </div>
+
+                    <div class="calculator-panel">
+                        <label for="param-slider" class="calc-label">MODEL PARAMETER SCALE:</label>
+                        <div class="slider-row">
+                            <input type="range" id="param-slider" min="1" max="70" value="70" step="1">
+                            <span class="slider-val" id="param-val">70 Billion Parameters</span>
+                        </div>
+                        <div class="scale-up-box" id="bloat-scale">
+                            Python RAM: <span id="bloat-total">2,240 GB</span> vs C Raw RAM: <span id="c-total">140 GB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="deep-dive-btn" data-target="content-4">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 5: RAM IS A STREET -->
+        <section class="scene" id="scene-5" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 05 / 21</span>
+            </div>
+            <h1 class="scene-title">Hardware Reality: RAM is a 1D Street</h1>
+            <p class="scene-subtitle">Physical memory contains no rows, columns, or matrices—only a single continuous array of memory addresses.</p>
+            
+            <div class="massive-diagram">
+                <div class="street-container">
+                    <div class="street-header">PHYSICAL SYSTEM RAM (1D Byte Addresses)</div>
+                    <div class="ram-street-wrapper">
+                        <div class="address-rail">
+                            <div class="addr-tag">0x00</div>
+                            <div class="addr-tag">0x04</div>
+                            <div class="addr-tag">0x08</div>
+                            <div class="addr-tag">0x0C</div>
+                            <div class="addr-tag">0x10</div>
+                            <div class="addr-tag">0x14</div>
+                        </div>
+                        <div class="memory-rail" id="s5-mem-rail">
+                            <div class="mem-cell" data-idx="0">10.0</div>
+                            <div class="mem-cell" data-idx="1">20.0</div>
+                            <div class="mem-cell" data-idx="2">30.0</div>
+                            <div class="mem-cell" data-idx="3">40.0</div>
+                            <div class="mem-cell" data-idx="4">50.0</div>
+                            <div class="mem-cell" data-idx="5">60.0</div>
+                        </div>
+                        <div class="index-rail">
+                            <span>Index 0</span><span>Index 1</span><span>Index 2</span><span>Index 3</span><span>Index 4</span><span>Index 5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ram-info-box" id="ram-info-box">
+                        Click any cell in the 1D RAM street to see its contiguous byte offsets.
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="deep-dive-btn" data-target="content-5">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 6: STORAGE -->
+        <section class="scene" id="scene-6" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 06 / 21</span>
+            </div>
+            <h1 class="scene-title">The Storage Abstraction</h1>
+            <p class="scene-subtitle"><code>class Storage</code> wraps flat C memory with zero concept of dimensions, shapes, or rows.</p>
+            
+            <div class="massive-diagram">
+                <div class="storage-diagram-wrapper">
+                    <div class="storage-class-box" id="s6-storage-layer">
+                        <div class="box-title">class Storage</div>
+                        <div class="box-sub">Allocates a single contiguous block of C floats (ptr, size=6)</div>
+                    </div>
+                    
+                    <div class="down-arrow-indicator">⬇️ Binds directly onto physical hardware RAM</div>
+
+                    <div class="ram-street-wrapper">
+                        <div class="memory-rail">
+                            <div class="mem-cell highlighted">10.0</div>
+                            <div class="mem-cell highlighted">20.0</div>
+                            <div class="mem-cell highlighted">30.0</div>
+                            <div class="mem-cell highlighted">40.0</div>
+                            <div class="mem-cell highlighted">50.0</div>
+                            <div class="mem-cell highlighted">60.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-bind-storage">▶ BIND STORAGE TO RAM</button>
+                <button class="deep-dive-btn" data-target="content-6">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 7: RAWTENSOR STRIDES -->
+        <section class="scene" id="scene-7" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 07 / 21</span>
+            </div>
+            <h1 class="scene-title">Coordinate Glasses: Strides</h1>
+            <p class="scene-subtitle"><code>RawTensor</code> uses Shape and Strides to turn a flat 1D Storage array into any n-dimensional matrix.</p>
+            
+            <div class="massive-diagram split-vertical">
+                <div class="top-half">
+                    <div class="tensor-glass">
+                        <div class="glass-header">
+                            <span>class RawTensor</span>
+                            <span class="meta-tag">Metadata View</span>
+                        </div>
+                        <div class="glass-meta">
+                            <div class="meta-item">SHAPE: <strong>(2, 3)</strong></div>
+                            <div class="meta-item">STRIDES: <strong>(3, 1)</strong></div>
+                        </div>
+                        <div class="matrix-view">
+                            <div class="m-row">
+                                <div class="m-cell" id="mc-0-0">10</div>
+                                <div class="m-cell" id="mc-0-1">20</div>
+                                <div class="m-cell" id="mc-0-2">30</div>
+                            </div>
+                            <div class="m-row">
+                                <div class="m-cell" id="mc-1-0">40</div>
+                                <div class="m-cell" id="mc-1-1">50</div>
+                                <div class="m-cell" id="mc-1-2">60</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="interaction-panel">
+                    <div class="sliders-wrapper">
+                        <div class="slider-box">
+                            <label>ROW (i₀):</label>
+                            <input type="range" id="stride-r" min="0" max="1" value="0">
+                            <span class="val-badge" id="val-r">0</span>
+                        </div>
+                        <div class="slider-box">
+                            <label>COL (i₁):</label>
+                            <input type="range" id="stride-c" min="0" max="2" value="0">
+                            <span class="val-badge" id="val-c">0</span>
+                        </div>
+                    </div>
+
+                    <div class="equation-box">
+                        <span class="eq-label">STORAGE INDEX FORMULA:</span>
+                        <div class="eq-display">
+                            Index = (<span id="eq-r">0</span> × <span class="c-accent">3</span>) + (<span id="eq-c">0</span> × <span class="c-accent">1</span>) = <strong id="eq-res">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-half">
+                    <div class="ram-street-wrapper">
+                        <div class="memory-rail" id="s7-mem-rail">
+                            <div class="mem-cell s7-0">10</div>
+                            <div class="mem-cell s7-1">20</div>
+                            <div class="mem-cell s7-2">30</div>
+                            <div class="mem-cell s7-3">40</div>
+                            <div class="mem-cell s7-4">50</div>
+                            <div class="mem-cell s7-5">60</div>
+                        </div>
+                        <div class="rail-label">1D Physical Storage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="deep-dive-btn" data-target="content-7">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 8: ZERO COPY TRANSPOSE -->
+        <section class="scene" id="scene-8" data-act="ACT I: DATA & TENSORS">
+            <div class="scene-meta">
+                <span class="scene-act">ACT I: DATA & TENSORS</span>
+                <span class="scene-number">SCENE 08 / 21</span>
+            </div>
+            <h1 class="scene-title">The Trillion-Dollar Miracle: Zero-Copy Transpose</h1>
+            <p class="scene-subtitle">Transpose a 50GB tensor in 0.000001 seconds by swapping metadata instead of copying bytes in RAM.</p>
+            
+            <div class="massive-diagram split-vertical">
+                <div class="top-half">
+                    <div class="tensor-glass" id="zc-glass">
+                        <div class="glass-header">
+                            <span>class RawTensor</span>
+                            <span class="status-badge green" id="zc-status">NORMAL VIEW</span>
+                        </div>
+                        <div class="glass-meta" id="zc-meta">
+                            <div class="meta-item">SHAPE: <strong id="zc-shape">(2, 3)</strong></div>
+                            <div class="meta-item">STRIDES: <strong id="zc-strides">(3, 1)</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interaction-panel horizontal">
+                    <button class="interaction-btn red-btn" id="btn-naive">NAIVE COPY TRANSPOSE</button>
+                    <button class="interaction-btn green-btn" id="btn-zero">ZERO-COPY METADATA SWAP</button>
+                </div>
+                
+                <div id="zc-metrics" class="metrics-display">BYTES MOVED: 0 B | TIME: 0 ms</div>
+
+                <div class="bottom-half">
+                    <div class="ram-street-wrapper">
+                        <div class="memory-rail" id="zc-mem-rail">
+                            <div class="mem-cell">10</div>
+                            <div class="mem-cell">20</div>
+                            <div class="mem-cell">30</div>
+                            <div class="mem-cell">40</div>
+                            <div class="mem-cell">50</div>
+                            <div class="mem-cell">60</div>
+                        </div>
+                        <div class="rail-label">Physical Storage Array (Unmodified in RAM)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="deep-dive-btn" data-target="content-8">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 9: TRAINING CRISIS -->
+        <section class="scene" id="scene-9" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 09 / 21</span>
+            </div>
+            <h1 class="scene-title">The Training Crisis</h1>
+            <p class="scene-subtitle">A neural network has millions of weights. How do we know which direction to adjust each weight to minimize loss?</p>
+            
+            <div class="massive-diagram">
+                <div class="equation-stage">
+                    <div class="huge-equation" id="eq-pred">Prediction = (x × w) + b</div>
+                    <div class="huge-equation mt-4" id="eq-loss">Loss = (Prediction - Target)²</div>
+                    <div class="question-text hidden" id="q-change-w">
+                        "If I nudge weight <strong>w</strong> by +0.001, does Loss go UP or DOWN?"
+                    </div>
+
+                    <div class="weight-nudge-box hidden" id="weight-nudge-panel">
+                        <label>TRY NUDGING WEIGHT (w):</label>
+                        <input type="range" id="w-nudge-slider" min="-3" max="3" value="1" step="0.1">
+                        <div class="nudge-stats">
+                            <span>w = <strong id="w-val">1.0</strong></span>
+                            <span>Loss = <strong id="l-val">4.0</strong></span>
+                            <span>∂L/∂w = <strong id="grad-val">4.0</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-build-eq">▶ BUILD FORMULA & SLIDER</button>
+                <button class="deep-dive-btn" data-target="content-9">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 10: BABY OPERATIONS -->
+        <section class="scene" id="scene-10" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 10 / 21</span>
+            </div>
+            <h1 class="scene-title">Baby Operations Derivative Catalog</h1>
+            <p class="scene-subtitle">Every terrifying neural network formula is just a chain of elementary math ops with known calculus derivatives.</p>
+            
+            <div class="massive-diagram">
+                <div class="op-grid">
+                    <div class="op-block" data-op="add">
+                        <div class="op-sym">+</div>
+                        <div class="op-name">ADDITION</div>
+                    </div>
+                    <div class="op-block" data-op="mul">
+                        <div class="op-sym">×</div>
+                        <div class="op-name">MULTIPLICATION</div>
+                    </div>
+                    <div class="op-block" data-op="pow">
+                        <div class="op-sym">xⁿ</div>
+                        <div class="op-name">POWER</div>
+                    </div>
+                    <div class="op-block" data-op="relu">
+                        <div class="op-sym">ReLU</div>
+                        <div class="op-name">ACTIVATION</div>
+                    </div>
+                </div>
+
+                <div id="op-inspector" class="inspector-box hidden mt-4">
+                    <div class="op-title" id="op-title-text">Select an Operation</div>
+                    <div class="op-deriv" id="op-deriv-text">Click any math operation above to reveal its backward derivative formula.</div>
+                    <div class="op-code" id="op-code-text"></div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="deep-dive-btn" data-target="content-10">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 11: VALUE -->
+        <section class="scene" id="scene-11" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 11 / 21</span>
+            </div>
+            <h1 class="scene-title">Decomposing a Value Object</h1>
+            <p class="scene-subtitle">Wrapping numbers inside intelligent <code>Value</code> objects that automatically record parents and local backward closures.</p>
+            
+            <div class="massive-diagram">
+                <div class="value-decomp-stage">
+                    <div class="huge-equation">c = a × b</div>
+                    <div id="val-decompose" class="value-object hidden mt-4">
+                        <div class="vo-header">
+                            <span>class Value (c)</span>
+                            <span class="vo-tag">Tape Recorder</span>
+                        </div>
+                        <div class="vo-body">
+                            <div class="vo-row"><span>DATA:</span> <strong>15.0</strong></div>
+                            <div class="vo-row"><span>GRAD:</span> <strong id="vo-grad">0.0</strong> (accumulated during backward)</div>
+                            <div class="vo-row"><span>PARENTS:</span> <strong>(a, b)</strong></div>
+                            <div class="vo-row"><span>OP:</span> <strong>'*'</strong></div>
+                            <div class="code-font mt-2">
+                                <span class="code-kw">def</span> _backward():<br>
+                                &nbsp;&nbsp;a.grad += b.data * c.grad<br>
+                                &nbsp;&nbsp;b.grad += a.data * c.grad
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-decompose">▶ OPEN VALUE OBJECT</button>
+                <button class="deep-dive-btn" data-target="content-11">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 12: FORWARD GRAPH -->
+        <section class="scene" id="scene-12" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 12 / 21</span>
+            </div>
+            <h1 class="scene-title">The Computational DAG (Forward Pass)</h1>
+            <p class="scene-subtitle">As Python code runs, the Directed Acyclic Graph constructs itself dynamically in memory.</p>
+            
+            <div class="massive-diagram">
+                <div class="dag-wrapper">
+                    <div class="dag-canvas" id="forward-dag"></div>
+                    <div id="node-inspector" class="inspector-box fixed-right hidden">
+                        <h3 id="ni-title">Node Inspector</h3>
+                        <p id="ni-data"></p>
+                        <p id="ni-parents"></p>
+                        <p id="ni-op"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-build-graph">▶ RUN FORWARD PASS</button>
+                <button class="deep-dive-btn" data-target="content-12">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 13: BACKWARD PASS -->
+        <section class="scene" id="scene-13" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 13 / 21</span>
+            </div>
+            <h1 class="scene-title">The Backward Pass (Loss.backward())</h1>
+            <p class="scene-subtitle">Rewinding the computation graph in reverse to flow gradients back to every input parameter in a single pass.</p>
+            
+            <div class="massive-diagram">
+                <div class="dag-wrapper">
+                    <div class="dag-canvas" id="backward-dag"></div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-run-backward">▶ Loss.backward()</button>
+                <button class="deep-dive-btn" data-target="content-13">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 14: TOPOLOGICAL SORT -->
+        <section class="scene" id="scene-14" data-act="ACT II: AUTOGRAD">
+            <div class="scene-meta">
+                <span class="scene-act">ACT II: AUTOGRAD</span>
+                <span class="scene-number">SCENE 14 / 21</span>
+            </div>
+            <h1 class="scene-title">Topological Sort DFS Post-Order</h1>
+            <p class="scene-subtitle">Preventing gradient overwrites when variables branch across multiple computational paths.</p>
+            
+            <div class="massive-diagram">
+                <div class="topo-stage">
+                    <div class="huge-equation">y = x + x &nbsp;|&nbsp; L = y × 3</div>
+                    <div class="dag-canvas small" id="topo-dag"></div>
+                    <div class="topo-timeline" id="topo-timeline">
+                        <div class="tl-empty">Click an execution order below to test gradient accumulation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-topo-wrong">WRONG EXECUTION ORDER</button>
+                <button class="interaction-btn green-btn" id="btn-topo-right">TOPOLOGICAL DFS ORDER</button>
+                <button class="deep-dive-btn" data-target="content-14">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 15: 10,000 USERS -->
+        <section class="scene" id="scene-15" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 15 / 21</span>
+            </div>
+            <h1 class="scene-title">The C10K Problem: 10,000 Concurrent Users</h1>
+            <p class="scene-subtitle">10,000 simultaneous mobile devices open network sockets to your AI inference server.</p>
+            
+            <div class="massive-diagram">
+                <div class="canvas-wrapper">
+                    <canvas id="user-canvas-15"></canvas>
+                    <div class="server-node-box">
+                        <div class="icon">🖥️</div>
+                        <div class="label">SINGLE AI BACKEND SERVER</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-flood-users">▶ FLOOD WITH 10,000 CONCURRENT USERS</button>
+                <button class="deep-dive-btn" data-target="content-15">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 16: THREAD DISASTER -->
+        <section class="scene" id="scene-16" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 16 / 21</span>
+            </div>
+            <h1 class="scene-title">Disaster: One Thread Per Connection</h1>
+            <p class="scene-subtitle">10,000 OS Threads × 8MB stack space = 80 Gigabytes of RAM wasted on thread stacks alone!</p>
+            
+            <div class="massive-diagram">
+                <div class="thread-disaster-stage">
+                    <div class="dashboard">
+                        <div class="dash-stat">THREADS: <span id="d-th">0</span></div>
+                        <div class="dash-stat">STACK RAM: <span id="d-ram">1</span> GB</div>
+                        <div class="dash-stat">CTX SWITCHES: <span id="d-ctx">0</span> /sec</div>
+                    </div>
+
+                    <div id="thread-pool" class="thread-pool"></div>
+                    <div id="oom-alert-16" class="flash-banner red massive hidden">
+                        💀 KERNEL OOM-KILLER: PROCESS TERMINATED OUT OF MEMORY
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-spawn-threads">▶ SPAWN 10,000 THREADS</button>
+                <button class="deep-dive-btn" data-target="content-16">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 17: NON-BLOCKING -->
+        <section class="scene" id="scene-17" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 17 / 21</span>
+            </div>
+            <h1 class="scene-title">Non-Blocking Sockets (setblocking(False))</h1>
+            <p class="scene-subtitle">Telling the OS kernel never to stall your thread. Returns <code>EWOULDBLOCK</code> immediately if no data has arrived.</p>
+            
+            <div class="massive-diagram">
+                <div class="nb-socket-stage">
+                    <div class="socket-array">
+                        <div class="sock-card" id="sb-1">
+                            <div class="sock-title">Socket #1</div>
+                            <div class="sock-status">Empty (EWOULDBLOCK)</div>
+                        </div>
+                        <div class="sock-card" id="sb-2">
+                            <div class="sock-title">Socket #2</div>
+                            <div class="sock-status">Empty (EWOULDBLOCK)</div>
+                        </div>
+                        <div class="sock-card ready" id="sb-3">
+                            <div class="sock-title">Socket #3</div>
+                            <div class="sock-status">Data Ready! (1024B)</div>
+                        </div>
+                    </div>
+
+                    <div class="cpu-reader-box" id="nb-cpu">
+                        ⚡ CPU Core Thread (Non-Blocking mode)
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-nb-read">▶ CALL sock.setblocking(False)</button>
+                <button class="deep-dive-btn" data-target="content-17">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 18: BUSY WAIT -->
+        <section class="scene" id="scene-18" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 18 / 21</span>
+            </div>
+            <h1 class="scene-title">The Busy-Wait Spin-Loop Crisis</h1>
+            <p class="scene-subtitle">Polling 10,000 sockets in a loop from user space burns 100% CPU on empty checks.</p>
+            
+            <div class="massive-diagram">
+                <div class="busy-wait-stage">
+                    <div class="dashboard">
+                        <div class="dash-stat red">CPU UTILIZATION: <span id="bw-cpu-stat">0</span>%</div>
+                        <div class="dash-stat">SPIN LOOPS: <span id="bw-loop-stat">0</span> /sec</div>
+                    </div>
+
+                    <div class="socket-array wrap" id="bw-sockets"></div>
+
+                    <div class="cpu-reader-box fire" id="bw-cpu">
+                        🔥 CPU Thread Polling User-Space Loop
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn red-btn" id="btn-busy-wait">▶ RUN USER-SPACE BUSY-WAIT</button>
+                <button class="deep-dive-btn" data-target="content-18">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 19: EPOLL -->
+        <section class="scene" id="scene-19" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 19 / 21</span>
+            </div>
+            <h1 class="scene-title">OS Kernel Rescue: epoll / selector</h1>
+            <p class="scene-subtitle">The OS kernel puts the CPU thread to sleep and wakes it ONLY when hardware NIC interrupts deliver network bytes.</p>
+            
+            <div class="massive-diagram split-vertical">
+                <div class="arch-stack">
+                    <div class="layer-card layer-app" id="ep-app">
+                        <div class="layer-title">APPLICATION SPACE (Python Code)</div>
+                        <div class="layer-sub">Suspended in selector.select() system call</div>
+                    </div>
+                    
+                    <div class="sys-call-line" id="ep-sys-line">⬇️ SYSTEM CALL: epoll_wait(interest_list) ⬆️</div>
+                    
+                    <div class="layer-card layer-kernel" id="ep-kernel">
+                        <div class="layer-title">LINUX OS KERNEL</div>
+                        <div class="layer-sub">Red-Black Tree of Descriptors & Ready List</div>
+                    </div>
+
+                    <div class="layer-card layer-hw" id="ep-nic">
+                        <div class="layer-title">HARDWARE NETWORK INTERFACE CARD (NIC)</div>
+                        <div class="layer-sub">Hardware Electrical IRQ Interrupt</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn green-btn" id="btn-epoll-flow">▶ TRIGGER HARDWARE PACKET IRQ</button>
+                <button class="deep-dive-btn" data-target="content-19">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 20: EVENT LOOP -->
+        <section class="scene" id="scene-20" data-act="ACT III: ASYNC & EPOLL">
+            <div class="scene-meta">
+                <span class="scene-act">ACT III: ASYNC & EPOLL</span>
+                <span class="scene-number">SCENE 20 / 21</span>
+            </div>
+            <h1 class="scene-title">The Asynchronous Event Loop Engine</h1>
+            <p class="scene-subtitle">An infinite orchestra conductor cycling between Ready Queue, Timer Min-Heap, epoll_wait, and Coroutines.</p>
+            
+            <div class="massive-diagram">
+                <div class="loop-machine">
+                    <div class="lm-node" id="lm-ready">
+                        <div class="lm-icon">📋</div>
+                        <div class="lm-title">READY QUEUE</div>
+                    </div>
+                    <div class="lm-arrow">➔</div>
+                    <div class="lm-node" id="lm-timer">
+                        <div class="lm-icon">⏱️</div>
+                        <div class="lm-title">TIMER HEAP</div>
+                    </div>
+                    <div class="lm-arrow">➔</div>
+                    <div class="lm-node" id="lm-os">
+                        <div class="lm-icon">⚙️</div>
+                        <div class="lm-title">OS SELECTOR</div>
+                    </div>
+                    <div class="lm-arrow">➔</div>
+                    <div class="lm-node" id="lm-task">
+                        <div class="lm-icon">🔄</div>
+                        <div class="lm-title">COROUTINES</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn" id="btn-run-loop">▶ START EVENT LOOP CLOCKWORK</button>
+                <button class="deep-dive-btn" data-target="content-20">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+        <!-- SCENE 21: UNIFIED MACHINE -->
+        <section class="scene" id="scene-21" data-act="FINALE">
+            <div class="scene-meta">
+                <span class="scene-act">FINALE</span>
+                <span class="scene-number">SCENE 21 / 21</span>
+            </div>
+            <h1 class="scene-title">The Unified Symphony</h1>
+            <p class="scene-subtitle">The complete end-to-end pipeline connecting async network sockets to GPU tensor autograd operations.</p>
+            
+            <div class="massive-diagram">
+                <div class="unified-grid">
+                    <div class="u-node" id="u-phone">📱 1. Client Request</div>
+                    <div class="u-node" id="u-nic">🖧 2. NIC IRQ Interrupt</div>
+                    <div class="u-node" id="u-epoll">⚙️ 3. epoll_wait Wakeup</div>
+                    <div class="u-node" id="u-loop">⚡ 4. Async Event Loop</div>
+                    <div class="u-node" id="u-tensor">🔢 5. RawTensor Storage</div>
+                    <div class="u-node" id="u-autograd">📈 6. Autograd DAG Pass</div>
+                </div>
+                <div class="moving-packet" id="hero-packet-2">
+                    <span class="packet-label">Token Stream</span>
+                </div>
+            </div>
+
+            <div class="scene-actions">
+                <button class="interaction-btn green-btn" id="btn-run-unified">▶ DISPATCH FULL PIPELINE SYMPHONY</button>
+                <button class="deep-dive-btn" data-target="content-21">📖 READ DEEP DIVE</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- NAVIGATION BAR -->
+    <nav id="nav-bar">
+        <button id="btn-prev" class="nav-btn">&larr; PREVIOUS CONCEPT</button>
+        <div id="nav-progress">
+            <span class="nav-concept-title" id="nav-concept-title">Prologue: The Grand Architecture</span>
+            <span class="nav-num-tag">SCENE <span id="current-scene-num">1</span> / 21</span>
+        </div>
+        <button id="btn-next" class="nav-btn primary">NEXT CONCEPT &rarr;</button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
