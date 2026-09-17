@@ -245,7 +245,7 @@ body {
 
 .ref-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -256,38 +256,70 @@ body {
     padding: 1.5rem;
     box-shadow: var(--shadow-tactile);
     display: flex;
-    gap: 1.2rem;
+    flex-direction: column;
+    justify-content: space-between;
     transition: transform 0.2s;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .ref-card:hover {
     transform: translateY(-4px);
 }
 
-.ref-icon { font-size: 2.2rem; }
-
-.ref-content h4 {
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-bottom: 0.4rem;
+.ref-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    min-width: 0;
 }
 
-.ref-content p {
+.ref-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.ref-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--c-text-primary);
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.ref-desc {
     font-size: 0.85rem;
     color: var(--c-text-secondary);
-    line-height: 1.4;
-    margin-bottom: 0.8rem;
+    line-height: 1.45;
+    margin-bottom: 1.2rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.ref-file-wrap {
+    margin-top: auto;
+    width: 100%;
+    overflow: hidden;
 }
 
 .ref-file {
+    display: inline-block;
+    max-width: 100%;
     font-family: var(--font-mono);
     font-size: 0.7rem;
     font-weight: 700;
     background: var(--bg-card-subtle);
-    padding: 0.2rem 0.5rem;
+    color: var(--c-text-primary);
+    padding: 0.3rem 0.6rem;
     border-radius: 4px;
     border: 1px solid #CCC;
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 /* TRACK TABS BAR */
