@@ -759,29 +759,41 @@
             
             <div class="massive-diagram">
                 <div class="nb-socket-stage">
-                    <div class="socket-array">
+                    <div class="nb-telemetry-bar">
+                        <div class="nb-tel-item">⚡ Syscall Mode: <strong>O_NONBLOCK (setblocking(False))</strong></div>
+                        <div class="nb-tel-item">⏱️ Thread Stall Time: <strong id="nb-stall-time" style="color:#2E7D4E">0.00 ms (0% Blocked)</strong></div>
+                    </div>
+                    <div class="socket-array" id="nb-socket-array">
                         <div class="sock-card" id="sb-1">
-                            <div class="sock-title">Socket #1</div>
-                            <div class="sock-status">Empty (EWOULDBLOCK)</div>
+                            <div class="sock-title">Socket #1 (fd=3)</div>
+                            <div class="sock-status" id="sb-status-1">Empty (EWOULDBLOCK)</div>
                         </div>
                         <div class="sock-card" id="sb-2">
-                            <div class="sock-title">Socket #2</div>
-                            <div class="sock-status">Empty (EWOULDBLOCK)</div>
+                            <div class="sock-title">Socket #2 (fd=4)</div>
+                            <div class="sock-status" id="sb-status-2">Empty (EWOULDBLOCK)</div>
                         </div>
                         <div class="sock-card ready" id="sb-3">
-                            <div class="sock-title">Socket #3</div>
-                            <div class="sock-status">Data Ready! (1024B)</div>
+                            <div class="sock-title">Socket #3 (fd=5)</div>
+                            <div class="sock-status" id="sb-status-3">Data Ready! (1024B)</div>
                         </div>
                     </div>
 
                     <div class="cpu-reader-box" id="nb-cpu">
                         ⚡ CPU Core Thread (Non-Blocking mode)
                     </div>
+
+                    <div class="nb-kernel-log" id="nb-log">
+                        <div class="nb-log-head">💻 OS KERNEL SYSCALL LOG (NON-BLOCKING ENGINE)</div>
+                        <div class="nb-log-body" id="nb-log-body">
+                            <div class="nb-log-line muted">Click 'RUN NON-BLOCKING POLL LOOP' to trace kernel socket reads...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="scene-actions">
-                <button class="interaction-btn" id="btn-nb-read">▶ CALL sock.setblocking(False)</button>
+                <button class="interaction-btn" id="btn-nb-read">▶ RUN NON-BLOCKING POLL LOOP</button>
+                <button class="interaction-btn green-btn" id="btn-toggle-sock2">⚡ TOGGLE DATA ON SOCKET #2</button>
                 <button class="deep-dive-btn" data-target="content-17">📖 READ DEEP DIVE</button>
             </div>
         </section>

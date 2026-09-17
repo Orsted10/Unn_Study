@@ -794,7 +794,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             svg.innerHTML = '';
 
-            connections.forEach(([id1, id2]) => {
+            connections.forEach((conn) => {
+                const id1 = Array.isArray(conn) ? conn[0] : conn.from;
+                const id2 = Array.isArray(conn) ? conn[1] : conn.to;
+                const isDouble = (id1 === 't-x' && id2 === 't-y');
+
                 const el1 = document.getElementById(id1);
                 const el2 = document.getElementById(id2);
                 if (!el1 || !el2) return;
@@ -804,15 +808,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 const x2 = el2.offsetLeft + (el2.offsetWidth / 2);
                 const y2 = el2.offsetTop + (el2.offsetHeight / 2);
 
-                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', x1);
-                line.setAttribute('y1', y1);
-                line.setAttribute('x2', x2);
-                line.setAttribute('y2', y2);
-                line.setAttribute('stroke', '#1A1D20');
-                line.setAttribute('stroke-width', '3');
-                line.setAttribute('stroke-linecap', 'round');
-                svg.appendChild(line);
+                if (isDouble) {
+                    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const cx = (x1 + x2) / 2;
+
+                    path1.setAttribute('d', `M ${x1} ${y1} Q ${cx} ${y1 - 35} ${x2} ${y2}`);
+                    path1.setAttribute('stroke', '#1A1D20');
+                    path1.setAttribute('stroke-width', '3');
+                    path1.setAttribute('fill', 'none');
+
+                    path2.setAttribute('d', `M ${x1} ${y1} Q ${cx} ${y1 + 35} ${x2} ${y2}`);
+                    path2.setAttribute('stroke', '#1A1D20');
+                    path2.setAttribute('stroke-width', '3');
+                    path2.setAttribute('fill', 'none');
+
+                    svg.appendChild(path1);
+                    svg.appendChild(path2);
+                } else {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('stroke', '#1A1D20');
+                    line.setAttribute('stroke-width', '3');
+                    line.setAttribute('stroke-linecap', 'round');
+                    svg.appendChild(line);
+                }
             });
         }
 
@@ -1122,6 +1145,83 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
             };
+        }
+
+        // SCENE 17: Non-Blocking Sockets (setblocking(False))
+        if (sceneIdx === 17) {
+            const btnRead = document.getElementById('btn-nb-read');
+            const btnToggle = document.getElementById('btn-toggle-sock2');
+            const cpu = document.getElementById('nb-cpu');
+            const logBody = document.getElementById('nb-log-body');
+            const stallTime = document.getElementById('nb-stall-time');
+
+            let sock2HasData = false;
+
+            if (btnToggle) {
+                btnToggle.onclick = () => {
+                    sock2HasData = !sock2HasData;
+                    const sb2 = document.getElementById('sb-2');
+                    const st2 = document.getElementById('sb-status-2');
+                    if (sock2HasData) {
+                        if (sb2) sb2.classList.add('ready');
+                        if (st2) st2.innerText = 'Data Ready! (512B)';
+                        btnToggle.innerText = '⚡ CLEAR DATA ON SOCKET #2';
+                    } else {
+                        if (sb2) sb2.classList.remove('ready');
+                        if (st2) st2.innerText = 'Empty (EWOULDBLOCK)';
+                        btnToggle.innerText = '⚡ TOGGLE DATA ON SOCKET #2';
+                    }
+                };
+            }
+
+            if (btnRead) {
+                btnRead.onclick = () => {
+                    if (logBody) logBody.innerHTML = '';
+                    if (stallTime) {
+                        stallTime.innerText = '0.00 ms (0% Blocked)';
+                        stallTime.style.color = '#2E7D4E';
+                    }
+
+                    const tl = gsap.timeline();
+
+                    // Step 1: Poll Socket #1
+                    tl.to(cpu, {
+                        x: -220,
+                        duration: 0.5,
+                        onStart: () => {
+                            if (logBody) logBody.innerHTML += `<div class="nb-log-line warn">➡️ sys_recv(fd=3, MSG_DONTWAIT) ➔ -1 (EWOULDBLOCK) [0ms stall! Non-blocking!]</div>`;
+                        }
+                    })
+                    // Step 2: Poll Socket #2
+                    .to(cpu, {
+                        x: 0,
+                        duration: 0.5,
+                        onStart: () => {
+                            if (sock2HasData) {
+                                if (logBody) logBody.innerHTML += `<div class="nb-log-line success">✅ sys_recv(fd=4, MSG_DONTWAIT) ➔ 512 bytes read instantly!</div>`;
+                            } else {
+                                if (logBody) logBody.innerHTML += `<div class="nb-log-line warn">➡️ sys_recv(fd=4, MSG_DONTWAIT) ➔ -1 (EWOULDBLOCK) [0ms stall! Non-blocking!]</div>`;
+                            }
+                        }
+                    })
+                    // Step 3: Poll Socket #3
+                    .to(cpu, {
+                        x: 220,
+                        duration: 0.5,
+                        onStart: () => {
+                            if (logBody) logBody.innerHTML += `<div class="nb-log-line success">🎉 sys_recv(fd=5, MSG_DONTWAIT) ➔ 1024 bytes read successfully!</div>`;
+                        }
+                    })
+                    // Step 4: Return CPU to center
+                    .to(cpu, {
+                        x: 0,
+                        duration: 0.4,
+                        onComplete: () => {
+                            if (logBody) logBody.innerHTML += `<div class="nb-log-line success">🚀 NON-BLOCKING POLL COMPLETE: Sockets checked without stalling! CPU thread never blocked!</div>`;
+                        }
+                    });
+                };
+            }
         }
 
         // SCENE 18: Busy Wait Spin Loop
