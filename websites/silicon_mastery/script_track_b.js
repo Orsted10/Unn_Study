@@ -60,6 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btnPrev.disabled = (currentScene === 1);
         btnNext.disabled = (currentScene === totalScenes);
 
+        if (window.renderMathInElement) {
+            setTimeout(() => {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }, 50);
+        }
+
         const dots = document.querySelectorAll('.scene-dot');
         dots.forEach((d, idx) => {
             if (idx + 1 === currentScene) d.classList.add('active');
