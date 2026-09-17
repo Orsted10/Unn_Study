@@ -248,7 +248,30 @@ body {
 .green-btn { background: #10B981 !important; color: white !important; border-color: #34D399 !important; }
 .red-btn { background: #EF4444 !important; color: white !important; border-color: #F87171 !important; }
 
-.deep-dive-btn:hover { background: #374151; color: #FFFFFF; }
+.deep-dive-btn {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 800;
+    padding: 0.8rem 1.6rem;
+    border: 1px solid #4B5563 !important;
+    border-radius: var(--radius-sm);
+    background: #1F2937 !important;
+    color: #F3F4F6 !important;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px #000000 !important;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deep-dive-btn:hover {
+    background: #374151 !important;
+    color: #FFFFFF !important;
+    border-color: #8B5CF6 !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0px #000000 !important;
+}
 
 /* MODAL / DEEP DIVE DRAWER */
 #deep-dive-modal.hidden { display: none; }
