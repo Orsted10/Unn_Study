@@ -1711,21 +1711,36 @@ body {
 .modal-body code {
     font-family: var(--font-mono);
     background: #EAE3D5;
-    padding: 0.2rem 0.4rem;
+    color: #1A1D20;
+    padding: 0.2rem 0.45rem;
     border-radius: 4px;
     font-size: 0.9rem;
+    font-weight: 700;
+    border: 1px solid #C8BDAB;
 }
 
 .modal-body pre {
-    background: var(--c-dark);
-    color: #F8F9FA;
-    padding: 1.2rem;
+    background: #1E232A;
+    color: #FAF7F2;
+    padding: 1.2rem 1.5rem;
     border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
     overflow-x: auto;
-    margin: 1rem 0;
-    border: 1px solid #333;
+    margin: 1.2rem 0;
+    border: 2px solid #1A1D20;
+    box-shadow: 4px 4px 0px #1A1D20;
+}
+
+.modal-body pre code {
+    background: transparent !important;
+    color: #85C1E9 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-weight: 700 !important;
+    font-size: inherit !important;
 }
 
 .modal-callout {
