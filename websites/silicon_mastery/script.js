@@ -731,13 +731,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const btn = document.getElementById('btn-build-graph');
             const cv = document.getElementById('forward-dag');
 
-            btn.onclick = () => {
+            function buildForwardGraph() {
                 cv.innerHTML = '';
                 const nodes = [
-                    { id: 'n-a', l: 'a=5.0', x: 80, y: 60, op: 'Leaf', parents: 'None' },
-                    { id: 'n-b', l: 'b=3.0', x: 80, y: 180, op: 'Leaf', parents: 'None' },
+                    { id: 'n-a', l: 'a=5.0', x: 60, y: 30, op: 'Leaf', parents: 'None' },
+                    { id: 'n-b', l: 'b=3.0', x: 60, y: 210, op: 'Leaf', parents: 'None' },
                     { id: 'n-c', l: 'c=15.0', x: 380, y: 120, op: 'Mul (*)', parents: '(a, b)' },
-                    { id: 'n-loss', l: 'Loss=225', x: 620, y: 120, op: 'Pow (**2)', parents: '(c)' }
+                    { id: 'n-loss', l: 'Loss=225', x: 640, y: 120, op: 'Pow (**2)', parents: '(c)' }
                 ];
 
                 nodes.forEach(n => {
@@ -750,71 +750,118 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     el.onclick = () => {
                         const insp = document.getElementById('node-inspector');
-                        insp.classList.remove('hidden');
-                        document.getElementById('ni-title').innerText = `Node: ${n.l}`;
-                        document.getElementById('ni-data').innerText = `Data: ${n.l.split('=')[1]}`;
-                        document.getElementById('ni-parents').innerText = `Parents: ${n.parents}`;
-                        document.getElementById('ni-op').innerText = `Operation: ${n.op}`;
+                        if (insp) {
+                            insp.classList.remove('hidden');
+                            document.getElementById('ni-title').innerText = `Node: ${n.l}`;
+                            document.getElementById('ni-data').innerText = `Data: ${n.l.split('=')[1]}`;
+                            document.getElementById('ni-parents').innerText = `Parents: ${n.parents}`;
+                            document.getElementById('ni-op').innerText = `Operation: ${n.op}`;
+                        }
                     };
 
                     cv.appendChild(el);
                     gsap.from(el, { scale: 0, duration: 0.4, ease: "back.out" });
                 });
 
-                // Edges
+                // Render vector lines directly between exact node centers
                 setTimeout(() => {
-                    connectNodeCenters(cv, 'n-a', 'n-c');
-                    connectNodeCenters(cv, 'n-b', 'n-c');
-                    connectNodeCenters(cv, 'n-c', 'n-loss');
-                }, 400);
-            };
+                    drawDagEdges(cv, [
+                        ['n-a', 'n-c'],
+                        ['n-b', 'n-c'],
+                        ['n-c', 'n-loss']
+                    ]);
+                }, 100);
+            }
+
+            if (btn) btn.onclick = buildForwardGraph;
+            buildForwardGraph();
         }
 
-        // Helper for SVG/HTML Center-to-Center Edges
-        function connectNodeCenters(container, id1, id2) {
-            const el1 = document.getElementById(id1);
-            const el2 = document.getElementById(id2);
-            if (!el1 || !el2) return;
+        // SVG Vector Edge Line Renderer
+        function drawDagEdges(container, connections) {
+            let svg = container.querySelector('svg.dag-svg-canvas');
+            if (!svg) {
+                svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'dag-svg-canvas');
+                svg.style.position = 'absolute';
+                svg.style.top = '0';
+                svg.style.left = '0';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.pointerEvents = 'none';
+                svg.style.zIndex = '1';
+                container.prepend(svg);
+            }
+            svg.innerHTML = '';
 
-            const x1 = el1.offsetLeft + (el1.offsetWidth / 2);
-            const y1 = el1.offsetTop + (el1.offsetHeight / 2);
-            const x2 = el2.offsetLeft + (el2.offsetWidth / 2);
-            const y2 = el2.offsetTop + (el2.offsetHeight / 2);
+            connections.forEach(([id1, id2]) => {
+                const el1 = document.getElementById(id1);
+                const el2 = document.getElementById(id2);
+                if (!el1 || !el2) return;
 
-            createEdge(container, x1, y1, x2, y2);
-        }
+                const x1 = el1.offsetLeft + (el1.offsetWidth / 2);
+                const y1 = el1.offsetTop + (el1.offsetHeight / 2);
+                const x2 = el2.offsetLeft + (el2.offsetWidth / 2);
+                const y2 = el2.offsetTop + (el2.offsetHeight / 2);
 
-        function createEdge(container, x1, y1, x2, y2) {
-            const length = Math.hypot(x2 - x1, y2 - y1);
-            const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
-
-            const edge = document.createElement('div');
-            edge.className = 'math-edge';
-            edge.style.width = `${length}px`;
-            edge.style.left = `${x1}px`;
-            edge.style.top = `${y1}px`;
-            edge.style.transform = `rotate(${angle}deg)`;
-            container.appendChild(edge);
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', '#1A1D20');
+                line.setAttribute('stroke-width', '3');
+                line.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(line);
+            });
         }
 
         // SCENE 13: Backward Pass
         if (sceneIdx === 13) {
             const cv = document.getElementById('backward-dag');
-            if (cv.innerHTML === '') {
-                const fwd = document.getElementById('forward-dag');
-                cv.innerHTML = fwd.innerHTML || `<div class="math-node" style="left:620px;top:120px">Loss=225</div><div class="math-node" style="left:380px;top:120px">c=15.0</div><div class="math-node" style="left:80px;top:60px">a=5.0</div><div class="math-node" style="left:80px;top:180px">b=3.0</div>`;
+            function buildBackwardGraph() {
+                cv.innerHTML = '';
+                const nodes = [
+                    { id: 'nb-a', l: 'a=5.0\ngrad=30', x: 60, y: 30 },
+                    { id: 'nb-b', l: 'b=3.0\ngrad=50', x: 60, y: 210 },
+                    { id: 'nb-c', l: 'c=15.0\ngrad=2', x: 380, y: 120 },
+                    { id: 'nb-loss', l: 'Loss=225\ngrad=1.0', x: 640, y: 120 }
+                ];
+
+                nodes.forEach(n => {
+                    let el = document.createElement('div');
+                    el.className = 'math-node';
+                    el.id = n.id;
+                    el.innerText = n.l;
+                    el.style.left = n.x + 'px';
+                    el.style.top = n.y + 'px';
+                    cv.appendChild(el);
+                });
+
+                setTimeout(() => {
+                    drawDagEdges(cv, [
+                        ['nb-a', 'nb-c'],
+                        ['nb-b', 'nb-c'],
+                        ['nb-c', 'nb-loss']
+                    ]);
+                }, 100);
             }
 
-            document.getElementById('btn-run-backward').onclick = () => {
-                const nodes = cv.querySelectorAll('.math-node');
-                gsap.to(nodes, {
-                    borderColor: "#C93B3B",
-                    color: "#C93B3B",
-                    boxShadow: "0 0 15px rgba(201, 59, 59, 0.4)",
-                    duration: 0.6,
-                    stagger: { each: 0.5, from: "end" }
-                });
-            };
+            buildBackwardGraph();
+
+            const btn = document.getElementById('btn-run-backward');
+            if (btn) {
+                btn.onclick = () => {
+                    const nodes = cv.querySelectorAll('.math-node');
+                    gsap.to(nodes, {
+                        borderColor: "#C93B3B",
+                        color: "#C93B3B",
+                        boxShadow: "0 0 15px rgba(201, 59, 59, 0.4)",
+                        duration: 0.6,
+                        stagger: { each: 0.5, from: "end" }
+                    });
+                };
+            }
         }
 
         // SCENE 14: Topological Sort
