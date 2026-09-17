@@ -111,6 +111,25 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>Computer RAM and GPU VRAM are strictly 1-dimensional flat strips of byte addresses. A 2D or 3D tensor is an illusion created by Shape & Stride metadata wrapping a 1D storage allocation.</p>
             <h4>Linear Address Formula</h4>
             <div class="math-block">$$\text{Linear Address} = \text{Offset} + \sum_{d=0}^{k-1} (i_d \times \text{stride}[d])$$</div>
+            
+            <h4>Interactive Code Simulator</h4>
+            <div class="code-sim-box">
+                <div class="sim-header">⚡ Python Execution Simulator (<code>tensor_memory_and_strides.py</code>)</div>
+                <pre class="sim-code"><code>storage = Storage([10.0, 20.0, 30.0, 40.0, 50.0, 60.0])
+t = RawTensor(storage, shape=(2, 3), strides=(3, 1), offset=0)
+# Lookup coordinate (row, col):</code></pre>
+                <div class="sim-inputs">
+                    <label>Row Index ($i_0$): <input type="number" id="sim-row" value="1" min="0" max="1"></label>
+                    <label>Col Index ($i_1$): <input type="number" id="sim-col" value="2" min="0" max="2"></label>
+                    <button class="sim-run-btn" id="btn-run-sim-1">▶ RUN CODE</button>
+                </div>
+                <div class="sim-output" id="sim-out-1">
+                    <span class="sim-prompt">>>> t.get_linear_index((1, 2))</span><br>
+                    <span class="sim-res">Linear Address: offset(0) + (1 * 3) + (2 * 1) = <strong>5</strong></span><br>
+                    <span class="sim-val">RAM Memory Cell [0x14]: <strong>60.0</strong></span>
+                </div>
+            </div>
+
             <h4>Python Implementation from <code>tensor_memory_and_strides.py</code></h4>
             <pre><code>class Storage:
     def __init__(self, data: Sequence[float]) -> None:
@@ -272,6 +291,30 @@ def contiguous(self) -> RawTensor:
                             {left: '$', right: '$', display: false}
                         ]
                     });
+                }
+
+                // Interactive Simulator Wiring
+                const btnSim1 = document.getElementById('btn-run-sim-1');
+                if (btnSim1) {
+                    btnSim1.onclick = () => {
+                        const r = parseInt(document.getElementById('sim-row').value) || 0;
+                        const c = parseInt(document.getElementById('sim-col').value) || 0;
+                        const strides0 = 3, strides1 = 1;
+                        const offset = 0;
+                        const linearIdx = offset + (r * strides0) + (c * strides1);
+                        const ramData = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0];
+                        const val = ramData[linearIdx] !== undefined ? ramData[linearIdx] : 0.0;
+                        const hexAddr = "0x" + (linearIdx * 4).toString(16).padStart(2, '0').toUpperCase();
+
+                        const simOut = document.getElementById('sim-out-1');
+                        if (simOut) {
+                            simOut.innerHTML = `
+                                <span class="sim-prompt">>>> t.get_linear_index((${r}, ${c}))</span><br>
+                                <span class="sim-res">Linear Address: offset(${offset}) + (${r} * ${strides0}) + (${c} * ${strides1}) = <strong>${linearIdx}</strong></span><br>
+                                <span class="sim-val">RAM Memory Cell [${hexAddr}]: <strong>${val.toFixed(1)}</strong></span>
+                            `;
+                        }
+                    };
                 }
             }
         };
