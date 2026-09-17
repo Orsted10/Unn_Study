@@ -24,4 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // --- MODAL DRAWERS ---
+    const toolsModal = document.getElementById('tools-modal');
+    const pillarsModal = document.getElementById('pillars-modal');
+
+    document.getElementById('btn-open-tools').onclick = () => toolsModal.classList.remove('hidden');
+    document.getElementById('btn-open-5pillars').onclick = () => pillarsModal.classList.remove('hidden');
+
+    document.getElementById('close-tools-btn').onclick = () => toolsModal.classList.add('hidden');
+    document.getElementById('close-pillars-btn').onclick = () => pillarsModal.classList.add('hidden');
+
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+        backdrop.onclick = () => {
+            toolsModal.classList.add('hidden');
+            pillarsModal.classList.add('hidden');
+        };
+    });
+
 });

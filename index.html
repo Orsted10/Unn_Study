@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silicon Mastery: Systems & AI Engineering Curriculum</title>
+    <title>Silicon Mastery: Tri-Track Systems & AI Engineering Masterclass</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,16 +19,21 @@
         <div class="hub-brand">
             <span class="brand-logo">⚡</span>
             <div>
-                <h1 class="brand-title">SILICON MASTERY</h1>
-                <p class="brand-sub">The Unbroken Engineering Narrative: Sockets, Tensors & Systems</p>
+                <h1 class="brand-title">SILICON MASTERY PLATFORM</h1>
+                <p class="brand-sub">Tri-Track Curriculum • Principal AI & Distributed Backend Architect</p>
             </div>
         </div>
 
+        <div class="hub-nav-links">
+            <button class="nav-link-btn" id="btn-open-tools">🧰 100+ Tool Matrix</button>
+            <button class="nav-link-btn" id="btn-open-5pillars">🏛️ 5-Pillar Standard</button>
+        </div>
+
         <div class="hub-user-badge">
-            <span class="user-avatar">👤</span>
+            <span class="user-avatar">🎓</span>
             <div class="user-info">
-                <span class="user-name">Student: Unnati</span>
-                <span class="user-status">Track C: Active</span>
+                <span class="user-name">Unnati's Masterclass</span>
+                <span class="user-status">Module 01: Completed</span>
             </div>
         </div>
     </header>
@@ -39,24 +44,74 @@
         <!-- HERO BANNER -->
         <section class="hero-banner">
             <div class="hero-content">
-                <div class="hero-tag">PARALLEL TRACK LEARNING CURRICULUM</div>
-                <h2 class="hero-heading">Master Systems & AI Engineering From First Principles</h2>
+                <div class="hero-tag">THE UNBROKEN TRI-TRACK ROADMAP</div>
+                <h2 class="hero-heading">From Silicon Hardware to Scaled AI Platforms</h2>
                 <p class="hero-description">
-                    Code looks arbitrary until you understand the crisis that forced humans to invent it. Experience engineering problems in real-time simulations, manipulate hardware abstractions, and understand systems at the silicon level.
+                    "We do not learn by scratching the surface of toy libraries. We learn by building the engines from scratch, inspecting every byte in memory, mastering the OS kernel, and deriving the calculus of artificial intelligence."
                 </p>
 
                 <div class="hero-stats">
+                    <div class="h-stat">
+                        <span class="h-num">15</span>
+                        <span class="h-label">MASTER MODULES</span>
+                    </div>
                     <div class="h-stat">
                         <span class="h-num">3</span>
                         <span class="h-label">PARALLEL TRACKS</span>
                     </div>
                     <div class="h-stat">
-                        <span class="h-num">7</span>
-                        <span class="h-label">ENGINEERING CHAPTERS</span>
+                        <span class="h-num">300+</span>
+                        <span class="h-label">GRANULAR PHASES</span>
                     </div>
                     <div class="h-stat">
-                        <span class="h-num">21</span>
-                        <span class="h-label">INTERACTIVE LAB SCENES</span>
+                        <span class="h-num">100+</span>
+                        <span class="h-label">ENTERPRISE TOOLS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MASTER REFERENCE DOCUMENTS SECTION -->
+        <section class="ref-docs-section">
+            <div class="section-title-wrap">
+                <h3 class="section-title">📖 Essential Master Companion References</h3>
+                <span class="section-sub">Foundational Knowledge Suite & Encyclopedias</span>
+            </div>
+
+            <div class="ref-grid">
+                <div class="ref-card">
+                    <div class="ref-icon">📚</div>
+                    <div class="ref-content">
+                        <h4>The Master Glossary & 360° Encyclopedia</h4>
+                        <p>34+ comprehensive terms (Weights, Bias, Logits, Strides, Epoll, GIL, Sockets, Backpropagation, etc.) with definitions, analogies, formulas, and failure modes.</p>
+                        <span class="ref-file">GLOSSARY_OF_TERMS.md</span>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <div class="ref-icon">🌊</div>
+                    <div class="ref-content">
+                        <h4>The Master Story & Guided Flow</h4>
+                        <p>The unbroken narrative journey connecting the cat image crisis, hardware RAM realities, zero-copy strides, autograd tapes, and non-blocking event loops.</p>
+                        <span class="ref-file">00_THE_MASTER_FLOW_AND_STORY.md</span>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <div class="ref-icon">⚙️</div>
+                    <div class="ref-content">
+                        <h4>Backend & OS Foundations</h4>
+                        <p>Hardware latency scale, Protection Rings (Ring 0 vs 3), File Descriptors, Threads vs Coroutines, CPython GIL, TCP 3-way handshake, Encodings, Min-Heaps.</p>
+                        <span class="ref-file">00_FOUNDATIONS_NETWORK_OS.md</span>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <div class="ref-icon">📐</div>
+                    <div class="ref-content">
+                        <h4>AI Math & Calculus Foundations</h4>
+                        <p>IEEE 754 Floating-Point, Vector Dot Products, Matrix Matmul derivations, First-principles Power Rule proof, Bicycle Chain Rule, Non-Linearity & XOR proof.</p>
+                        <span class="ref-file">00_FOUNDATIONS_MATH_MEMORY.md</span>
                     </div>
                 </div>
             </div>
@@ -64,156 +119,378 @@
 
         <!-- TRACK FILTER TABS -->
         <section class="track-tabs-bar">
-            <div class="tabs-label">FILTER TRACKS:</div>
-            <button class="track-tab active" data-filter="all">ALL TRACKS</button>
-            <button class="track-tab track-c-tab" data-filter="track-c">TRACK C: UNIFIED FOUNDATIONS</button>
-            <button class="track-tab track-a-tab" data-filter="track-a">TRACK A: BACKEND & INFRA</button>
-            <button class="track-tab track-b-tab" data-filter="track-b">TRACK B: AI/ML & TENSORS</button>
+            <div class="tabs-label">FILTER CURRICULUM:</div>
+            <button class="track-tab active" data-filter="all">ALL 15 MODULES</button>
+            <button class="track-tab track-c-tab" data-filter="track-c">TRACK C: UNIFIED STORY & FOUNDATIONS</button>
+            <button class="track-tab track-a-tab" data-filter="track-a">TRACK A: DISTRIBUTED BACKEND</button>
+            <button class="track-tab track-b-tab" data-filter="track-b">TRACK B: DEEP LEARNING & AI</button>
         </section>
 
-        <!-- CHAPTERS GRID -->
+        <!-- 15 MODULES CATALOG GRID -->
         <section class="chapters-grid">
 
-            <!-- CHAPTER 0 (ACTIVE - TRACK C) -->
+            <!-- MODULE 01 (ACTIVE / CHAPTER 0) -->
             <article class="chapter-card active-chapter" data-track="track-c">
                 <div class="card-header">
                     <div class="track-badge track-c">TRACK C • UNIFIED FOUNDATION</div>
-                    <div class="status-pill active">INTERACTIVE READY</div>
+                    <div class="status-pill active">🚀 COMPLETED & VERIFIED</div>
                 </div>
 
-                <div class="chapter-num">CHAPTER 00</div>
-                <h3 class="chapter-title">The Grand Narrative: From Zero to Silicon Mastery</h3>
+                <div class="chapter-num">MODULE 01</div>
+                <h3 class="chapter-title">The Engine Room — Async Systems, Tensor Internals & Silicon Realities</h3>
                 <p class="chapter-summary">
-                    Connect network sockets to GPU tensor autograd operations. Discover why PyTorch banned Python lists, how Strides enable Zero-Copy Transpose, and how Linux <code>epoll</code> handles 10,000 users.
+                    Connect network sockets to GPU tensor autograd operations. Master Linux <code>epoll</code>, <code>asyncio</code> custom loops, raw C float contiguous RAM, zero-copy strides, and reverse-mode autograd.
                 </p>
 
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>SCENES:</span> <strong>21 Interactive Scenes</strong></div>
-                    <div class="meta-item"><span>TOPICS:</span> <strong>Strides, Autograd, epoll</strong></div>
-                    <div class="meta-item"><span>EST. TIME:</span> <strong>45 Mins</strong></div>
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Linux epoll multiplexing, uvloop, custom async HTTP/1.1 server, GIL deep-dive.</div>
+                    <div class="tb-item"><strong>Track B:</strong> Tensor memory layouts, CUDA GPU model, dynamic autograd DAG, vector calculus.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Cat Image Crisis, packet-to-tensor pipeline, hardware latency human scale.</div>
                 </div>
 
                 <div class="card-footer">
                     <a href="websites/silicon_mastery/index.html" class="launch-btn primary">
-                        ▶ LAUNCH INTERACTIVE PRESENTATION
+                        ▶ LAUNCH INTERACTIVE PRESENTATION (CHAPTER 0)
                     </a>
                 </div>
             </article>
 
-            <!-- TRACK A: CHAPTER 1 -->
+            <!-- MODULE 02 -->
             <article class="chapter-card" data-track="track-a">
                 <div class="card-header">
-                    <div class="track-badge track-a">TRACK A • BACKEND & INFRA</div>
+                    <div class="track-badge track-a">TRACK A • BACKEND</div>
+                    <div class="status-pill ready">⏳ READY TO BUILD</div>
+                </div>
+
+                <div class="chapter-num">MODULE 02</div>
+                <h3 class="chapter-title">Relational Mastery & Neural Foundations from Scratch</h3>
+                <p class="chapter-summary">
+                    PostgreSQL storage engine (8KB Pages, MVCC, WAL, B-Tree/GIN/BRIN indexing) side-by-side with Linear Layers, Cross-Entropy Loss, and AdamW optimizers from scratch.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> 8KB Pages, MVCC tuples, WAL logging, B-Tree/GIN indexes, Cost planner, Async ORM.</div>
+                    <div class="tb-item"><strong>Track B:</strong> ReLU/GeLU/Swish activations, LogSumExp Cross-Entropy, SGD/RMSprop/AdamW, Grad norm clipping.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Tale of the Crashing Ledger & Blown Neuron, 8KB Dirty Pages vs SafeTensors checkpoints.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 NEXT UP FOR DEVELOPMENT</button>
+                </div>
+            </article>
+
+            <!-- MODULE 03 -->
+            <article class="chapter-card" data-track="track-b">
+                <div class="card-header">
+                    <div class="track-badge track-b">TRACK B • AI/ML</div>
                     <div class="status-pill upcoming">UPCOMING PARALLEL</div>
                 </div>
 
-                <div class="chapter-num">CHAPTER 01 (TRACK A)</div>
-                <h3 class="chapter-title">Async I/O Engine & Custom Event Loops</h3>
+                <div class="chapter-num">MODULE 03</div>
+                <h3 class="chapter-title">In-Memory Caching & Deep Vision Architectures</h3>
                 <p class="chapter-summary">
-                    Deep dive into building a production async event loop from scratch in C and Python using <code>epoll</code>, <code>kqueue</code>, min-heap timers, and non-blocking sockets.
+                    Redis single-threaded event loop, RESP protocol, Redlock, Lua scripts, and XFetch alongside 2D Convolutions (`im2col`), BatchNorm, ResNets, and Vision Transformers (ViT).
                 </p>
 
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>PREREQUISITE:</span> <strong>Chapter 0</strong></div>
-                    <div class="meta-item"><span>TOPICS:</span> <strong>Raw Sockets, HTTP/1.1 Parser</strong></div>
-                    <div class="meta-item"><span>PARALLEL:</span> <strong>Runs with Track B Ch 1</strong></div>
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Redis Sentinel/Cluster, Redlock, Rate Limiters, XFetch Thundering Herd protection.</div>
+                    <div class="tb-item"><strong>Track B:</strong> Conv2d im2col math, BatchNorm/LayerNorm gradients, ResNet skip connections, ViT patch self-attention.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Flash Mob Crisis, 100,000 image prompt caching, Redis to ViT feature map pipeline.</div>
                 </div>
 
                 <div class="card-footer">
-                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS READY (COMING SOON)</button>
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
                 </div>
             </article>
 
-            <!-- TRACK B: CHAPTER 1 -->
-            <article class="chapter-card" data-track="track-b">
+            <!-- MODULE 04 -->
+            <article class="chapter-card" data-track="track-a">
                 <div class="card-header">
-                    <div class="track-badge track-b">TRACK B • AI/ML & TENSORS</div>
+                    <div class="track-badge track-a">TRACK A • BACKEND</div>
                     <div class="status-pill upcoming">UPCOMING PARALLEL</div>
                 </div>
 
-                <div class="chapter-num">CHAPTER 01 (TRACK B)</div>
-                <h3 class="chapter-title">Tensors from Scratch & Contiguous Memory Strides</h3>
+                <div class="chapter-num">MODULE 04</div>
+                <h3 class="chapter-title">Asynchronous Event Streaming & Sequence Modeling</h3>
                 <p class="chapter-summary">
-                    Construct a standalone multi-dimensional Tensor library in C/Python. Implement shape, strides, slicing, broadcasting, and zero-copy view transformations.
+                    Apache Kafka KRaft brokers, commit log segment files, consumer groups, Exactly-Once Semantics (EOS) paired with RNNs, LSTMs, GRUs, and Seq2Seq Bahdanau Attention.
                 </p>
 
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>PREREQUISITE:</span> <strong>Chapter 0</strong></div>
-                    <div class="meta-item"><span>TOPICS:</span> <strong>C Pointers, Memory Alignment</strong></div>
-                    <div class="meta-item"><span>PARALLEL:</span> <strong>Runs with Track A Ch 1</strong></div>
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Kafka KRaft brokers, consumer group rebalancing, EOS two-phase commits, Avro schemas.</div>
+                    <div class="tb-item"><strong>Track B:</strong> LSTM forget/input/output gates, BPTT, GRUs, Seq2Seq Bahdanau/Luong attention.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Stream of Time: Kafka log events vs Recurrent sequence hidden states.</div>
                 </div>
 
                 <div class="card-footer">
-                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS READY (COMING SOON)</button>
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
                 </div>
             </article>
 
-            <!-- TRACK A: CHAPTER 2 -->
-            <article class="chapter-card" data-track="track-a">
-                <div class="card-header">
-                    <div class="track-badge track-a">TRACK A • BACKEND & INFRA</div>
-                    <div class="status-pill upcoming">FUTURE MODULE</div>
-                </div>
-
-                <div class="chapter-num">CHAPTER 02 (TRACK A)</div>
-                <h3 class="chapter-title">Distributed Socket Cluster & Zero-Copy Protocol Buffers</h3>
-                <p class="chapter-summary">
-                    Scaling beyond a single server: building distributed RPC mechanisms, custom binary protocols, shared memory IPC, and zero-copy packet deserialization.
-                </p>
-
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>TOPICS:</span> <strong>Binary SerDe, Shared Memory</strong></div>
-                    <div class="meta-item"><span>EST. TIME:</span> <strong>60 Mins</strong></div>
-                </div>
-
-                <div class="card-footer">
-                    <button class="launch-btn disabled" disabled>🔒 LOCKED</button>
-                </div>
-            </article>
-
-            <!-- TRACK B: CHAPTER 2 -->
+            <!-- MODULE 05 -->
             <article class="chapter-card" data-track="track-b">
                 <div class="card-header">
-                    <div class="track-badge track-b">TRACK B • AI/ML & TENSORS</div>
-                    <div class="status-pill upcoming">FUTURE MODULE</div>
+                    <div class="track-badge track-b">TRACK B • AI/ML</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
                 </div>
 
-                <div class="chapter-num">CHAPTER 02 (TRACK B)</div>
-                <h3 class="chapter-title">Reverse-Mode Autograd Engine & Topological DAGs</h3>
+                <div class="chapter-num">MODULE 05</div>
+                <h3 class="chapter-title">High-Performance RPC & The Transformer from Scratch</h3>
                 <p class="chapter-summary">
-                    Build a complete automatic differentiation engine. Support arbitrary expression graphs, higher-order derivatives, and backpropagation over neural network layers.
+                    Protobuf v3 wire encoding, gRPC HTTP/2 multiplexing, HPACK headers alongside Scaled Dot-Product Attention, RoPE embeddings, RMSNorm, SwiGLU, KV Cache, and full GPT decoder.
                 </p>
 
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>TOPICS:</span> <strong>DAG Graphs, Chain Rule</strong></div>
-                    <div class="meta-item"><span>EST. TIME:</span> <strong>60 Mins</strong></div>
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Protobuf Varints & ZigZag encoding, gRPC HTTP/2 streams, HPACK compression, Circuit Breakers.</div>
+                    <div class="tb-item"><strong>Track B:</strong> Multi-Head Attention (MHA), Rotary Embeddings (RoPE), SwiGLU, KV Cache O(N) autoregressive decoding.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Death of Text and Rise of Binary Vectors: gRPC streaming tokens directly into Transformer KV Caches.</div>
                 </div>
 
                 <div class="card-footer">
-                    <button class="launch-btn disabled" disabled>🔒 LOCKED</button>
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
                 </div>
             </article>
 
-            <!-- TRACK C: CHAPTER 0.5 -->
+            <!-- MODULE 06 -->
             <article class="chapter-card" data-track="track-c">
                 <div class="card-header">
-                    <div class="track-badge track-c">TRACK C • UNIFIED FOUNDATION</div>
-                    <div class="status-pill upcoming">SPECIAL CAPSTONE</div>
+                    <div class="track-badge track-c">TRACK C • UNIFIED</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
                 </div>
 
-                <div class="chapter-num">CHAPTER 0.5 (TRACK C)</div>
-                <h3 class="chapter-title">Hardware-Software Codesign & Compute Acceleration</h3>
+                <div class="chapter-num">MODULE 06</div>
+                <h3 class="chapter-title">Distributed Databases & LLM Pretraining at Scale</h3>
                 <p class="chapter-summary">
-                    Connecting the GPU kernel hardware execution model with Linux IO kernel async queues. Unified memory architectures and cache coherence.
+                    CAP/PACELC theorems, Consistent Hashing, Raft Consensus algorithm from scratch, HNSW vector search (`pgvector`/Qdrant) paired with Byte-Pair Encoding (BPE), PyTorch DDP, and DeepSpeed ZeRO-1/2/3.
                 </p>
 
-                <div class="chapter-meta">
-                    <div class="meta-item"><span>TOPICS:</span> <strong>GPU Memory, NVLink, SIMD</strong></div>
-                    <div class="meta-item"><span>EST. TIME:</span> <strong>50 Mins</strong></div>
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Raft algorithm from scratch (Leader election, log replication), Consistent Hashing, HNSW vector graphs.</div>
+                    <div class="tb-item"><strong>Track B:</strong> BPE Tokenizer from scratch, PyTorch DDP Ring All-Reduce, DeepSpeed ZeRO-1/2/3 parameter sharding.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Scale Barrier: Raft quorum replication vs PyTorch FSDP InfiniBand gradient gathering.</div>
                 </div>
 
                 <div class="card-footer">
-                    <button class="launch-btn disabled" disabled>🔒 LOCKED</button>
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 07 -->
+            <article class="chapter-card" data-track="track-a">
+                <div class="card-header">
+                    <div class="track-badge track-a">TRACK A • BACKEND</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 07</div>
+                <h3 class="chapter-title">Enterprise Gateways & LLM Post-Training (SFT, LoRA, RLHF, DPO)</h3>
+                <p class="chapter-summary">
+                    Envoy/Kong reverse proxies, OAuth 2.0 PKCE, OIDC, asymmetric RS256 JWTs, OPA Rego policies alongside LoRA mathematics ($W + \frac{\alpha}{r}BA$), custom LoRA modules, SFT, RLHF, and DPO alignment.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Envoy/Kong gateway routing, OAuth2/OIDC, RS256 JWT validation, OPA RBAC/ABAC authorization.</div>
+                    <div class="tb-item"><strong>Track B:</strong> LoRA low-rank decomposition from scratch, SFT prompt templates, DPO preference optimization, INT8/INT4 AWQ.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Secure Fine-Tuning Gateway: Verifying JWT claims while hot-swapping user LoRA adapters in VRAM.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 08 -->
+            <article class="chapter-card" data-track="track-b">
+                <div class="card-header">
+                    <div class="track-badge track-b">TRACK B • AI/ML</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 08</div>
+                <h3 class="chapter-title">Search Engines & Enterprise Hybrid RAG Systems</h3>
+                <p class="chapter-summary">
+                    Elasticsearch inverted index, Lucene segment merges, BM25 scoring formula, RFC 6455 WebSockets alongside Bi-Encoder dense retrieval, Hybrid RRF, Cross-Encoder re-ranking, GraphRAG (Neo4j), and RAGAS metrics.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Lucene inverted index, BM25 term frequency saturation, horizontal WebSocket Redis backplane.</div>
+                    <div class="tb-item"><strong>Track B:</strong> Sentence-Transformers Bi-Encoders, Hybrid RRF fusion, BGE Cross-Encoder reranking, GraphRAG, RAGAS.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Library of Babel: Combining BM25 lexical precision with vector semantic search.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 09 -->
+            <article class="chapter-card" data-track="track-a">
+                <div class="card-header">
+                    <div class="track-badge track-a">TRACK A • BACKEND</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 09</div>
+                <h3 class="chapter-title">Container Internals & High-Throughput AI Inference Engines</h3>
+                <p class="chapter-summary">
+                    Linux namespaces, cgroups v2, OverlayFS, building a custom container runtime from scratch alongside PagedAttention, vLLM virtual memory KV cache, continuous batching, and NVIDIA Triton serving.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Linux namespaces (`unshare`, `pivot_root`), cgroups v2 resource limits, OverlayFS layer isolation.</div>
+                    <div class="tb-item"><strong>Track B:</strong> PagedAttention page tables, vLLM continuous batching, NVIDIA Triton dynamic batching, SSE streaming.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Virtual Memory Parallel: How OS virtual page tables inspired PagedAttention in vLLM.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 10 -->
+            <article class="chapter-card" data-track="track-b">
+                <div class="card-header">
+                    <div class="track-badge track-b">TRACK B • AI/ML</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 10</div>
+                <h3 class="chapter-title">Kubernetes Cluster Architecture & Autonomous AI Agents</h3>
+                <p class="chapter-summary">
+                    Kubernetes control plane (`etcd`, `kubelet`, CNI networking, HPA autoscaling) paired with ReAct loops from scratch, Pydantic tool protocols, LangGraph cyclic state graphs, and episodic agent memory.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> K8s control plane (`kube-apiserver`, `etcd`), Pod networking CNI, Custom HPA queue autoscaling.</div>
+                    <div class="tb-item"><strong>Track B:</strong> ReAct loops from scratch, LangGraph state graphs, Pydantic tool execution, episodic vector memory.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Autonomous Orchestration: K8s container pods vs LangGraph agent execution pods.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 11 -->
+            <article class="chapter-card" data-track="track-c">
+                <div class="card-header">
+                    <div class="track-badge track-c">TRACK C • UNIFIED</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 11</div>
+                <h3 class="chapter-title">CI/CD GitOps & Scaled MLOps Pipelines</h3>
+                <p class="chapter-summary">
+                    GitHub Actions, ArgoCD declarative GitOps, Canary deployments alongside MLflow experiment tracking, DVC data versioning, Feast online/offline feature store, and Evidently AI drift detection.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> GitHub Actions workflows, ArgoCD cluster reconciliation, Canary Blue-Green deployments.</div>
+                    <div class="tb-item"><strong>Track B:</strong> MLflow experiment tracking, DVC S3 data pipelines, Feast Redis feature store, Evidently AI data drift.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Reproducibility Contract: Code, data, model weights, and infra versioned declaratively.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 12 -->
+            <article class="chapter-card" data-track="track-a">
+                <div class="card-header">
+                    <div class="track-badge track-a">TRACK A • BACKEND</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 12</div>
+                <h3 class="chapter-title">Production Observability (SRE) & Multimodal AI Systems</h3>
+                <p class="chapter-summary">
+                    Prometheus time-series metrics, OpenTelemetry distributed tracing, Jaeger span propagation paired with CLIP contrastive loss, LLaVA vision projection adapters, DDPM Diffusion models, and Whisper speech models.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Prometheus PromQL, OpenTelemetry W3C traceparent context propagation, Jaeger spans, SLO error budgets.</div>
+                    <div class="tb-item"><strong>Track B:</strong> CLIP InfoNCE loss, LLaVA VLM projection adapters, DDPM Gaussian UNet denoiser, Whisper speech model.</div>
+                    <div class="tb-item"><strong>Track C:</strong> The Transparent Machine: Tracing user voice prompts through Whisper, LLM, and Stable Diffusion via OpenTelemetry.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 13 -->
+            <article class="chapter-card" data-track="track-b">
+                <div class="card-header">
+                    <div class="track-badge track-b">TRACK B • AI/ML</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 13</div>
+                <h3 class="chapter-title">Distributed Consistency & LLM Evaluation / Safety Engineering</h3>
+                <p class="chapter-summary">
+                    Two-Phase Commit (2PC), Saga Pattern (Choreography/Orchestration), Transactional Outbox pattern with Debezium CDC paired with LLM-as-a-Judge, Adversarial Red-Teaming, NeMo Guardrails, and PII redaction.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> 2PC transaction recovery, Saga compensation loops, Outbox pattern with Debezium CDC.</div>
+                    <div class="tb-item"><strong>Track B:</strong> LLM-as-a-Judge G-Eval framework, Adversarial red-teaming, NeMo Guardrails, PII redaction.</div>
+                    <div class="tb-item"><strong>Track C:</strong> Trust and Verification: Database ACID guarantees vs AI safety & alignment guardrails.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 14 -->
+            <article class="chapter-card" data-track="track-c">
+                <div class="card-header">
+                    <div class="track-badge track-c">TRACK C • UNIFIED</div>
+                    <div class="status-pill upcoming">UPCOMING PARALLEL</div>
+                </div>
+
+                <div class="chapter-num">MODULE 14</div>
+                <h3 class="chapter-title">Infrastructure as Code (Terraform) & Edge AI / Optimization</h3>
+                <p class="chapter-summary">
+                    Terraform HCL resource graphs, VPC subnets, EKS/RDS automated modules alongside magnitude pruning, Knowledge Distillation (Teacher-Student KL divergence), ONNX/TensorRT, and WebGPU browser execution.
+                </p>
+
+                <div class="track-breakdown">
+                    <div class="tb-item"><strong>Track A:</strong> Terraform HCL, state locking with DynamoDB, VPC subnets, EKS & Multi-AZ RDS modules.</div>
+                    <div class="tb-item"><strong>Track B:</strong> Network Pruning, Teacher-Student Knowledge Distillation, TensorRT export, WebGPU browser runtime.</div>
+                    <div class="tb-item"><strong>Track C:</strong> From Cloud to Edge: Provisioning EKS GPU clusters while distilling models for edge silicon.</div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 SYLLABUS LOCKED</button>
+                </div>
+            </article>
+
+            <!-- MODULE 15: CAPSTONE -->
+            <article class="chapter-card capstone-card" data-track="track-c">
+                <div class="card-header">
+                    <div class="track-badge track-c">CAPSTONE • UNIFIED MASTERPIECE</div>
+                    <div class="status-pill upcoming">GRAND FINALE</div>
+                </div>
+
+                <div class="chapter-num">MODULE 15</div>
+                <h3 class="chapter-title">Scaled Multi-Tenant Enterprise AI Platform</h3>
+                <p class="chapter-summary">
+                    An end-to-end, industrial-scale platform combining every single architectural concept mastered across Modules 1 through 14:
+                </p>
+
+                <ul class="capstone-bullets">
+                    <li>⚡ <strong>Async Microservices:</strong> FastAPI / uvloop with PostgreSQL Row-Level Security & OAuth2/RS256 JWT.</li>
+                    <li>📡 <strong>Event Streaming:</strong> Kafka event bus with Exactly-Once Semantics & Outbox pattern.</li>
+                    <li>🔥 <strong>Inference Engine:</strong> vLLM GPU cluster with PagedAttention & dynamic LoRA hot-swapping.</li>
+                    <li>🔍 <strong>Hybrid RAG:</strong> Qdrant vector database + BM25 search + Cross-Encoder reranking.</li>
+                    <li>🤖 <strong>Autonomous Agents:</strong> LangGraph multi-agent teams with Human-in-the-loop checkpoints.</li>
+                    <li>☸️ <strong>Orchestration & SRE:</strong> Kubernetes deployment, Terraform IaC, ArgoCD GitOps, and OpenTelemetry spans.</li>
+                </ul>
+
+                <div class="card-footer">
+                    <button class="launch-btn disabled" disabled>🔒 CAPSTONE LOCKED (COMPLETE MODULES 1-14 FIRST)</button>
                 </div>
             </article>
 
@@ -221,9 +498,83 @@
 
     </main>
 
+    <!-- MODAL DRAWER: 100+ TOOL ECOSYSTEM -->
+    <div id="tools-modal" class="hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-drawer">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-act-tag">ENTERPRISE ECOSYSTEM</span>
+                    <h2>100+ Tools & Technologies Mastered</h2>
+                </div>
+                <button class="close-modal-btn" id="close-tools-btn">&times; CLOSE</button>
+            </div>
+            <div class="modal-body">
+                <table class="tools-table">
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Tools & Technologies</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Core Runtimes</strong></td><td>Python 3.12/3.13 (Free-threaded), C Extensions, PyTorch 2.x, TensorFlow 2.x, SQL, Bash</td></tr>
+                        <tr><td><strong>Databases & Vectors</strong></td><td>PostgreSQL 16, pgvector, Redis Stack, SQLite, Qdrant, Milvus, ChromaDB, Cassandra, Neo4j, DuckDB</td></tr>
+                        <tr><td><strong>Networking</strong></td><td>BSD Sockets, TCP/IP, HTTP/1.1, HTTP/2, WebSockets (RFC 6455), SSE, gRPC, Protobuf v3, mTLS</td></tr>
+                        <tr><td><strong>Event Streaming</strong></td><td>Apache Kafka, RabbitMQ, Redis Pub/Sub, Debezium (CDC)</td></tr>
+                        <tr><td><strong>Containers & K8s</strong></td><td>Docker, containerd, Linux Namespaces, Cgroups v2, OverlayFS, Kubernetes, Helm, Terraform</td></tr>
+                        <tr><td><strong>Distributed Training</strong></td><td>PyTorch DDP, PyTorch FSDP, DeepSpeed (ZeRO-1/2/3), Hugging Face Accelerate, FlashAttention 2</td></tr>
+                        <tr><td><strong>Inference Serving</strong></td><td>vLLM, NVIDIA Triton Inference Server, TensorRT-LLM, TorchScript, ONNX Runtime, GGUF/llama.cpp</td></tr>
+                        <tr><td><strong>GenAI & Agents</strong></td><td>LangGraph, LlamaIndex, BGE Reranker, Sentence-Transformers, LiteLLM, NeMo Guardrails</td></tr>
+                        <tr><td><strong>MLOps & Quality</strong></td><td>MLflow, DVC, Feast Feature Store, Weights & Biases, Evidently AI, RAGAS, DeepEval, TruLens</td></tr>
+                        <tr><td><strong>Observability & SRE</strong></td><td>OpenTelemetry, Prometheus, Grafana, Jaeger, Loki, FluentBit</td></tr>
+                        <tr><td><strong>Security & Auth</strong></td><td>OAuth 2.0, OpenID Connect (OIDC), Asymmetric JWT (RS256/ES256), Open Policy Agent (OPA), HashiCorp Vault</td></tr>
+                        <tr><td><strong>CI/CD & GitOps</strong></td><td>GitHub Actions, ArgoCD, SonarQube, Trivy Security Scanner</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DRAWER: 5-PILLAR STANDARD -->
+    <div id="pillars-modal" class="hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-drawer">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-act-tag">PEDAGOGICAL STANDARD</span>
+                    <h2>The 5-Pillar Teaching Standard</h2>
+                </div>
+                <button class="close-modal-btn" id="close-pillars-btn">&times; CLOSE</button>
+            </div>
+            <div class="modal-body">
+                <div class="pillar-box">
+                    <h3>1. Intuitive Mental Model & "Why"</h3>
+                    <p>Plain-English analogies and real-world metaphors that make complex distributed systems intuitive before showing syntax.</p>
+                </div>
+                <div class="pillar-box">
+                    <h3>2. Deep Mathematical & Architectural Rigor</h3>
+                    <p>Exact calculus derivations, linear algebra proofs, physical memory layout diagrams, and RFC network protocol specifications.</p>
+                </div>
+                <div class="pillar-box">
+                    <h3>3. Production Clean Code</h3>
+                    <p>Industrial-grade Python, PyTorch, SQL, C/Rust, Docker & K8s configs with strict type hinting and modular architecture.</p>
+                </div>
+                <div class="pillar-box">
+                    <h3>4. Dual-Layer Line-by-Line Breakdown</h3>
+                    <p>• Layer 1: In-code comments explaining every single line.<br>• Layer 2: Exhaustive line-by-line walkthrough outside the code analyzing CPU, GPU, memory, and syscalls.</p>
+                </div>
+                <div class="pillar-box">
+                    <h3>5. Industry War Stories & 100+ Tool Ecosystem</h3>
+                    <p>Real-world failure modes from FAANG and top AI labs, edge cases, benchmarks, and production tooling.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer id="hub-footer">
-        <p>SILICON MASTERY LEARNING PLATFORM • DESIGNED FOR UNNATI • POWERED BY FIRST PRINCIPLES ENGINEERING</p>
+        <p>SILICON MASTERY PLATFORM • TRI-TRACK CURRICULUM FOR UNNATI • 15 MODULES • 300+ PHASES</p>
     </footer>
 
     <script src="hub_script.js"></script>
