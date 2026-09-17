@@ -96,65 +96,153 @@ document.addEventListener('DOMContentLoaded', () => {
     const deepDiveTextB = {
         'content-b1': {
             title: 'Phase 1.5: The 1D Memory Strip vs Coordinate Glasses',
-            html: `<h3>What is a Tensor REALLY in Hardware?</h3>
-            <p>Physical RAM is strictly 1-dimensional. A Tensor object in PyTorch is simply a pair of coordinate glasses wrapping a 1D storage array.</p>
-            <pre><code>linear_address = offset + (row * stride[0]) + (col * stride[1])</code></pre>
-            <p>When you reshape or transpose a tensor, PyTorch never moves bytes in RAM. It simply updates the shape and stride metadata in nanoseconds.</p>`
+            html: `<h3>1. Physical RAM & Hardware Storage</h3>
+            <p>Computer RAM and GPU VRAM are strictly 1-dimensional flat strips of byte addresses. A 2D or 3D tensor is an illusion created by Shape & Stride metadata wrapping a 1D storage allocation.</p>
+            <h4>Linear Address Formula</h4>
+            <div class="math-block">$$\text{Linear Address} = \text{Offset} + \sum_{d=0}^{k-1} (i_d \times \text{stride}[d])$$</div>
+            <h4>Python Implementation from <code>tensor_memory_and_strides.py</code></h4>
+            <pre><code>class Storage:
+    def __init__(self, data: Sequence[float]) -> None:
+        # Physical 1D flat allocation
+        self._data: List[float] = [float(x) for x in data]
+
+    def __getitem__(self, idx: int) -> float:
+        return self._data[idx]
+
+class RawTensor:
+    def get_linear_index(self, indices: Tuple[int, ...]) -> int:
+        idx = self.storage_offset
+        for i, coord in enumerate(indices):
+            idx += coord * self.strides[i]
+        return idx</code></pre>`
         },
         'content-b2': {
             title: 'Phase 1.5: Zero-Copy Transposition Mechanics',
-            html: `<h3>Why t.T Takes 0.000001 Seconds</h3>
-            <p>Calling <code>.T</code> or <code>.transpose()</code> in PyTorch swaps the stride values in metadata. Both the original and transposed tensor share the exact same <code>storage.data_ptr()</code> pointer.</p>`
+            html: `<h3>1. Why PyTorch Transpose takes 0.000001 Seconds</h3>
+            <p>Transposing a tensor does NOT move or copy any bytes in memory. It simply swaps the <code>strides</code> metadata tuple while keeping the exact same <code>storage.data_ptr()</code> pointer.</p>
+            <div class="math-block">$$\text{Original: Shape } (2, 3), \text{ Strides } (3, 1) \implies \text{Transposed: Shape } (3, 2), \text{ Strides } (1, 3)$$</div>
+            <h4>Python Implementation</h4>
+            <pre><code>def transpose(self) -> RawTensor:
+    # Zero-copy metadata swap!
+    new_shape = (self.shape[1], self.shape[0])
+    new_strides = (self.strides[1], self.strides[0])
+    return RawTensor(
+        storage=self.storage, # Shares same physical memory!
+        shape=new_shape,
+        strides=new_strides,
+        storage_offset=self.storage_offset
+    )</code></pre>`
         },
         'content-b3': {
             title: 'Phase 1.5: Contiguity Guards & Memory Reallocation',
-            html: `<h3>Why .view() Fails on Transposed Tensors</h3>
-            <p><code>.view()</code> requires contiguous memory order. When a tensor is transposed, adjacent elements in coordinate space are no longer adjacent in physical RAM. Calling <code>.contiguous()</code> allocates a new buffer and re-orders the bytes.</p>`
+            html: `<h3>1. Why .view() Fails on Transposed Tensors</h3>
+            <p><code>.view()</code> demands contiguous row-major memory where elements in coordinate space are adjacent in physical RAM. When transposed, adjacent row elements jump by stride steps in RAM, causing <code>RuntimeError</code>.</p>
+            <h4>Memory Reallocation via .contiguous()</h4>
+            <pre><code>def is_contiguous(self) -> bool:
+    expected_stride = 1
+    for d in reversed(range(len(self.shape))):
+        if self.shape[d] != 1 and self.strides[d] != expected_stride:
+            return False
+        expected_stride *= self.shape[d]
+    return True
+
+def contiguous(self) -> RawTensor:
+    if self.is_contiguous(): return self
+    # Reallocates flat 1D memory in logical order
+    new_data = [self[r, c] for r in range(self.shape[0]) for c in range(self.shape[1])]
+    return RawTensor.from_list(new_data, self.shape)</code></pre>`
         },
         'content-b4': {
             title: 'Phase 1.6: CUDA SIMT & Streaming Multiprocessors',
-            html: `<h3>GPU Execution Model</h3>
-            <p>An NVIDIA GPU executes code via SIMT (Single Instruction Multiple Threads). Threads are grouped into 32-thread <strong>Warps</strong> that execute the exact same instruction in parallel lockstep.</p>`
+            html: `<h3>1. NVIDIA GPU Architecture & Warps</h3>
+            <p>GPUs execute massive parallel workloads using SIMT (Single Instruction Multiple Threads). Threads are grouped into 32-thread <strong>Warps</strong> that execute the exact same instruction in lockstep across CUDA cores inside a Streaming Multiprocessor (SM).</p>
+            <h4>Warp Execution Pipeline</h4>
+            <ul>
+                <li><strong>Warp Scheduler</strong>: Dispatches instructions to 32 parallel CUDA cores.</li>
+                <li><strong>Shared Memory</strong>: Low-latency L1 cache shared within an SM block.</li>
+                <li><strong>Thread Divergence Penalty</strong>: If threads in a warp branch conditionally (<code>if/else</code>), execution serializes!</li>
+            </ul>`
         },
         'content-b5': {
             title: 'Phase 1.6: Memory Coalescing & VRAM Bandwidth',
-            html: `<h3>The 97% Bandwidth Drop</h3>
-            <p>When a Warp's 32 threads access contiguous 128-byte aligned memory addresses, the memory controller fetches all data in 1 single transaction. Strided non-contiguous accesses force 32 separate transactions!</p>`
+            html: `<h3>1. The 97% Bandwidth Penalty</h3>
+            <p>GPU memory controllers fetch VRAM data in 128-byte aligned transactions. If 32 threads in a warp access consecutive addresses, all 32 numbers arrive in <strong>1 single memory transaction</strong> (Coalesced access).</p>
+            <p>If threads access strided or random addresses, the hardware must issue <strong>32 separate transactions</strong>, dropping memory throughput from 1,000 GB/s to under 30 GB/s!</p>`
         },
         'content-b6': {
             title: 'Phase 1.7: Scalar Value Object Decomposition',
-            html: `<h3>Anatomy of an Autograd Node</h3>
-            <p>Every scalar in micrograd stores <code>data</code>, <code>grad</code>, <code>_prev</code> (parent nodes), <code>_op</code>, and a <code>_backward()</code> closure implementing the local chain rule derivative.</p>`
+            html: `<h3>1. Anatomy of an Autograd Node</h3>
+            <p>The <code>Value</code> class in <code>autograd_engine_from_scratch.py</code> stores the forward pass result, the derivative accumulator, and a closure that executes the local chain rule derivative.</p>
+            <pre><code>class Value:
+    def __init__(self, data: float, _children=(), _op=""):
+        self.data: float = float(data)
+        self.grad: float = 0.0
+        self._backward: Callable[[], None] = lambda: None
+        self._prev: Set[Value] = set(_children)
+        self._op: str = _op</code></pre>`
         },
         'content-b7': {
             title: 'Phase 1.7: Dynamic Computational Graph (DAG)',
-            html: `<h3>Tape-Based Graph Construction</h3>
-            <p>PyTorch builds graphs dynamically at runtime ("Define-by-Run"). As Python executes operations, operand relationships are recorded on the tape graph.</p>`
+            html: `<h3>1. Define-by-Run Tape Construction</h3>
+            <p>As Python evaluates expressions, overloaded operators (<code>+</code>, <code>*</code>, <code>**</code>) construct a Directed Acyclic Graph (DAG) on the fly, recording child-parent relationships.</p>
+            <pre><code>def __mul__(self, other: Value) -> Value:
+    out = Value(self.data * other.data, (self, other), '*')
+    def _backward():
+        self.grad += other.data * out.grad  # d(a*b)/da = b
+        other.grad += self.data * out.grad  # d(a*b)/db = a
+    out._backward = _backward
+    return out</code></pre>`
         },
         'content-b8': {
             title: 'Phase 1.7: Topological DFS Sort & Gradient Accumulation',
-            html: `<h3>Why We Need Topological Order</h3>
-            <p>Topological sorting via DFS post-order guarantees parent gradients are fully evaluated before child backprop runs. Gradients accumulate with <code>+=</code> to prevent overwriting multi-branch derivatives.</p>`
+            html: `<h3>1. Preventing Gradient Overwriting via Post-Order DFS</h3>
+            <p>If a variable is reused in multiple branches, backpropagation MUST process all child nodes before calculating parent gradients. DFS post-order topological sort ensures perfect evaluation order.</p>
+            <div class="math-block">$$\text{Multivariate Chain Rule: } \frac{\partial L}{\partial x} = \sum_{j \in \text{children}(x)} \frac{\partial L}{\partial y_j} \frac{\partial y_j}{\partial x}$$</div>
+            <pre><code>def backward(self):
+    topo = []
+    visited = set()
+    def build_topo(v):
+        if v not in visited:
+            visited.add(v)
+            for child in v._prev:
+                build_topo(child)
+            topo.append(v)
+    build_topo(self)
+    self.grad = 1.0
+    for node in reversed(topo):
+        node._backward()</code></pre>`
         },
         'content-b9': {
             title: 'Phase 1.8: Baby Operations Calculus Catalog',
-            html: `<h3>First-Principles Derivatives</h3>
-            <p>Addition distributes gradients 1:1. Multiplication swaps inputs (<code>d(a*b)/da = b</code>). Power rule: <code>d(xⁿ)/dx = n * xⁿ⁻¹</code>. ReLU passes gradient if input > 0.</p>`
+            html: `<h3>1. First-Principles Derivatives Table</h3>
+            <ul>
+                <li><strong>Addition ($x + y$)</strong>: $\frac{\partial out}{\partial x} = 1.0, \quad \frac{\partial out}{\partial y} = 1.0$</li>
+                <li><strong>Multiplication ($x \cdot y$)</strong>: $\frac{\partial out}{\partial x} = y, \quad \frac{\partial out}{\partial y} = x$</li>
+                <li><strong>Power ($x^n$)</strong>: $\frac{\partial out}{\partial x} = n \cdot x^{n-1}$</li>
+                <li><strong>ReLU ($\max(0, x)$)</strong>: $\frac{\partial out}{\partial x} = 1.0 \text{ if } x > 0 \text{ else } 0.0$</li>
+                <li><strong>Tanh ($\tanh(x)$)</strong>: $\frac{\partial out}{\partial x} = 1 - \tanh^2(x)$</li>
+            </ul>`
         },
         'content-b10': {
             title: 'Phase 1.8: Vector Calculus & Jacobian Matrices',
-            html: `<h3>The Jacobian Matrix</h3>
-            <p>The Jacobian J ∈ ℝ^(M×N) organizes all partial derivatives ∂yᵢ/∂xⱼ for vector-valued functions.</p>`
+            html: `<h3>1. The Jacobian Matrix $J \in \mathbb{R}^{M \times N}$</h3>
+            <p>For a vector-valued function $f: \mathbb{R}^N \to \mathbb{R}^M$, the Jacobian matrix organizes all first-order partial derivatives:</p>
+            <div class="math-block">$$J = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix}$$</div>`
         },
         'content-b11': {
             title: 'Phase 1.8: Chain Rule & Matmul Gradient',
-            html: `<h3>Matrix Derivative Derivation</h3>
-            <p>For Y = X · W, the weight gradient is ∂L/∂W = Xᵀ · ∂L/∂Y. The transposed input matrix maps output loss gradients back to weight updates.</p>`
+            html: `<h3>1. Matrix Multiplication Derivatives</h3>
+            <p>For matrix product $Y = X \cdot W$ where $X \in \mathbb{R}^{B \times N}$ and $W \in \mathbb{R}^{N \times M}$:</p>
+            <div class="math-block">$$\frac{\partial L}{\partial W} = X^T \cdot \frac{\partial L}{\partial Y}, \qquad \frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} \cdot W^T$$</div>
+            <pre><code>def _backward_matmul():
+    # Transpose input matrix to map output gradients back to weight updates!
+    self.grad += matmul(out.grad, other.transpose())
+    other.grad += matmul(self.transpose(), out.grad)</code></pre>`
         },
         'content-b12': {
             title: 'Phase 1.8: Full Micrograd Laboratory Engine',
-            html: `<h3>Live Micrograd Backprop</h3>
-            <p>Inspect the complete forward pass and backward pass execution flow on a 2-input neuron with hyperbolic tangent activation.</p>`
+            html: `<h3>1. End-to-End Artificial Neuron Evaluation</h3>
+            <p>A 2-input single neuron evaluates $y = \tanh(w_1 x_1 + w_2 x_2 + b)$. Calling <code>y.backward()</code> traverses 7 nodes backward, computing exact derivatives for weights $w_1, w_2$ and bias $b$.</p>`
         }
     };
 
@@ -166,6 +254,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalTitle.innerText = data.title;
                 modalBody.innerHTML = data.html;
                 modal.classList.remove('hidden');
+                if (window.renderMathInElement) {
+                    renderMathInElement(modalBody, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ]
+                    });
+                }
             }
         };
     });
