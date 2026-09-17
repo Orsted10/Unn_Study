@@ -1458,13 +1458,98 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     width: 100%;
 }
 
+.huge-equation {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1A1D20;
+    background: #F8F9FA;
+    border: 2px solid #1A1D20;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--radius-sm);
+    box-shadow: 3px 3px 0px #1A1D20;
+    letter-spacing: -0.02em;
+}
+
+.topo-dag-canvas {
+    width: 780px;
+    height: 190px;
+    position: relative;
+    border: 2px dashed #CBD5E1;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.topo-monitor-bar {
+    width: 780px;
+    background: #1A1D20;
+    color: white;
+    border: 2px solid #1A1D20;
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-tactile);
+}
+
+.mon-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #94A3B8;
+    font-weight: 700;
+}
+
+.mon-val {
+    color: #64748B;
+    background: #0F172A;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 800;
+    border: 1px solid #334155;
+    transition: all 0.3s ease;
+}
+
+.mon-val.highlight {
+    color: #38BDF8;
+    border-color: #38BDF8;
+}
+
+.node-active {
+    border-color: var(--c-accent-amber) !important;
+    box-shadow: 0 0 15px rgba(217, 119, 6, 0.5) !important;
+    transform: scale(1.08) !important;
+}
+
+.node-visited {
+    border-color: #3B82F6 !important;
+    background: #EFF6FF !important;
+}
+
+.node-error {
+    border-color: #C93B3B !important;
+    color: #C93B3B !important;
+    background: #FDEDEC !important;
+    box-shadow: 0 0 15px rgba(201, 59, 59, 0.5) !important;
+}
+
+.node-success {
+    border-color: #2E7D4E !important;
+    color: #2E7D4E !important;
+    background: #E8F8F5 !important;
+    box-shadow: 0 0 15px rgba(46, 125, 78, 0.5) !important;
+}
+
 .topo-timeline {
-    width: 750px;
-    height: 60px;
+    width: 780px;
+    min-height: 60px;
     border: var(--border-thick);
     border-radius: var(--radius-sm);
     background: white;
@@ -1477,11 +1562,15 @@ body {
     flex: 1;
     border-right: 1px solid #DDD;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 .tl-empty {

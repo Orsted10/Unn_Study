@@ -866,19 +866,192 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // SCENE 14: Topological Sort
         if (sceneIdx === 14) {
+            const cv = document.getElementById('topo-dag');
             const timeline = document.getElementById('topo-timeline');
-            document.getElementById('btn-topo-wrong').onclick = () => {
-                timeline.innerHTML = `
-                    <div class="tl-slot" style="background:#FDEDEC; color:#C93B3B">Branch 1: x.grad = 3 (WRONG OVERWRITE)</div>
-                `;
-            };
-            document.getElementById('btn-topo-right').onclick = () => {
-                timeline.innerHTML = `
-                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E">Eval Loss</div>
-                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E">Eval y</div>
-                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E">Accumulate x.grad += 3 + 3 = 6</div>
-                `;
-            };
+            const stackText = document.getElementById('topo-stack-text');
+            const visitedText = document.getElementById('topo-visited-text');
+            const orderText = document.getElementById('topo-order-text');
+
+            function buildTopoCanvas() {
+                if (!cv) return;
+                cv.innerHTML = '';
+                const nodes = [
+                    { id: 't-x', l: 'x = 2.0\n(Branch x+x)', x: 60, y: 35 },
+                    { id: 't-y', l: 'y = x + x\n(Data: 4.0)', x: 340, y: 35 },
+                    { id: 't-loss', l: 'Loss = y * 3\n(Data: 12.0)', x: 610, y: 35 }
+                ];
+
+                nodes.forEach(n => {
+                    let el = document.createElement('div');
+                    el.className = 'math-node';
+                    el.id = n.id;
+                    el.innerText = n.l;
+                    el.style.left = n.x + 'px';
+                    el.style.top = n.y + 'px';
+                    cv.appendChild(el);
+                });
+
+                setTimeout(() => {
+                    drawDagEdges(cv, [
+                        ['t-x', 't-y'],
+                        ['t-y', 't-loss']
+                    ]);
+                }, 50);
+            }
+
+            buildTopoCanvas();
+
+            // WRONG EXECUTION ORDER (Naive Linear)
+            const btnWrong = document.getElementById('btn-topo-wrong');
+            if (btnWrong) {
+                btnWrong.onclick = () => {
+                    if (!cv.querySelector('.math-node')) buildTopoCanvas();
+
+                    const nodes = cv.querySelectorAll('.math-node');
+                    nodes.forEach(n => n.className = 'math-node');
+
+                    if (stackText) stackText.innerText = 'N/A (No DFS)';
+                    if (visitedText) visitedText.innerText = 'Unordered';
+                    if (orderText) {
+                        orderText.innerText = '[x ➔ y ➔ Loss] (WRONG)';
+                        orderText.className = 'mon-val';
+                        orderText.style.borderColor = '#C93B3B';
+                        orderText.style.color = '#C93B3B';
+                    }
+
+                    const nx = document.getElementById('t-x');
+                    if (nx) {
+                        nx.classList.add('node-error');
+                        nx.innerText = 'x = 2.0\nx.grad = 3 (OVERWRITTEN!)';
+                    }
+
+                    if (timeline) {
+                        timeline.innerHTML = `
+                            <div class="tl-slot" style="background:#FDEDEC; color:#C93B3B;">
+                                <div>❌ Step 1: Naive eval 'x' first</div>
+                                <div style="font-size:0.75rem; margin-top:2px;">Branch 1 sets x.grad = 3.0</div>
+                            </div>
+                            <div class="tl-slot" style="background:#FDEDEC; color:#C93B3B;">
+                                <div>🚨 Step 2: Branch 2 overwrites 'x'</div>
+                                <div style="font-size:0.75rem; margin-top:2px;">x.grad = 3.0 (SWALLOWS BRANCH 1!)</div>
+                            </div>
+                            <div class="tl-slot" style="background:#FDEDEC; color:#C93B3B;">
+                                <div>💥 CRITICAL BUG</div>
+                                <div style="font-size:0.75rem; margin-top:2px;">x.grad is 3.0 instead of 6.0</div>
+                            </div>
+                        `;
+                    }
+                };
+            }
+
+            // TOPOLOGICAL DFS POST-ORDER (Correct Autograd)
+            const btnRight = document.getElementById('btn-topo-right');
+            if (btnRight) {
+                btnRight.onclick = () => {
+                    if (!cv.querySelector('.math-node')) buildTopoCanvas();
+
+                    const nodes = cv.querySelectorAll('.math-node');
+                    nodes.forEach(n => n.className = 'math-node');
+
+                    const nx = document.getElementById('t-x');
+                    const ny = document.getElementById('t-y');
+                    const nloss = document.getElementById('t-loss');
+
+                    if (nx) nx.innerText = 'x = 2.0\n(Branch x+x)';
+                    if (ny) ny.innerText = 'y = x + x\n(Data: 4.0)';
+                    if (nloss) nloss.innerText = 'Loss = y * 3\n(Data: 12.0)';
+
+                    const tl = gsap.timeline();
+
+                    // DFS Simulation step 1: Visit Loss
+                    tl.to({}, {
+                        duration: 0.4,
+                        onStart: () => {
+                            if (nloss) nloss.classList.add('node-active');
+                            if (stackText) stackText.innerText = '[Loss]';
+                            if (visitedText) visitedText.innerText = '{Loss}';
+                            if (orderText) orderText.innerText = 'Building...';
+                        }
+                    })
+                    // DFS Simulation step 2: Visit y
+                    .to({}, {
+                        duration: 0.4,
+                        onStart: () => {
+                            if (nloss) {
+                                nloss.classList.remove('node-active');
+                                nloss.classList.add('node-visited');
+                            }
+                            if (ny) ny.classList.add('node-active');
+                            if (stackText) stackText.innerText = '[Loss, y]';
+                            if (visitedText) visitedText.innerText = '{Loss, y}';
+                        }
+                    })
+                    // DFS Simulation step 3: Visit x
+                    .to({}, {
+                        duration: 0.4,
+                        onStart: () => {
+                            if (ny) {
+                                ny.classList.remove('node-active');
+                                ny.classList.add('node-visited');
+                            }
+                            if (nx) nx.classList.add('node-active');
+                            if (stackText) stackText.innerText = '[Loss, y, x]';
+                            if (visitedText) visitedText.innerText = '{Loss, y, x}';
+                        }
+                    })
+                    // DFS Post-Order Pop -> Reverse
+                    .to({}, {
+                        duration: 0.4,
+                        onStart: () => {
+                            if (nx) {
+                                nx.classList.remove('node-active');
+                                nx.classList.add('node-visited');
+                            }
+                            if (stackText) stackText.innerText = '[] (Popped)';
+                            if (orderText) {
+                                orderText.innerText = '[Loss ➔ y ➔ x]';
+                                orderText.className = 'mon-val highlight';
+                            }
+
+                            if (timeline) {
+                                timeline.innerHTML = `
+                                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E;">
+                                        <div>1. Loss._backward()</div>
+                                        <div style="font-size:0.75rem; margin-top:2px;">Loss.grad = 1.0</div>
+                                    </div>
+                                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E;">
+                                        <div>2. y._backward()</div>
+                                        <div style="font-size:0.75rem; margin-top:2px;">y.grad = 3.0</div>
+                                    </div>
+                                    <div class="tl-slot" style="background:#E8F8F5; color:#2E7D4E;">
+                                        <div>3. x._backward()</div>
+                                        <div style="font-size:0.75rem; margin-top:2px;">Accumulate: x.grad += 3 + 3 = 6.0</div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    })
+                    // Final gradient result highlight
+                    .to([nloss, ny, nx], {
+                        duration: 0.5,
+                        onStart: () => {
+                            if (nx) {
+                                nx.classList.remove('node-visited');
+                                nx.classList.add('node-success');
+                                nx.innerText = 'x = 2.0\nx.grad += 3 + 3 = 6.0';
+                            }
+                            if (ny) {
+                                ny.classList.add('node-success');
+                                ny.innerText = 'y = 4.0\ny.grad = 3.0';
+                            }
+                            if (nloss) {
+                                nloss.classList.add('node-success');
+                                nloss.innerText = 'Loss = 12.0\nLoss.grad = 1.0';
+                            }
+                        }
+                    });
+                };
+            }
         }
 
         // SCENE 15: 10,000 Users Canvas Particles

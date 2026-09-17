@@ -673,8 +673,13 @@
             
             <div class="massive-diagram">
                 <div class="topo-stage">
-                    <div class="huge-equation">y = x + x &nbsp;|&nbsp; L = y × 3</div>
-                    <div class="dag-canvas small" id="topo-dag"></div>
+                    <div class="huge-equation">y = x + x &nbsp;|&nbsp; Loss = y × 3 &nbsp;(x branches into 2 paths)</div>
+                    <div class="dag-canvas topo-dag-canvas" id="topo-dag"></div>
+                    <div class="topo-monitor-bar" id="topo-monitor">
+                        <div class="mon-item">🔍 DFS Stack: <span class="mon-val" id="topo-stack-text">[]</span></div>
+                        <div class="mon-item">🧠 Visited Set: <span class="mon-val" id="topo-visited-text">{}</span></div>
+                        <div class="mon-item">⚡ Topo Order: <span class="mon-val highlight" id="topo-order-text">[]</span></div>
+                    </div>
                     <div class="topo-timeline" id="topo-timeline">
                         <div class="tl-empty">Click an execution order below to test gradient accumulation</div>
                     </div>
