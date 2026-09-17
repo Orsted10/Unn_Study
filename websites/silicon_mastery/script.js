@@ -763,14 +763,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Edges
                 setTimeout(() => {
-                    createEdge(cv, 170, 105, 380, 165);
-                    createEdge(cv, 170, 225, 380, 165);
-                    createEdge(cv, 470, 165, 620, 165);
+                    connectNodeCenters(cv, 'n-a', 'n-c');
+                    connectNodeCenters(cv, 'n-b', 'n-c');
+                    connectNodeCenters(cv, 'n-c', 'n-loss');
                 }, 400);
             };
         }
 
-        // Helper for SVG/HTML Edges
+        // Helper for SVG/HTML Center-to-Center Edges
+        function connectNodeCenters(container, id1, id2) {
+            const el1 = document.getElementById(id1);
+            const el2 = document.getElementById(id2);
+            if (!el1 || !el2) return;
+
+            const x1 = el1.offsetLeft + (el1.offsetWidth / 2);
+            const y1 = el1.offsetTop + (el1.offsetHeight / 2);
+            const x2 = el2.offsetLeft + (el2.offsetWidth / 2);
+            const y2 = el2.offsetTop + (el2.offsetHeight / 2);
+
+            createEdge(container, x1, y1, x2, y2);
+        }
+
         function createEdge(container, x1, y1, x2, y2) {
             const length = Math.hypot(x2 - x1, y2 - y1);
             const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
