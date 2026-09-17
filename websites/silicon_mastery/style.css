@@ -6,6 +6,7 @@
     --bg-card: #FFFFFF;
     --bg-card-subtle: #F6F2EB;
     --bg-dark: #1E232A;
+    --c-dark: #1E232A;
     
     --c-text-primary: #1A1D20;
     --c-text-secondary: #5A626A;
@@ -581,25 +582,32 @@ body {
 }
 
 .heap-header {
-    background: var(--c-dark);
-    color: white;
-    padding: 0.5rem 1rem;
+    background: #1E232A !important;
+    color: #FAF7F2 !important;
+    padding: 0.6rem 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    border-bottom: 2px dashed #C8BEAF;
+    font-size: 0.8rem;
+    font-weight: 800;
+    border-bottom: 2px solid var(--c-text-primary);
+}
+
+.heap-title {
+    color: #FAF7F2 !important;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
 
 .heap-tag.red {
-    background: #FDEDEC;
-    color: var(--c-accent-crimson);
-    padding: 0.15rem 0.5rem;
+    background: var(--c-accent-crimson) !important;
+    color: #FFFFFF !important;
+    padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 800;
+    border: 1px solid white;
 }
 
 .heap-obj {
