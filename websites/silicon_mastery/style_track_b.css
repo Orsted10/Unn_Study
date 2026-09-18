@@ -636,3 +636,120 @@ body {
     font-weight: 700;
 }
 
+/* =============================================================
+   SCENE WIDGET STYLES (WARM CREAM ARCHIVAL DESIGN SYSTEM)
+   ============================================================= */
+
+/* SCENE 03: CONTIGUOUS VS NON-CONTIGUOUS STAGE */
+.contig-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: 100%;
+    align-items: center;
+}
+
+.contig-banner {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1A1D20;
+    background: #FFEDD5;
+    border: var(--border-thick);
+    padding: 0.8rem 1.4rem;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0px #1A1D20;
+    text-align: center;
+    width: 100%;
+}
+
+.code-terminal {
+    background: #1E232A;
+    border: var(--border-thick);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #F8FAFC;
+    width: 100%;
+    box-shadow: 4px 4px 0px #1A1D20;
+    overflow-x: auto;
+}
+
+.code-terminal pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.code-terminal .err-text {
+    color: #EF4444;
+    font-weight: 700;
+}
+
+.ram-realloc-box {
+    background: #FFFFFF;
+    border: var(--border-thick);
+    border-radius: 10px;
+    padding: 1.2rem;
+    width: 100%;
+    box-shadow: 4px 4px 0px #1A1D20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.ram-realloc-box .r-label {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #2E7D4E;
+    text-align: center;
+}
+
+/* SCENE 04: CUDA GPU ARCHITECTURE STAGE */
+.cuda-stage { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.gpu-grid { display: flex; gap: 2rem; width: 100%; justify-content: center; }
+.sm-card { background: #FFFFFF; border: var(--border-thick); border-radius: 12px; padding: 1.4rem; box-shadow: 4px 4px 0px #1A1D20; width: 55%; }
+.sm-title { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: #1A1D20; margin-bottom: 0.2rem; }
+.sm-sub { font-family: var(--font-mono); font-size: 0.78rem; color: #D96B27; font-weight: 700; margin-bottom: 1rem; }
+.warp-container { background: #FAF7F2; border: 1.5px solid #1A1D20; border-radius: 8px; padding: 0.8rem; }
+.warp-title { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 800; color: #1A1D20; margin-bottom: 0.6rem; }
+.threads-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+.t-cell { background: #2E7D4E; color: white; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; text-align: center; padding: 4px 2px; border-radius: 3px; border: 1px solid #1A1D20; }
+.vram-block { background: #FFFFFF; border: var(--border-thick); border-radius: 12px; padding: 1.4rem; box-shadow: 4px 4px 0px #1A1D20; width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.vram-title { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800; color: #1A1D20; }
+.vram-sub { font-family: var(--font-mono); font-size: 0.78rem; color: #2E7D4E; font-weight: 700; margin-top: 0.3rem; }
+
+/* SCENE 05: COALESCED VS UNCOALESCED STAGE */
+.coalesced-stage { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.mode-selector { display: flex; gap: 1rem; }
+.mode-btn { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800; padding: 0.6rem 1.2rem; border: var(--border-thick); border-radius: 8px; background: #FFFFFF; cursor: pointer; box-shadow: 3px 3px 0px #1A1D20; }
+.mode-btn.active { background: #FFEDD5; border-color: #D96B27; }
+.transaction-monitor { display: flex; gap: 1.5rem; background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.8rem 1.4rem; box-shadow: 3px 3px 0px #1A1D20; font-family: var(--font-mono); font-size: 0.88rem; }
+.vram-line-visualizer { display: flex; gap: 4px; margin-top: 0.8rem; justify-content: center; flex-wrap: wrap; max-width: 700px; }
+
+/* SCENE 06: VALUE ANATOMY STAGE */
+.value-anatomy-stage { width: 100%; display: flex; justify-content: center; }
+.struct-card { background: #FFFFFF; border: var(--border-thick); border-radius: 12px; padding: 1.6rem 2rem; box-shadow: 5px 5px 0px #1A1D20; width: 620px; }
+.struct-head { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: #D96B27; border-bottom: 2px dashed #1A1D20; padding-bottom: 0.6rem; margin-bottom: 1rem; }
+.struct-fields { display: flex; flex-direction: column; gap: 0.8rem; font-family: var(--font-mono); font-size: 0.9rem; }
+.sf-item { background: #F6F2EB; border: 1px solid #1A1D20; padding: 0.6rem 1rem; border-radius: 6px; color: #1A1D20; }
+
+/* SCENE 08: TOPOLOGICAL STAGE */
+.topo-stage { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.topo-monitor-bar { display: flex; gap: 1.5rem; background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.7rem 1.4rem; box-shadow: 3px 3px 0px #1A1D20; font-family: var(--font-mono); font-size: 0.85rem; }
+.mon-val.highlight { color: #D96B27; font-weight: 800; }
+.tl-empty { font-family: var(--font-mono); font-size: 0.85rem; color: #5C6672; font-weight: 700; width: 100%; text-align: center; padding: 1.2rem; }
+
+/* SCENE 09: CALCULUS OPERATIONS CATALOG */
+.ops-catalog-grid { display: flex; gap: 1rem; justify-content: center; width: 100%; }
+.op-card { background: #FFFFFF; border: var(--border-thick); border-radius: 10px; padding: 1rem; text-align: center; cursor: pointer; box-shadow: 3px 3px 0px #1A1D20; width: 160px; }
+.op-card.active { background: #FFEDD5; border-color: #D96B27; }
+.op-symbol { font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: #D96B27; }
+.op-name { font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; margin: 0.2rem 0; }
+.op-formula { font-family: var(--font-mono); font-size: 0.75rem; color: #5C6672; }
+
+
