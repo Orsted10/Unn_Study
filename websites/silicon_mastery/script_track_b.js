@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             html: `<h3>1. Physical RAM & Hardware Storage</h3>
             <p>Computer RAM and GPU VRAM are strictly 1-dimensional flat strips of byte addresses. A 2D or 3D tensor is an illusion created by Shape & Stride metadata wrapping a 1D storage allocation.</p>
             <h4>Linear Address Formula</h4>
-            <div class="math-block">$$\text{Linear Address} = \text{Offset} + \sum_{d=0}^{k-1} (i_d \times \text{stride}[d])$$</div>
+            <div class="math-block">$$\\text{Linear Address} = \\text{Offset} + \\sum_{d=0}^{k-1} (i_d \\times \\text{stride}[d])$$</div>
             
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
@@ -150,7 +150,7 @@ class RawTensor:
             title: 'Phase 1.5: Zero-Copy Transposition Mechanics',
             html: `<h3>1. Why PyTorch Transpose takes 0.000001 Seconds</h3>
             <p>Transposing a tensor does NOT move or copy any bytes in memory. It simply swaps the <code>strides</code> metadata tuple while keeping the exact same <code>storage.data_ptr()</code> pointer.</p>
-            <div class="math-block">$$\text{Original: Shape } (2, 3), \text{ Strides } (3, 1) \implies \text{Transposed: Shape } (3, 2), \text{ Strides } (1, 3)$$</div>
+            <div class="math-block">$$\\text{Original: Shape } (2, 3), \\text{ Strides } (3, 1) \\implies \\text{Transposed: Shape } (3, 2), \\text{ Strides } (1, 3)$$</div>
             
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
@@ -314,7 +314,7 @@ c = a * b  # c.data = 6.0</code></pre>
             title: 'Phase 1.7: Topological DFS Sort & Gradient Accumulation',
             html: `<h3>1. Preventing Gradient Overwriting via Post-Order DFS</h3>
             <p>If a variable is reused in multiple branches, backpropagation MUST process all child nodes before calculating parent gradients. DFS post-order topological sort ensures perfect evaluation order.</p>
-            <div class="math-block">$$\text{Multivariate Chain Rule: } \frac{\partial L}{\partial x} = \sum_{j \in \text{children}(x)} \frac{\partial L}{\partial y_j} \frac{\partial y_j}{\partial x}$$</div>
+            <div class="math-block">$$\\text{Multivariate Chain Rule: } \\frac{\\partial L}{\\partial x} = \\sum_{j \\in \\text{children}(x)} \\frac{\\partial L}{\\partial y_j} \\frac{\\partial y_j}{\\partial x}$$</div>
             
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">

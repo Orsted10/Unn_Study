@@ -331,7 +331,7 @@ body {
 .modal-body code { font-family: var(--font-mono); background: #F0EAE1; color: var(--c-accent-indigo) !important; padding: 0.2rem 0.45rem; border-radius: 4px; border: 1px solid rgba(26,29,32,0.2); font-size: 0.9rem; }
 .modal-body pre { background: #1E232A; border: var(--border-thick); border-radius: 8px; padding: 1.1rem; margin: 0.8rem 0; overflow-x: auto; max-width: 100%; white-space: pre-wrap; word-break: break-word; font-size: 0.9rem; box-shadow: 3px 3px 0px #1A1D20; }
 .modal-body pre code { background: transparent !important; border: none !important; color: #F8FAFC !important; }
-.modal-body .math-block { background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.9rem 1.4rem; margin: 1rem 0; text-align: center; box-shadow: 3px 3px 0px #1A1D20; }
+.modal-body .math-block { background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.9rem 1.2rem; margin: 1rem 0; text-align: center; box-shadow: 3px 3px 0px #1A1D20; overflow-x: auto; max-width: 100%; font-size: 0.9rem; }
 
 /* CODE SIMULATOR STYLES */
 .code-sim-box {
