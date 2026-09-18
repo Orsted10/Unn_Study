@@ -472,3 +472,165 @@ body {
 .gear { background: #FFFFFF; border: var(--border-thick); border-radius: var(--radius-md); padding: 1.2rem 1.8rem; font-family: var(--font-mono); font-weight: 800; color: var(--c-text-primary); box-shadow: 4px 4px 0px #1A1D20; font-size: 0.95rem; }
 .lab-inputs { display: flex; gap: 1.2rem; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 800; background: #FFFFFF; color: var(--c-text-primary); padding: 1rem 1.8rem; border: var(--border-thick); border-radius: var(--radius-md); box-shadow: 4px 4px 0px #1A1D20; }
 .lab-inputs input { width: 70px; padding: 0.4rem; font-family: var(--font-mono); font-weight: 700; border: var(--border-thick); background: #FAF7F2; color: var(--c-text-primary); border-radius: 4px; text-align: center; font-size: 0.9rem; box-shadow: 2px 2px 0px #1A1D20; }
+
+/* =============================================================
+   IDE CODE WINDOW & LINE-BY-LINE EXPLANATION STYLES
+   ============================================================= */
+
+.code-window {
+    background: #181C24;
+    border: var(--border-thick);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0px #1A1D20;
+    margin: 1.2rem 0;
+    overflow: hidden;
+}
+
+.code-header-bar {
+    background: #212631;
+    border-bottom: 1.5px solid #2D3442;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.code-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.code-dot.red { background: #FF5F56; }
+.code-dot.yellow { background: #FFBD2E; }
+.code-dot.green { background: #27C93F; }
+
+.code-filename {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #9DA5B4;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.code-lang-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #D96B27;
+    background: rgba(217, 107, 39, 0.15);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(217, 107, 39, 0.4);
+}
+
+.code-body {
+    padding: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: #ABB2BF;
+    overflow-x: auto;
+}
+
+/* Syntax Highlighting */
+.kw { color: #C678DD; font-weight: 700; }     /* Keyword (def, return, class) */
+.fn { color: #61AFEF; font-weight: 700; }     /* Function name */
+.cm { color: #7F848E; font-style: italic; }   /* Comment */
+.str { color: #98C379; }                      /* String */
+.num { color: #D19A66; font-weight: 700; }    /* Number */
+.typ { color: #E5C07B; }                      /* Type hint */
+.op { color: #56B6C2; }                       /* Operator */
+.var { color: #E06C75; }                      /* Variable */
+
+/* LINE BY LINE BREAKDOWN BOX */
+.line-breakdown-box {
+    background: #FFFFFF;
+    border: var(--border-thick);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1.2rem 0;
+    box-shadow: 3px 3px 0px #1A1D20;
+}
+
+.breakdown-title {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--c-accent-amber);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px dashed rgba(26, 29, 32, 0.2);
+    padding-bottom: 0.4rem;
+}
+
+.line-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.line-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.step-pill {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    background: #1A1D20;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 2px 2px 0px #1A1D20;
+}
+
+.step-desc {
+    color: var(--c-text-primary);
+    font-family: var(--font-body);
+}
+
+.step-desc code {
+    font-family: var(--font-mono);
+    background: #F0EAE1;
+    color: var(--c-accent-indigo) !important;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+/* OUTPUT TERMINAL ENHANCEMENT */
+.sim-partial-steps {
+    background: #11141A;
+    border: 1.5px solid #2D3442;
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.partial-step-item {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+    color: #ABB2BF;
+}
+.partial-step-tag {
+    color: #E5C07B;
+    font-weight: 700;
+}
+

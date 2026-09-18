@@ -112,39 +112,75 @@ document.addEventListener('DOMContentLoaded', () => {
             <h4>Linear Address Formula</h4>
             <div class="math-block">$$\\text{Linear Address} = \\text{Offset} + \\sum_{d=0}^{k-1} (i_d \\times \\text{stride}[d])$$</div>
             
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 tensor_memory_and_strides.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">class</span> <span class="typ">Storage</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">data</span>: <span class="typ">Sequence</span>[<span class="typ">float</span>]) <span class="op">-></span> <span class="typ">None</span>:
+        <span class="cm"># Physical 1D flat allocation in RAM</span>
+        <span class="var">self</span>._data: <span class="typ">List</span>[<span class="typ">float</span>] <span class="op">=</span> [<span class="typ">float</span>(x) <span class="kw">for</span> x <span class="kw">in</span> data]
+
+<span class="kw">class</span> <span class="typ">RawTensor</span>:
+    <span class="kw">def</span> <span class="fn">get_linear_index</span>(<span class="var">self</span>, <span class="var">indices</span>: <span class="typ">Tuple</span>[<span class="typ">int</span>, ...]) <span class="op">-></span> <span class="typ">int</span>:
+        <span class="var">idx</span> <span class="op">=</span> <span class="var">self</span>.storage_offset
+        <span class="kw">for</span> i, coord <span class="kw">in</span> <span class="fn">enumerate</span>(indices):
+            <span class="var">idx</span> <span class="op">+=</span> coord <span class="op">*</span> <span class="var">self</span>.strides[i]
+        <span class="kw">return</span> <span class="var">idx</span>
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 1-4</span>
+                        <span class="step-desc"><code>Storage.__init__</code> creates a flat 1D Python list storing contiguous float numbers in physical RAM memory.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 6-7</span>
+                        <span class="step-desc"><code>RawTensor.get_linear_index</code> accepts multi-dimensional coordinates like <code>(row, col) = (1, 2)</code>.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 8-10</span>
+                        <span class="step-desc">Computes <code>idx += coord * stride[i]</code> to jump across rows and columns in flat 1D RAM space.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Python Execution Simulator (<code>tensor_memory_and_strides.py</code>)</div>
-                <pre class="sim-code"><code>storage = Storage([10.0, 20.0, 30.0, 40.0, 50.0, 60.0])
-t = RawTensor(storage, shape=(2, 3), strides=(3, 1), offset=0)
-# Lookup coordinate (row, col):</code></pre>
+                <div class="code-window">
+                    <div class="code-header-bar">
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                        <span class="code-filename">🐍 test_indexing.py</span>
+                        <span class="code-lang-badge">EXECUTE</span>
+                    </div>
+                    <div class="code-body">
+<span class="var">storage</span> <span class="op">=</span> <span class="typ">Storage</span>([<span class="num">10.0</span>, <span class="num">20.0</span>, <span class="num">30.0</span>, <span class="num">40.0</span>, <span class="num">50.0</span>, <span class="num">60.0</span>])
+<span class="var">t</span> <span class="op">=</span> <span class="typ">RawTensor</span>(storage, shape<span class="op">=</span>(<span class="num">2</span>, <span class="num">3</span>), strides<span class="op">=</span>(<span class="num">3</span>, <span class="num">1</span>), offset<span class="op">=</span><span class="num">0</span>)
+                    </div>
+                </div>
                 <div class="sim-inputs">
                     <label>Row Index ($i_0$): <input type="number" id="sim-row" value="1" min="0" max="1"></label>
                     <label>Col Index ($i_1$): <input type="number" id="sim-col" value="2" min="0" max="2"></label>
                     <button class="sim-run-btn" id="btn-run-sim-1">▶ RUN CODE</button>
                 </div>
                 <div class="sim-output" id="sim-out-1">
+                    <div class="sim-partial-steps">
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Initializing RAM:</span> Allocated 6 float32 elements at pointer 0x7f9a1400</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Stride Calculation:</span> Row stride=3, Col stride=1</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Address Resolution:</span> offset(0) + (1*3) + (2*1) = 5</div>
+                    </div>
                     <span class="sim-prompt">>>> t.get_linear_index((1, 2))</span><br>
                     <span class="sim-res">Linear Address: offset(0) + (1 * 3) + (2 * 1) = <strong>5</strong></span><br>
                     <span class="sim-val">RAM Memory Cell [0x14]: <strong>60.0</strong></span>
                 </div>
-            </div>
-
-            <h4>Python Implementation from <code>tensor_memory_and_strides.py</code></h4>
-            <pre><code>class Storage:
-    def __init__(self, data: Sequence[float]) -> None:
-        # Physical 1D flat allocation
-        self._data: List[float] = [float(x) for x in data]
-
-    def __getitem__(self, idx: int) -> float:
-        return self._data[idx]
-
-class RawTensor:
-    def get_linear_index(self, indices: Tuple[int, ...]) -> int:
-        idx = self.storage_offset
-        for i, coord in enumerate(indices):
-            idx += coord * self.strides[i]
-        return idx</code></pre>`
+            </div>`
         },
         'content-b2': {
             title: 'Phase 1.5: Zero-Copy Transposition Mechanics',
@@ -152,78 +188,178 @@ class RawTensor:
             <p>Transposing a tensor does NOT move or copy any bytes in memory. It simply swaps the <code>strides</code> metadata tuple while keeping the exact same <code>storage.data_ptr()</code> pointer.</p>
             <div class="math-block">$$\\text{Original: Shape } (2, 3), \\text{ Strides } (3, 1) \\implies \\text{Transposed: Shape } (3, 2), \\text{ Strides } (1, 3)$$</div>
             
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 zero_copy_transpose.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">def</span> <span class="fn">transpose</span>(<span class="var">self</span>) <span class="op">-></span> <span class="typ">RawTensor</span>:
+    <span class="cm"># Zero-copy metadata swap!</span>
+    <span class="var">new_shape</span> <span class="op">=</span> (<span class="var">self</span>.shape[<span class="num">1</span>], <span class="var">self</span>.shape[<span class="num">0</span>])
+    <span class="var">new_strides</span> <span class="op">=</span> (<span class="var">self</span>.strides[<span class="num">1</span>], <span class="var">self</span>.strides[<span class="num">0</span>])
+    <span class="kw">return</span> <span class="typ">RawTensor</span>(
+        storage<span class="op">=</span><span class="var">self</span>.storage,  <span class="cm"># Shares same physical memory pointer!</span>
+        shape<span class="op">=</span><span class="var">new_shape</span>,
+        strides<span class="op">=</span><span class="var">new_strides</span>,
+        storage_offset<span class="op">=</span><span class="var">self</span>.storage_offset
+    )
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 1</span>
+                        <span class="step-desc"><code>def transpose(self) -> RawTensor:</code> Method returning transposed tensor view.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>new_shape = (self.shape[1], self.shape[0])</code> Swaps matrix dimensions <code>(2, 3)</code> to <code>(3, 2)</code>.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 4</span>
+                        <span class="step-desc"><code>new_strides = (self.strides[1], self.strides[0])</code> Swaps memory stride step sizes <code>(3, 1)</code> to <code>(1, 3)</code>.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5-10</span>
+                        <span class="step-desc"><code>return RawTensor(...)</code> Returns a new Tensor object wrapping the <strong>exact same physical RAM storage</strong> (<code>self.storage</code>). Zero bytes copied!</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Python Execution Simulator (<code>t.T Transpose</code>)</div>
-                <pre class="sim-code"><code>t = RawTensor(data=[10, 20, 30, 40, 50, 60], shape=(2, 3))
-t_trans = t.T  # Swaps strides (3, 1) -> (1, 3)</code></pre>
+                <div class="code-window">
+                    <div class="code-header-bar">
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                        <span class="code-filename">🐍 test_t.py</span>
+                        <span class="code-lang-badge">EXECUTE</span>
+                    </div>
+                    <div class="code-body">
+<span class="var">t</span> <span class="op">=</span> <span class="typ">RawTensor</span>(data<span class="op">=</span>[<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>, <span class="num">60</span>], shape<span class="op">=</span>(<span class="num">2</span>, <span class="num">3</span>))
+<span class="var">t_trans</span> <span class="op">=</span> <span class="var">t</span>.<span class="fn">T</span>  <span class="cm"># Swaps strides (3, 1) -> (1, 3)</span>
+                    </div>
+                </div>
                 <div class="sim-inputs">
                     <button class="sim-run-btn" id="btn-run-sim-2">▶ EXECUTE t.T TRANSPOSE</button>
                 </div>
                 <div class="sim-output" id="sim-out-2">
+                    <div class="sim-partial-steps">
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Check Original:</span> Shape (2, 3), Strides (3, 1), Pointer 0x7f9a1400</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Metadata Swap:</span> New Shape (3, 2), New Strides (1, 3)</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Pointer Validation:</span> Same Storage Pointer 0x7f9a1400</div>
+                    </div>
                     <span class="sim-prompt">>>> t_trans.storage.data_ptr() == t.storage.data_ptr()</span><br>
                     <span class="sim-res">True (Zero Bytes Allocated!)</span><br>
                     <span class="sim-val">Strides: (1, 3) | Shape: (3, 2)</span>
                 </div>
-            </div>
-
-            <h4>Python Implementation</h4>
-            <pre><code>def transpose(self) -> RawTensor:
-    # Zero-copy metadata swap!
-    new_shape = (self.shape[1], self.shape[0])
-    new_strides = (self.strides[1], self.strides[0])
-    return RawTensor(
-        storage=self.storage, # Shares same physical memory!
-        shape=new_shape,
-        strides=new_strides,
-        storage_offset=self.storage_offset
-    )</code></pre>`
+            </div>`
         },
         'content-b3': {
             title: 'Phase 1.5: Contiguity Guards & Memory Reallocation',
             html: `<h3>1. Why .view() Fails on Transposed Tensors</h3>
             <p><code>.view()</code> demands contiguous row-major memory where elements in coordinate space are adjacent in physical RAM. When transposed, adjacent row elements jump by stride steps in RAM, causing <code>RuntimeError</code>.</p>
             
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 contiguity_guard.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">def</span> <span class="fn">is_contiguous</span>(<span class="var">self</span>) <span class="op">-></span> <span class="typ">bool</span>:
+    <span class="var">expected_stride</span> <span class="op">=</span> <span class="num">1</span>
+    <span class="kw">for</span> d <span class="kw">in</span> <span class="fn">reversed</span>(<span class="fn">range</span>(<span class="fn">len</span>(<span class="var">self</span>.shape))):
+        <span class="kw">if</span> <span class="var">self</span>.shape[d] <span class="op">!=</span> <span class="num">1</span> <span class="kw">and</span> <span class="var">self</span>.strides[d] <span class="op">!=</span> <span class="var">expected_stride</span>:
+            <span class="kw">return</span> <span class="typ">False</span>
+        <span class="var">expected_stride</span> <span class="op">*=</span> <span class="var">self</span>.shape[d]
+    <span class="kw">return</span> <span class="typ">True</span>
+
+<span class="kw">def</span> <span class="fn">contiguous</span>(<span class="var">self</span>) <span class="op">-></span> <span class="typ">RawTensor</span>:
+    <span class="kw">if</span> <span class="var">self</span>.<span class="fn">is_contiguous</span>(): <span class="kw">return</span> <span class="var">self</span>
+    <span class="cm"># Reallocates flat 1D memory in logical order</span>
+    <span class="var">new_data</span> <span class="op">=</span> [<span class="var">self</span>[r, c] <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="var">self</span>.shape[<span class="num">0</span>]) <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="var">self</span>.shape[<span class="num">1</span>])]
+    <span class="kw">return</span> <span class="typ">RawTensor</span>.<span class="fn">from_list</span>(<span class="var">new_data</span>, <span class="var">self</span>.shape)
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 1-7</span>
+                        <span class="step-desc"><code>is_contiguous()</code> verifies if stride step multipliers match standard C-contiguous row-major formula.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 9-10</span>
+                        <span class="step-desc"><code>contiguous()</code> returns self immediately if already contiguous.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 12-13</span>
+                        <span class="step-desc">If non-contiguous (e.g., after <code>.T</code>), iterates elements in logical order and allocates a <strong>fresh contiguous 1D memory strip</strong>.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Python Execution Simulator (<code>.view() vs .contiguous()</code>)</div>
-                <pre class="sim-code"><code>t_trans = t.T  # Transposed non-contiguous tensor</code></pre>
                 <div class="sim-inputs">
                     <button class="sim-run-btn red-btn" id="btn-run-sim-3a">▶ RUN t_trans.view(6)</button>
                     <button class="sim-run-btn green-btn" id="btn-run-sim-3b">▶ RUN t_trans.contiguous().view(6)</button>
                 </div>
                 <div class="sim-output" id="sim-out-3">
-                    <span class="sim-prompt">>>> Select an operation above</span>
+                    <span class="sim-prompt">>>> Select an operation above to test PyTorch contiguity rules</span>
                 </div>
-            </div>
-
-            <h4>Memory Reallocation via .contiguous()</h4>
-            <pre><code>def is_contiguous(self) -> bool:
-    expected_stride = 1
-    for d in reversed(range(len(self.shape))):
-        if self.shape[d] != 1 and self.strides[d] != expected_stride:
-            return False
-        expected_stride *= self.shape[d]
-    return True
-
-def contiguous(self) -> RawTensor:
-    if self.is_contiguous(): return self
-    # Reallocates flat 1D memory in logical order
-    new_data = [self[r, c] for r in range(self.shape[0]) for c in range(self.shape[1])]
-    return RawTensor.from_list(new_data, self.shape)</code></pre>`
+            </div>`
         },
         'content-b4': {
             title: 'Phase 1.6: CUDA SIMT & Streaming Multiprocessors',
             html: `<h3>1. NVIDIA GPU Architecture & Warps</h3>
             <p>GPUs execute massive parallel workloads using SIMT (Single Instruction Multiple Threads). Threads are grouped into 32-thread <strong>Warps</strong> that execute the exact same instruction in lockstep across CUDA cores inside a Streaming Multiprocessor (SM).</p>
             
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 vector_add_kernel.cu</span>
+                    <span class="code-lang-badge">CUDA C++</span>
+                </div>
+                <div class="code-body">
+<span class="kw">__global__</span> <span class="typ">void</span> <span class="fn">add_kernel</span>(<span class="typ">float</span><span class="op">*</span> <span class="var">A</span>, <span class="typ">float</span><span class="op">*</span> <span class="var">B</span>, <span class="typ">float</span><span class="op">*</span> <span class="var">C</span>, <span class="typ">int</span> <span class="var">N</span>) {
+    <span class="cm">// Calculate global 1D thread ID across blocks</span>
+    <span class="typ">int</span> <span class="var">idx</span> <span class="op">=</span> blockIdx.x <span class="op">*</span> blockDim.x <span class="op">+</span> threadIdx.x;
+    <span class="kw">if</span> (<span class="var">idx</span> <span class="op"><</span> <span class="var">N</span>) {
+        <span class="var">C</span>[<span class="var">idx</span>] <span class="op">=</span> <span class="var">A</span>[<span class="var">idx</span>] <span class="op">+</span> <span class="var">B</span>[<span class="var">idx</span>];
+    }
+}
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 1</span>
+                        <span class="step-desc"><code>__global__ void add_kernel(...)</code> GPU entry function executed in parallel by thousands of CUDA threads.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>idx = blockIdx.x * blockDim.x + threadIdx.x</code> Computes unique global memory index for each active thread.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 4-5</span>
+                        <span class="step-desc"><code>if (idx < N) C[idx] = A[idx] + B[idx]</code> Boundary check ensuring threads outside array length do not perform illegal memory access.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ CUDA Kernel Warp Execution Simulator</div>
-                <pre class="sim-code"><code>__global__ void add_kernel(float* A, float* B, float* C) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < N) C[idx] = A[idx] + B[idx];
-}</code></pre>
                 <div class="sim-inputs">
                     <label>Grid Threads ($N$): <input type="number" id="sim-cuda-threads" value="128" min="32" max="1024" step="32"></label>
                     <button class="sim-run-btn" id="btn-run-sim-4">▶ LAUNCH CUDA KERNEL</button>
@@ -233,19 +369,41 @@ def contiguous(self) -> RawTensor:
                     <span class="sim-res">Active Warps: <strong>4 Warps (128 CUDA Threads)</strong></span><br>
                     <span class="sim-val">Execution Mode: Lockstep SIMT across 4 SM Warp Schedulers</span>
                 </div>
-            </div>
-
-            <h4>Warp Execution Pipeline</h4>
-            <ul>
-                <li><strong>Warp Scheduler</strong>: Dispatches instructions to 32 parallel CUDA cores.</li>
-                <li><strong>Shared Memory</strong>: Low-latency L1 cache shared within an SM block.</li>
-                <li><strong>Thread Divergence Penalty</strong>: If threads in a warp branch conditionally (<code>if/else</code>), execution serializes!</li>
-            </ul>`
+            </div>`
         },
         'content-b5': {
             title: 'Phase 1.6: Memory Coalescing & VRAM Bandwidth',
             html: `<h3>1. The 97% Bandwidth Penalty</h3>
             <p>GPU memory controllers fetch VRAM data in 128-byte aligned transactions. If 32 threads in a warp access consecutive addresses, all 32 numbers arrive in <strong>1 single memory transaction</strong> (Coalesced access).</p>
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 coalesced_vs_strided.cu</span>
+                    <span class="code-lang-badge">CUDA C++</span>
+                </div>
+                <div class="code-body">
+<span class="cm">// Coalesced (Continuous): 1 Transaction per Warp</span>
+<span class="typ">float</span> <span class="var">val</span> <span class="op">=</span> <span class="var">data</span>[threadIdx.x];
+
+<span class="cm">// Strided Uncoalesced: 32 Separate 128B Transactions!</span>
+<span class="typ">float</span> <span class="var">val</span> <span class="op">=</span> <span class="var">data</span>[threadIdx.x <span class="op">*</span> <span class="num">32</span>];
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 2</span>
+                        <span class="step-desc"><code>data[threadIdx.x]</code> Threads 0..31 read contiguous addresses 0x00..0x7C. Fits perfectly inside one 128-byte L2 cache line transaction!</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5</span>
+                        <span class="step-desc"><code>data[threadIdx.x * 32]</code> Threads read addresses 0x00, 0x80, 0x100... Triggers 32 distinct cache line requests! 97% bandwidth wasted!</span>
+                    </div>
+                </div>
+            </div>
 
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
@@ -255,7 +413,7 @@ def contiguous(self) -> RawTensor:
                     <button class="sim-run-btn red-btn" id="btn-run-sim-5b">▶ TEST STRIDED UNCOALESCED ACCESS</button>
                 </div>
                 <div class="sim-output" id="sim-out-5">
-                    <span class="sim-prompt">>>> Select access mode to benchmark VRAM bus transactions...</span>
+                    <span class="sim-prompt">>>> Select access mode above to benchmark VRAM bus transactions</span>
                 </div>
             </div>`
         },
@@ -263,43 +421,125 @@ def contiguous(self) -> RawTensor:
             title: 'Phase 1.7: Scalar Value Object Decomposition',
             html: `<h3>1. Anatomy of an Autograd Node</h3>
             <p>The <code>Value</code> class in <code>autograd_engine_from_scratch.py</code> stores the forward pass result, the derivative accumulator, and a closure that executes the local chain rule derivative.</p>
-            
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 autograd_node.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">class</span> <span class="typ">Value</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">data</span>: <span class="typ">float</span>, <span class="var">_children</span><span class="op">=</span>(), <span class="var">_op</span><span class="op">=</span><span class="str">""</span>):
+        <span class="var">self</span>.data: <span class="typ">float</span> <span class="op">=</span> <span class="typ">float</span>(data)
+        <span class="var">self</span>.grad: <span class="typ">float</span> <span class="op">=</span> <span class="num">0.0</span>
+        <span class="var">self</span>._backward: <span class="typ">Callable</span>[[], <span class="typ">None</span>] <span class="op">=</span> <span class="kw">lambda</span>: <span class="typ">None</span>
+        <span class="var">self</span>._prev: <span class="typ">Set</span>[<span class="typ">Value</span>] <span class="op">=</span> <span class="fn">set</span>(_children)
+        <span class="var">self</span>._op: <span class="typ">str</span> <span class="op">=</span> _op
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>self.data</code> Stores forward numerical scalar value computed during forward pass.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 4</span>
+                        <span class="step-desc"><code>self.grad</code> Derivative accumulator initialized to 0.0 ($dL/d\text{self}$).</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5</span>
+                        <span class="step-desc"><code>self._backward</code> Closure function storing local chain rule gradient propagation step.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 6-7</span>
+                        <span class="step-desc"><code>self._prev</code> Set storing direct parent inputs in dynamic computation graph.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Value Node Instantiate & Backward Simulator</div>
-                <pre class="sim-code"><code>a = Value(2.0)
-b = Value(3.0)
-c = a * b  # c.data = 6.0</code></pre>
+                <div class="code-window">
+                    <div class="code-header-bar">
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                        <span class="code-filename">🐍 test_value.py</span>
+                        <span class="code-lang-badge">EXECUTE</span>
+                    </div>
+                    <div class="code-body">
+<span class="var">a</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="num">2.0</span>)
+<span class="var">b</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="num">3.0</span>)
+<span class="var">c</span> <span class="op">=</span> <span class="var">a</span> <span class="op">*</span> <span class="var">b</span>  <span class="cm"># Forward: c.data = 6.0</span>
+<span class="var">c</span>.<span class="fn">backward</span>()
+                    </div>
+                </div>
                 <div class="sim-inputs">
                     <label>Set $a.data$: <input type="number" id="sim-val-a" value="2.0" step="0.5"></label>
                     <label>Set $b.data$: <input type="number" id="sim-val-b" value="3.0" step="0.5"></label>
                     <button class="sim-run-btn" id="btn-run-sim-6">▶ EVALUATE FORWARD & BACKWARD</button>
                 </div>
                 <div class="sim-output" id="sim-out-6">
+                    <div class="sim-partial-steps">
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Forward Pass:</span> c.data = 2.0 * 3.0 = 6.0</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Seed Gradient:</span> c.grad = 1.0</div>
+                        <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Chain Rule:</span> a.grad += b.data * c.grad = 3.0 | b.grad += a.data * c.grad = 2.0</div>
+                    </div>
                     <span class="sim-prompt">>>> c = a * b; c.backward()</span><br>
                     <span class="sim-res">c.data = <strong>6.0</strong> | c.grad = <strong>1.0</strong></span><br>
                     <span class="sim-val">a.grad = d(a*b)/da * c.grad = b.data = <strong>3.0</strong></span><br>
                     <span class="sim-val">b.grad = d(a*b)/db * c.grad = a.data = <strong>2.0</strong></span>
                 </div>
-            </div>
-
-            <pre><code>class Value:
-    def __init__(self, data: float, _children=(), _op=""):
-        self.data: float = float(data)
-        self.grad: float = 0.0
-        self._backward: Callable[[], None] = lambda: None
-        self._prev: Set[Value] = set(_children)
-        self._op: str = _op</code></pre>`
+            </div>`
         },
         'content-b7': {
             title: 'Phase 1.7: Dynamic Computational Graph (DAG)',
             html: `<h3>1. Define-by-Run Tape Construction</h3>
             <p>As Python evaluates expressions, overloaded operators (<code>+</code>, <code>*</code>, <code>**</code>) construct a Directed Acyclic Graph (DAG) on the fly, recording child-parent relationships.</p>
-            
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 operator_overloading.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">def</span> <span class="fn">__mul__</span>(<span class="var">self</span>, <span class="var">other</span>):
+    <span class="var">other</span> <span class="op">=</span> <span class="var">other</span> <span class="kw">if</span> <span class="fn">isinstance</span>(<span class="var">other</span>, <span class="typ">Value</span>) <span class="kw">else</span> <span class="typ">Value</span>(<span class="var">other</span>)
+    <span class="var">out</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="var">self</span>.data <span class="op">*</span> <span class="var">other</span>.data, (<span class="var">self</span>, <span class="var">other</span>), <span class="str">'*'</span>)
+    
+    <span class="kw">def</span> <span class="fn">_backward</span>():
+        <span class="var">self</span>.grad <span class="op">+=</span> <span class="var">other</span>.data <span class="op">*</span> <span class="var">out</span>.grad
+        <span class="var">other</span>.grad <span class="op">+=</span> <span class="var">self</span>.data <span class="op">*</span> <span class="var">out</span>.grad
+    <span class="var">out</span>._backward <span class="op">=</span> <span class="var">_backward</span>
+    <span class="kw">return</span> <span class="var">out</span>
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>out = Value(..., (self, other), '*')</code> Instantiates output node, binding parents <code>(self, other)</code> in DAG graph memory.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5-7</span>
+                        <span class="step-desc"><code>_backward()</code> Implements local partial derivative rules ($d(a \cdot b)/da = b$ and $d(a \cdot b)/db = a$).</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 8</span>
+                        <span class="step-desc"><code>out._backward = _backward</code> Attaches closure to output node for backward execution traversal.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Expression Tape Recorder Simulator</div>
-                <pre class="sim-code"><code>L = (a * b + c) ** 2</code></pre>
                 <div class="sim-inputs">
                     <button class="sim-run-btn" id="btn-run-sim-7">▶ RECORD DAG TAPE</button>
                 </div>
@@ -315,11 +555,52 @@ c = a * b  # c.data = 6.0</code></pre>
             html: `<h3>1. Preventing Gradient Overwriting via Post-Order DFS</h3>
             <p>If a variable is reused in multiple branches, backpropagation MUST process all child nodes before calculating parent gradients. DFS post-order topological sort ensures perfect evaluation order.</p>
             <div class="math-block">$$\\text{Multivariate Chain Rule: } \\frac{\\partial L}{\\partial x} = \\sum_{j \\in \\text{children}(x)} \\frac{\\partial L}{\\partial y_j} \\frac{\\partial y_j}{\\partial x}$$</div>
-            
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 topological_sort.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">def</span> <span class="fn">backward</span>(<span class="var">self</span>):
+    <span class="var">topo</span> <span class="op">=</span> []
+    <span class="var">visited</span> <span class="op">=</span> <span class="fn">set</span>()
+    <span class="kw">def</span> <span class="fn">build_topo</span>(<span class="var">v</span>):
+        <span class="kw">if</span> <span class="var">v</span> <span class="kw">not in</span> <span class="var">visited</span>:
+            <span class="var">visited</span>.<span class="fn">add</span>(<span class="var">v</span>)
+            <span class="kw">for</span> <span class="var">child</span> <span class="kw">in</span> <span class="var">v</span>._prev:
+                <span class="fn">build_topo</span>(<span class="var">child</span>)
+            <span class="var">topo</span>.<span class="fn">append</span>(<span class="var">v</span>)
+    <span class="fn">build_topo</span>(<span class="var">self</span>)
+
+    <span class="var">self</span>.grad <span class="op">=</span> <span class="num">1.0</span>
+    <span class="kw">for</span> node <span class="kw">in</span> <span class="fn">reversed</span>(<span class="var">topo</span>):
+        <span class="var">node</span>.<span class="fn">_backward</span>()
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 4-9</span>
+                        <span class="step-desc"><code>build_topo(v)</code> Performs DFS post-order traversal ensuring children nodes are processed before parent nodes.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 11</span>
+                        <span class="step-desc"><code>self.grad = 1.0</code> Seeds output node gradient ($dL/dL = 1.0$).</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 12-13</span>
+                        <span class="step-desc">Iterates nodes in <code>reversed(topo)</code> order, executing <code>_backward()</code> closures to accumulate gradients via multivariate chain rule.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ DFS Topological Sort Simulator</div>
-                <pre class="sim-code"><code># Graph: f = x * x (x is reused!)</code></pre>
                 <div class="sim-inputs">
                     <button class="sim-run-btn" id="btn-run-sim-8">▶ EXECUTE DFS TOPOLOGICAL SORT</button>
                 </div>
@@ -333,7 +614,38 @@ c = a * b  # c.data = 6.0</code></pre>
         'content-b9': {
             title: 'Phase 1.8: Baby Operations Calculus Catalog',
             html: `<h3>1. First-Principles Derivatives Table</h3>
-            
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 operations_calculus.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="cm"># ReLU Activation: d/da max(0, a) = 1 if a > 0 else 0</span>
+<span class="kw">def</span> <span class="fn">relu</span>(<span class="var">self</span>):
+    <span class="var">out</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="num">0.0</span> <span class="kw">if</span> <span class="var">self</span>.data <span class="op"><</span> <span class="num">0</span> <span class="kw">else</span> <span class="var">self</span>.data, (<span class="var">self</span>,), <span class="str">'ReLU'</span>)
+    <span class="kw">def</span> <span class="fn">_backward</span>():
+        <span class="var">self</span>.grad <span class="op">+=</span> (<span class="var">out</span>.data <span class="op">></span> <span class="num">0</span>) <span class="op">*</span> <span class="var">out</span>.grad
+    <span class="var">out</span>._backward <span class="op">=</span> <span class="var">_backward</span>
+    <span class="kw">return</span> <span class="var">out</span>
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>out = Value(0.0 if self.data < 0 else self.data)</code> Clamps negative values to 0.0.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5</span>
+                        <span class="step-desc"><code>self.grad += (out.data > 0) * out.grad</code> Passes gradient backwards ONLY if forward output was strictly positive ($> 0$).</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Derivative Calculator Simulator</div>
@@ -354,15 +666,42 @@ c = a * b  # c.data = 6.0</code></pre>
         },
         'content-b10': {
             title: 'Phase 1.8: Vector Calculus & Jacobian Matrices',
-            html: `<h3>1. The Jacobian Matrix $J \in \mathbb{R}^{M \times N}$</h3>
-            <p>For a vector-valued function $f: \mathbb{R}^N \to \mathbb{R}^M$, the Jacobian matrix organizes all first-order partial derivatives:</p>
-            <div class="math-block">$$J = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix}$$</div>
-            
+            html: `<h3>1. The Jacobian Matrix $J \\in \\mathbb{R}^{M \\times N}$</h3>
+            <p>For a vector-valued function $f: \\mathbb{R}^N \\to \\mathbb{R}^M$, the Jacobian matrix organizes all first-order partial derivatives:</p>
+            <div class="math-block">$$J = \\begin{bmatrix} \\frac{\\partial f_1}{\\partial x_1} & \\dots & \\frac{\\partial f_1}{\\partial x_n} \\\\ \\vdots & \\ddots & \\vdots \\\\ \\frac{\\partial f_m}{\\partial x_1} & \\dots & \\frac{\\partial f_m}{\\partial x_n} \\end{bmatrix}$$</div>
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 jacobian_matrix.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="cm"># System: f1 = x^2 + 3y, f2 = 2x * y</span>
+<span class="kw">def</span> <span class="fn">compute_jacobian</span>(<span class="var">x</span>: <span class="typ">float</span>, <span class="var">y</span>: <span class="typ">float</span>):
+    <span class="var">J11</span>, <span class="var">J12</span> <span class="op">=</span> <span class="num">2</span><span class="op">*</span>x, <span class="num">3.0</span>       <span class="cm"># df1/dx, df1/dy</span>
+    <span class="var">J21</span>, <span class="var">J22</span> <span class="op">=</span> <span class="num">2</span><span class="op">*</span>y, <span class="num">2</span><span class="op">*</span>x        <span class="cm"># df2/dx, df2/dy</span>
+    <span class="kw">return</span> [[<span class="var">J11</span>, <span class="var">J12</span>], [<span class="var">J21</span>, <span class="var">J22</span>]]
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>J11 = 2*x, J12 = 3.0</code> Evaluates row 1 partial derivatives for $f_1(x, y) = x^2 + 3y$.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 4</span>
+                        <span class="step-desc"><code>J21 = 2*y, J22 = 2*x</code> Evaluates row 2 partial derivatives for $f_2(x, y) = 2xy$.</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ 2x2 Jacobian Matrix Evaluator</div>
-                <pre class="sim-code"><code>f1(x, y) = x^2 + 3y
-f2(x, y) = 2x * y</code></pre>
                 <div class="sim-inputs">
                     <label>x: <input type="number" id="sim-j-x" value="2.0" step="0.5"></label>
                     <label>y: <input type="number" id="sim-j-y" value="3.0" step="0.5"></label>
@@ -377,9 +716,38 @@ f2(x, y) = 2x * y</code></pre>
         'content-b11': {
             title: 'Phase 1.8: Chain Rule & Matmul Gradient',
             html: `<h3>1. Matrix Multiplication Derivatives</h3>
-            <p>For matrix product $Y = X \cdot W$ where $X \in \mathbb{R}^{B \times N}$ and $W \in \mathbb{R}^{N \times M}$:</p>
-            <div class="math-block">$$\frac{\partial L}{\partial W} = X^T \cdot \frac{\partial L}{\partial Y}, \qquad \frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} \cdot W^T$$</div>
-            
+            <p>For matrix product $Y = X \\cdot W$ where $X \\in \\mathbb{R}^{B \\times N}$ and $W \\in \\mathbb{R}^{N \\times M}$:</p>
+            <div class="math-block">$$\\frac{\\partial L}{\\partial W} = X^T \\cdot \\frac{\\partial L}{\\partial Y}, \\qquad \\frac{\\partial L}{\\partial X} = \\frac{\\partial L}{\\partial Y} \\cdot W^T$$</div>
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 matmul_grad.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="kw">def</span> <span class="fn">matmul_backward</span>(<span class="var">X</span>, <span class="var">W</span>, <span class="var">dL_dY</span>):
+    <span class="cm"># Transpose dimensions for shape compatibility</span>
+    <span class="var">dL_dW</span> <span class="op">=</span> <span class="var">X</span>.<span class="fn">T</span> <span class="op">@</span> <span class="var">dL_dY</span>  <span class="cm"># (N, B) @ (B, M) -> (N, M)</span>
+    <span class="var">dL_dX</span> <span class="op">=</span> <span class="var">dL_dY</span> <span class="op">@</span> <span class="var">W</span>.<span class="fn">T</span>  <span class="cm"># (B, M) @ (M, N) -> (B, N)</span>
+    <span class="kw">return</span> <span class="var">dL_dX</span>, <span class="var">dL_dW</span>
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 3</span>
+                        <span class="step-desc"><code>dL_dW = X.T @ dL_dY</code> Matrix product of transposed inputs ($N \times B$) and output gradients ($B \times M$), matching Weight shape ($N \times M$).</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 4</span>
+                        <span class="step-desc"><code>dL_dX = dL_dY @ W.T</code> Matrix product of output gradients ($B \times M$) and transposed weights ($M \times N$), matching Input shape ($B \times N$).</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Matmul Backprop Tensor Shape Simulator</div>
@@ -399,8 +767,43 @@ f2(x, y) = 2x * y</code></pre>
         'content-b12': {
             title: 'Phase 1.8: Full Micrograd Laboratory Engine',
             html: `<h3>1. End-to-End Artificial Neuron Evaluation</h3>
-            <p>A 2-input single neuron evaluates $y = \tanh(w_1 x_1 + w_2 x_2 + b)$. Calling <code>y.backward()</code> traverses 7 nodes backward, computing exact derivatives for weights $w_1, w_2$ and bias $b$.</p>
-            
+            <p>A 2-input single neuron evaluates $y = \\tanh(w_1 x_1 + w_2 x_2 + b)$. Calling <code>y.backward()</code> traverses 7 nodes backward, computing exact derivatives for weights $w_1, w_2$ and bias $b$.</p>
+
+            <div class="code-window">
+                <div class="code-header-bar">
+                    <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    <span class="code-filename">📂 single_neuron_backprop.py</span>
+                    <span class="code-lang-badge">PYTHON 3.11</span>
+                </div>
+                <div class="code-body">
+<span class="var">x1</span>, <span class="var">x2</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="num">2.0</span>), <span class="typ">Value</span>(<span class="num">1.0</span>)
+<span class="var">w1</span>, <span class="var">w2</span> <span class="op">=</span> <span class="typ">Value</span>(-<span class="num">3.0</span>), <span class="typ">Value</span>(<span class="num">1.0</span>)
+<span class="var">b</span> <span class="op">=</span> <span class="typ">Value</span>(<span class="num">6.8813735870195432</span>)
+
+<span class="var">n</span> <span class="op">=</span> <span class="var">w1</span><span class="op">*</span><span class="var">x1</span> <span class="op">+</span> <span class="var">w2</span><span class="op">*</span><span class="var">x2</span> <span class="op">+</span> <span class="var">b</span>
+<span class="var">y</span> <span class="op">=</span> <span class="var">n</span>.<span class="fn">tanh</span>()
+<span class="var">y</span>.<span class="fn">backward</span>()
+                </div>
+            </div>
+
+            <div class="line-breakdown-box">
+                <div class="breakdown-title">💡 Line-by-Line Code Breakdown</div>
+                <div class="line-step-list">
+                    <div class="line-step">
+                        <span class="step-pill">Line 1-3</span>
+                        <span class="step-desc">Initializes inputs <code>x1, x2</code>, weights <code>w1, w2</code>, and bias <code>b</code> as <code>Value</code> autograd nodes.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 5-6</span>
+                        <span class="step-desc">Computes linear combination <code>n = w1*x1 + w2*x2 + b</code> and non-linear activation <code>y = tanh(n)</code>.</span>
+                    </div>
+                    <div class="line-step">
+                        <span class="step-pill">Line 7</span>
+                        <span class="step-desc"><code>y.backward()</code> executes reverse topological sort and computes exact derivatives for all weights and inputs!</span>
+                    </div>
+                </div>
+            </div>
+
             <h4>Interactive Code Simulator</h4>
             <div class="code-sim-box">
                 <div class="sim-header">⚡ Full Micrograd Neuron Backprop Simulator</div>
