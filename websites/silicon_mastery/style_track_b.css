@@ -534,9 +534,11 @@ body {
     padding: 1.2rem;
     font-family: var(--font-mono);
     font-size: 0.92rem;
-    line-height: 1.7;
+    line-height: 1.6;
     color: #ABB2BF;
     overflow-x: auto;
+    white-space: pre;
+    tab-size: 4;
 }
 
 /* Syntax Highlighting */
