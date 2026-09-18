@@ -432,8 +432,8 @@ body {
 .ram-view-container, .coord-view-container { width: 100%; }
 .ram-header, .coord-header { font-family: var(--font-mono); font-weight: 800; font-size: 0.85rem; color: var(--c-text-muted); margin-bottom: 0.6rem; text-align: center; }
 
-.ram-cells-row { display: flex; gap: 0.6rem; justify-content: center; }
-.ram-cell { background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.8rem 1.1rem; text-align: center; font-family: var(--font-mono); box-shadow: 3px 3px 0px #1A1D20; transition: all 0.25s ease; color: var(--c-text-primary); }
+.ram-cells-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+.ram-cell { background: #FFFFFF; border: var(--border-thick); border-radius: 8px; padding: 0.8rem 1.2rem; text-align: center; font-family: var(--font-mono); box-shadow: 3px 3px 0px #1A1D20; transition: all 0.25s ease; color: var(--c-text-primary); min-width: 72px; flex-shrink: 0; }
 .ram-cell .addr { display: block; font-size: 0.72rem; color: var(--c-text-muted); margin-bottom: 0.2rem; }
 .ram-cell .val { font-size: 1.15rem; font-weight: 800; color: var(--c-text-primary); }
 .ram-cell.highlight { border-color: var(--c-accent-amber); background: #FFEDD5; transform: scale(1.1); }
