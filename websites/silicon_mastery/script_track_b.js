@@ -854,6 +854,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-1');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Initializing RAM:</span> Allocated 6 float32 elements at pointer 0x7f9a1400</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Stride Calculation:</span> Row stride=3, Col stride=1</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Address Resolution:</span> offset(${offset}) + (${r}*${strides0}) + (${c}*${strides1}) = ${linearIdx}</div>
+                                </div>
                                 <span class="sim-prompt">>>> t.get_linear_index((${r}, ${c}))</span><br>
                                 <span class="sim-res">Linear Address: offset(${offset}) + (${r} * ${strides0}) + (${c} * ${strides1}) = <strong>${linearIdx}</strong></span><br>
                                 <span class="sim-val">RAM Memory Cell [${hexAddr}]: <strong>${val.toFixed(1)}</strong></span>
@@ -868,6 +873,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-2');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Check Original:</span> Shape (2, 3), Strides (3, 1), Pointer 0x7f9a1400</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Metadata Swap:</span> New Shape (3, 2), New Strides (1, 3)</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Pointer Validation:</span> Same Storage Pointer 0x7f9a1400</div>
+                                </div>
                                 <span class="sim-prompt">>>> t_trans = t.T</span><br>
                                 <span class="sim-res">t.strides (3, 1) -> t_trans.strides (1, 3)</span><br>
                                 <span class="sim-val">t_trans.storage.data_ptr() == t.storage.data_ptr() -> <strong>True (Zero Copy!)</strong></span>
@@ -883,6 +893,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-3');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Contiguity Guard:</span> Strides (1, 3) != C-Contiguous (2, 1)</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Reshape Check:</span> Row elements jump non-adjacent in physical RAM</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag" style="color:#EF4444">[Step 3] Exception Raised:</span> PyTorch RuntimeError assertion triggered!</div>
+                                </div>
                                 <span class="sim-prompt">>>> t_trans.view(6)</span><br>
                                 <span class="sim-res" style="color:#EF4444;">RuntimeError: view size is not compatible with input tensor's size and stride!</span>
                             `;
@@ -892,6 +907,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-3');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Contiguity Check:</span> Non-contiguous stride detected</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Buffer Reallocation:</span> Allocating fresh 6-element contiguous 1D array in RAM</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Reshape View:</span> Reshaping contiguous buffer into 1D (6,) tensor</div>
+                                </div>
                                 <span class="sim-prompt">>>> t_trans.contiguous().view(6)</span><br>
                                 <span class="sim-res">Success! Fresh 1D allocation: [10.0, 40.0, 20.0, 50.0, 30.0, 60.0]</span><br>
                                 <span class="sim-val">Strides: (1,) | Contiguous: True</span>
@@ -908,6 +928,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-4');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] SM Scheduling:</span> Dispatching ${n} CUDA Threads to SM Warp Schedulers</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Warp Grouping:</span> Dividing ${n} threads into ${warps} Warps of 32 threads</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] SIMT Execution:</span> Executing add_kernel in lockstep across CUDA cores</div>
+                                </div>
                                 <span class="sim-prompt">>>> Launching add_kernel<<<&lt;${Math.ceil(n/128)}, 128&gt;&gt;&gt;</span><br>
                                 <span class="sim-res">Active Warps: <strong>${warps} Warps (${n} CUDA Threads)</strong></span><br>
                                 <span class="sim-val">SIMT Lockstep: ${warps} Warp Schedulers active across SM cores</span>
@@ -923,6 +948,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-5');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Memory Request:</span> 32 threads requesting contiguous 4-byte float values</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Address Alignment:</span> 32 * 4 = 128 bytes matching single L2 cache line</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Bus Transaction:</span> 1 single 128-byte VRAM fetch transaction issued!</div>
+                                </div>
                                 <span class="sim-prompt">>>> Coalesced Access Benchmark</span><br>
                                 <span class="sim-res">VRAM Bus Transactions: <strong>1 Transaction (128-byte block)</strong></span><br>
                                 <span class="sim-val">VRAM Bandwidth Utilization: <strong>100% (1,008 GB/s throughput)</strong></span>
@@ -933,6 +963,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-5');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Memory Request:</span> 32 threads requesting strided 32-element spaced addresses</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Cache Line Miss:</span> Addresses spill across 32 separate 128B cache lines</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag" style="color:#EF4444">[Step 3] Bus Penalty:</span> 32 distinct VRAM transactions issued! 97% bandwidth wasted!</div>
+                                </div>
                                 <span class="sim-prompt">>>> Strided Uncoalesced Access Benchmark</span><br>
                                 <span class="sim-res" style="color:#EF4444;">VRAM Bus Transactions: <strong>32 Separate Transactions!</strong></span><br>
                                 <span class="sim-val" style="color:#EF4444;">VRAM Bandwidth Drop: <strong>3.1% Utilization (31.5 GB/s penalty!)</strong></span>
@@ -953,6 +988,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-6');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Forward Pass:</span> c.data = ${aData.toFixed(1)} * ${bData.toFixed(1)} = ${cData.toFixed(2)}</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Seed Gradient:</span> c.grad = 1.0</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Chain Rule:</span> a.grad += b.data * c.grad = ${aGrad.toFixed(2)} | b.grad += a.data * c.grad = ${bGrad.toFixed(2)}</div>
+                                </div>
                                 <span class="sim-prompt">>>> c = a * b; c.backward()</span><br>
                                 <span class="sim-res">c.data = <strong>${cData.toFixed(2)}</strong> | c.grad = <strong>1.00</strong></span><br>
                                 <span class="sim-val">a.grad = d(a*b)/da * c.grad = <strong>${aGrad.toFixed(2)}</strong></span><br>
@@ -968,8 +1008,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-7');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Expression Evaluation:</span> L = (a * b + c) ** 2</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Operator Overloading:</span> Intercepting *, +, ** operations</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] DAG Tape Construction:</span> 6 Value objects wired with directed parent edges</div>
+                                </div>
                                 <span class="sim-prompt">>>> L = (a * b + c) ** 2</span><br>
-                                <span class="sim-res">Recorded Graph: [a, b] -> (*)-> (a*b), c -> (+)-> (a*b+c) -> (**2)-> L</span><br>
+                                <span class="sim-res">Recorded Graph: [a, b] -> (*) -> (a*b), c -> (+) -> (a*b+c) -> (**2) -> L</span><br>
                                 <span class="sim-val">Active Tape Nodes: 6 Value Objects in Memory</span>
                             `;
                         }
@@ -982,6 +1027,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-8');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Graph Traversal:</span> Pushing node f to DFS stack</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Topological Sorting:</span> Reordering graph -> [x, f]</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Gradient Accumulation:</span> Executing f._backward() -> x.grad += 2 * x.data</div>
+                                </div>
                                 <span class="sim-prompt">>>> f = x * x; f.backward()</span><br>
                                 <span class="sim-res">Topological Order: [x, f]</span><br>
                                 <span class="sim-val">Accumulated Gradient: x.grad += x.data * 1.0 + x.data * 1.0 = <strong>2 * x.data</strong></span>
@@ -1005,6 +1055,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-9');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Function Lookup:</span> Selected calculus function: ${op}</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Derivative Formula:</span> ${expr}</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Tangent Slope Evaluation:</span> Slope at a = ${valA} is ${deriv.toFixed(4)}</div>
+                                </div>
                                 <span class="sim-prompt">>>> Evaluating derivative for ${op}...</span><br>
                                 <span class="sim-res">${expr}</span><br>
                                 <span class="sim-val">Computed Local Slope da: <strong>${deriv.toFixed(4)}</strong></span>
@@ -1027,6 +1082,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-10');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Function Setup:</span> System f1(x,y) = x^2 + 3y, f2(x,y) = 2xy</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Partial Derivatives:</span> df1/dx=2x, df1/dy=3, df2/dx=2y, df2/dy=2x</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Matrix Evaluation:</span> Evaluating J at (x=${x}, y=${y})</div>
+                                </div>
                                 <span class="sim-prompt">>>> J = [[df1/dx, df1/dy], [df2/dx, df2/dy]]</span><br>
                                 <span class="sim-res">Evaluated Jacobian J: <strong>[[${j11}, ${j12}], [${j21}, ${j22}]]</strong></span>
                             `;
@@ -1044,6 +1104,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-11');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Forward Shape:</span> Y = X @ W (X:(${b},${n}), W:(${n},${m})) -> Y:(${b},${m})</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Transpose Outer Product:</span> dL/dW = X^T @ dL/dY -> (${n},${b}) @ (${b},${m})</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Transpose Inner Product:</span> dL/dX = dL/dY @ W^T -> (${b},${m}) @ (${m},${n})</div>
+                                </div>
                                 <span class="sim-prompt">>>> Y = X @ W (X:(${b},${n}), W:(${n},${m}))</span><br>
                                 <span class="sim-res">dL/dW = X^T @ dL/dY = (${n},${b}) @ (${b},${m}) -> <strong>Shape (${n}, ${m})</strong></span><br>
                                 <span class="sim-val">dL/dX = dL/dY @ W^T = (${b},${m}) @ (${m},${n}) -> <strong>Shape (${b}, ${n})</strong></span>
@@ -1070,18 +1135,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         const simOut = document.getElementById('sim-out-12');
                         if (simOut) {
                             simOut.innerHTML = `
+                                <div class="sim-partial-steps">
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 1] Forward Neuron Pass:</span> raw = w1*x1 + w2*x2 + b = ${rawOutput.toFixed(2)}, y = tanh(raw) = ${actOutput.toFixed(4)}</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 2] Derivative of Tanh:</span> dAct = 1 - y^2 = ${dAct.toFixed(4)}</div>
+                                    <div class="partial-step-item"><span class="partial-step-tag">[Step 3] Parameter Gradients:</span> dw1 = x1*dAct = ${dw1.toFixed(4)}, dw2 = x2*dAct = ${dw2.toFixed(4)}, db = dAct = ${db.toFixed(4)}</div>
+                                </div>
                                 <span class="sim-prompt">>>> Neuron Forward & Backward Evaluation</span><br>
-                                <span class="sim-res">y = tanh(${rawOutput.toFixed(2)}) = <strong>${actOutput.toFixed(4)}</strong></span><br>
-                                <span class="sim-val">w1.grad = <strong>${dw1.toFixed(4)}</strong> | w2.grad = <strong>${dw2.toFixed(4)}</strong> | b.grad = <strong>${db.toFixed(4)}</strong></span>
+                                <span class="sim-res">Forward Output: y = <strong>${actOutput.toFixed(4)}</strong></span><br>
+                                <span class="sim-val">Gradients: w1.grad = <strong>${dw1.toFixed(4)}</strong> | w2.grad = <strong>${dw2.toFixed(4)}</strong> | b.grad = <strong>${db.toFixed(4)}</strong></span>
                             `;
                         }
                     };
                 }
-            }
-        };
-    });
 
-    if (closeModalBtn) closeModalBtn.onclick = () => modal.classList.add('hidden');
+                if (closeModalBtn) closeModalBtn.onclick = () => modal.classList.add('hidden');
     if (modalBackdrop) modalBackdrop.onclick = () => modal.classList.add('hidden');
 
     // --- INTERACTIVE SCENE CONTROLLER ---
