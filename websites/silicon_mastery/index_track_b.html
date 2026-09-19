@@ -379,7 +379,9 @@
 <span class="code-line" id="s7-l8"><span class="op">>>></span> <span class="var">L</span> = d ** <span class="num">2</span>; L.label = <span class="str">'L'</span></span>
 <span class="code-line output-line" id="s7-out1" style="display:none"></span></code></pre>
                     </div>
-                    <div class="dag-canvas" id="forward-dag-b" style="width: 100%; max-width: 880px; min-width: 880px; height: 260px; position: relative; margin: 0 auto;"></div>
+                    <div style="width: 100%; overflow-x: auto; padding-bottom: 1rem;">
+                        <div class="dag-canvas" id="forward-dag-b" style="width: 100%; max-width: 880px; min-width: 880px; height: 260px; position: relative; margin: 0 auto;"></div>
+                    </div>
                 </div>
             </div>
 
@@ -530,10 +532,10 @@
 <span class="code-line output-line" id="s10-out1" style="display:none"></span></code></pre>
                     </div>
 
-                    <div class="j-eq">
+                    <div class="j-eq" style="font-size: 1.4rem; padding: 1.5rem; background: #FFFFFF; border: 2px dashed #1A1D20; border-radius: 10px; margin-bottom: 1.5rem; box-shadow: 4px 4px 0px #1A1D20; text-align: center;">
                         $$\mathbf{y} = f(\mathbf{x}), \quad J = \begin{bmatrix} \frac{\partial y_1}{\partial x_1} & \frac{\partial y_1}{\partial x_2} \\ \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2} \end{bmatrix}$$
                     </div>
-                    <div class="j-matrix-display" id="j-matrix-display">
+                    <div class="j-matrix-display" id="j-matrix-display" style="font-size: 1.2rem; font-family: var(--font-mono); font-weight: 800; padding: 1.5rem; background: #F9F6F0; border: 2px solid #1A1D20; border-radius: 10px; box-shadow: 4px 4px 0px #1A1D20; text-align: center; color: #D96B27; line-height: 1.6;">
                         <!-- Injected via JS -->
                     </div>
                 </div>
@@ -575,14 +577,14 @@
 <span class="code-line output-line" id="s11-out1" style="display:none"></span></code></pre>
                     </div>
 
-                    <div class="gear-visualizer">
-                        <div class="gear" id="gear-a">⚙️ Gear A (d B/d A = 2)</div>
-                        <div class="gear-conn">➔</div>
-                        <div class="gear" id="gear-b">⚙️ Gear B (d C/d B = 3)</div>
-                        <div class="gear-conn">➔</div>
-                        <div class="gear" id="gear-c">⚙️ Gear C (Total d C/d A = 6)</div>
+                    <div class="gear-visualizer" style="display: flex; gap: 1rem; align-items: center; justify-content: center; margin: 2rem 0; flex-wrap: wrap;">
+                        <div class="gear" id="gear-a" style="font-size: 1.1rem;">⚙️ Gear A (d B/d A = 2)</div>
+                        <div class="gear-conn" style="font-weight: 900; font-size: 1.5rem; color: #D96B27;">➔</div>
+                        <div class="gear" id="gear-b" style="font-size: 1.1rem;">⚙️ Gear B (d C/d B = 3)</div>
+                        <div class="gear-conn" style="font-weight: 900; font-size: 1.5rem; color: #D96B27;">➔</div>
+                        <div class="gear" id="gear-c" style="font-size: 1.1rem; border-color: #D96B27; background: #FFF4EB;">⚙️ Gear C (Total d C/d A = 6)</div>
                     </div>
-                    <div class="matmul-grad-card">
+                    <div class="matmul-grad-card" style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; background: #F9F6F0; border: 2px dashed #1A1D20; border-radius: 10px; padding: 1.5rem; box-shadow: 4px 4px 0px #1A1D20; text-align: center; color: #C25E00; margin-bottom: 1rem;">
                         <code>∂L/∂W = Xᵀ · ∂L/∂Y &nbsp;|&nbsp; Shape: (in_features × out_features)</code>
                     </div>
                 </div>
@@ -631,20 +633,28 @@
 <span class="code-line output-line" id="s12-out3" style="display:none"></span></code></pre>
                 </div>
                 
-                <div class="micrograd-lab" style="flex: 1;">
-                    <div class="lab-inputs">
-                        <label>x1: <input type="number" id="inp-x1" value="2.0" step="0.1"></label>
-                        <label>w1: <input type="number" id="inp-w1" value="-3.0" step="0.1"></label>
-                        <label>x2: <input type="number" id="inp-x2" value="1.0" step="0.1"></label>
-                        <label>w2: <input type="number" id="inp-w2" value="1.0" step="0.1"></label>
-                        <label>b: <input type="number" id="inp-b" value="6.88137" step="0.1"></label>
+                <div class="micrograd-lab" style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="lab-inputs" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; align-items: center; background: #FFFFFF; color: var(--c-text-primary); padding: 1.5rem; border: var(--border-thick); border-radius: var(--radius-md); box-shadow: 4px 4px 0px #1A1D20;">
+                        <label style="font-weight: 800;">x1: <input type="number" id="inp-x1" value="2.0" step="0.1" style="width: 80px;"></label>
+                        <label style="font-weight: 800;">w1: <input type="number" id="inp-w1" value="-3.0" step="0.1" style="width: 80px;"></label>
+                        <label style="font-weight: 800;">x2: <input type="number" id="inp-x2" value="1.0" step="0.1" style="width: 80px;"></label>
+                        <label style="font-weight: 800;">w2: <input type="number" id="inp-w2" value="1.0" step="0.1" style="width: 80px;"></label>
+                        <label style="font-weight: 800; grid-column: span 2; text-align: center;">b: <input type="number" id="inp-b" value="6.88137" step="0.1" style="width: 100px;"></label>
                     </div>
 
-                    <div class="lab-results" id="lab-results">
-                        <div class="res-item">n = (x1*w1 + x2*w2 + b): <strong id="res-n">-</strong></div>
-                        <div class="res-item">o = tanh(n): <strong id="res-o">-</strong></div>
-                        <div class="res-item">w1.grad: <strong id="res-w1grad">-</strong></div>
-                        <div class="res-item">w2.grad: <strong id="res-w2grad">-</strong></div>
+                    <div class="lab-results" id="lab-results" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="res-item" style="font-family: var(--font-mono); font-size: 1.05rem; background: #F9F6F0; border: 1.5px solid #1A1D20; border-radius: 8px; padding: 1rem; box-shadow: 3px 3px 0px #1A1D20; display: flex; justify-content: space-between;">
+                            <span>n = (x1*w1 + x2*w2 + b):</span> <strong id="res-n" style="color: #D96B27;">-</strong>
+                        </div>
+                        <div class="res-item" style="font-family: var(--font-mono); font-size: 1.05rem; background: #F9F6F0; border: 1.5px solid #1A1D20; border-radius: 8px; padding: 1rem; box-shadow: 3px 3px 0px #1A1D20; display: flex; justify-content: space-between;">
+                            <span>o = tanh(n):</span> <strong id="res-o" style="color: #D96B27;">-</strong>
+                        </div>
+                        <div class="res-item" style="font-family: var(--font-mono); font-size: 1.05rem; background: #F9F6F0; border: 1.5px solid #1A1D20; border-radius: 8px; padding: 1rem; box-shadow: 3px 3px 0px #1A1D20; display: flex; justify-content: space-between;">
+                            <span>w1.grad:</span> <strong id="res-w1grad" style="color: #2E7D4E;">-</strong>
+                        </div>
+                        <div class="res-item" style="font-family: var(--font-mono); font-size: 1.05rem; background: #F9F6F0; border: 1.5px solid #1A1D20; border-radius: 8px; padding: 1rem; box-shadow: 3px 3px 0px #1A1D20; display: flex; justify-content: space-between;">
+                            <span>w2.grad:</span> <strong id="res-w2grad" style="color: #2E7D4E;">-</strong>
+                        </div>
                     </div>
                 </div>
             </div>
