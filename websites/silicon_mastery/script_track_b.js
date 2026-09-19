@@ -49,16 +49,52 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sceneNo === currentScene) {
                 s.classList.add('active');
                 const act = s.getAttribute('data-act') || 'TRACK B';
-                actBadgeDisp.innerText = act;
-                initSceneInteraction(currentScene);
+                if (actBadgeDisp) actBadgeDisp.innerText = act;
+                try {
+                    initSceneInteraction(currentScene);
+                } catch (e) {
+                    console.error("Scene init error:", e);
+                }
             } else {
                 s.classList.remove('active');
             }
         });
 
-        hudSceneTitle.innerText = sceneTitles[currentScene - 1] || "";
-        btnPrev.disabled = (currentScene === 1);
-        btnNext.disabled = (currentScene === totalScenes);
+        if (hudSceneTitle) hudSceneTitle.innerText = sceneTitles[currentScene - 1] || "";
+        if (btnPrev) btnPrev.disabled = (currentScene === 1);
+        
+        if (btnNext) {
+            if (currentScene === totalScenes) {
+                btnNext.innerText = "RETURN TO HUB ⌂";
+                btnNext.disabled = false;
+                btnNext.onclick = (e) => {
+                    e.preventDefault();
+                    window.location.href = "../../index.html";
+                };
+            } else {
+                btnNext.innerText = "NEXT CONCEPT →";
+                btnNext.disabled = false;
+                btnNext.onclick = (e) => {
+                    e.preventDefault();
+                    if (currentScene < totalScenes) {
+                        currentScene++;
+                        updateScene();
+                    }
+                };
+            }
+        }
+
+        if (btnPrev) {
+            btnPrev.onclick = (e) => {
+                e.preventDefault();
+                if (currentScene > 1) {
+                    currentScene--;
+                    updateScene();
+                }
+            };
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (window.renderMathInElement) {
             setTimeout(() => {
@@ -77,9 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             else d.classList.remove('active');
         });
     }
-
-    btnNext.addEventListener('click', () => { if (currentScene < totalScenes) { currentScene++; updateScene(); } });
-    btnPrev.addEventListener('click', () => { if (currentScene > 1) { currentScene--; updateScene(); } });
 
     document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
