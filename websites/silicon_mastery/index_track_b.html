@@ -164,22 +164,26 @@
                         STATUS: Tensor is TRANSPOSED (Non-Contiguous). Strides (1, 3) != C-Contiguous (2, 1).
                     </div>
 
-                    <div class="code-terminal">
+                    <div class="code-terminal enhanced" id="term-scene3">
                         <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
                             <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
-                            <span class="code-filename">💻 python_terminal.sh</span>
+                            <span class="code-filename">💻 tensor_memory.py</span>
                             <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
                         </div>
-                        <pre><code># Attempting .view(6) on transposed tensor:
->>> t_trans = t.T
->>> t_trans.is_contiguous()  # False!
->>> t_trans.view(6)
-<span class="err-text" id="err-code-text">RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .contiguous() first!</span></code></pre>
+                        <pre><code><span class="code-line" id="s3-l1"><span class="cm"># Attempting .view(6) on transposed tensor:</span></span>
+<span class="code-line" id="s3-l2"><span class="op">>>></span> <span class="var">t_trans</span> = t.T</span>
+<span class="code-line" id="s3-l3"><span class="op">>>></span> t_trans.<span class="fn">is_contiguous</span>()</span>
+<span class="code-line" id="s3-out1" style="display:none"></span>
+<span class="code-line" id="s3-l4"><span class="op">>>></span> t_trans.<span class="fn">view</span>(<span class="num">6</span>)</span>
+<span class="code-line err-line" id="s3-err1" style="display:none"></span>
+<span class="code-line" id="s3-l5" style="display:none"><span class="op">>>></span> <span class="var">t_contig</span> = t_trans.<span class="fn">contiguous</span>()</span>
+<span class="code-line" id="s3-l6" style="display:none"><span class="op">>>></span> t_contig.<span class="fn">view</span>(<span class="num">6</span>)</span>
+<span class="code-line output-line" id="s3-out2" style="display:none"></span></code></pre>
                     </div>
 
-                    <div class="ram-realloc-box" id="ram-realloc">
-                        <div class="r-label">After calling `.contiguous()`: Fresh memory buffer allocated in consecutive reading order!</div>
-                        <div class="ram-cells-row" id="realloc-cells">
+                    <div class="ram-realloc-box" id="ram-realloc" style="display: none; width: 100%;">
+                        <div class="r-label" style="text-align: center; font-weight: 800; color: #2E7D4E; margin-bottom: 0.5rem;">After calling `.contiguous()`: Fresh memory buffer allocated in consecutive reading order!</div>
+                        <div class="ram-cells-row" id="realloc-cells" style="display: flex; gap: 0.5rem; justify-content: center;">
                             <div class="ram-cell green"><span class="val">10.0</span></div>
                             <div class="ram-cell green"><span class="val">40.0</span></div>
                             <div class="ram-cell green"><span class="val">20.0</span></div>
@@ -209,6 +213,25 @@
             
             <div class="massive-diagram">
                 <div class="cuda-stage">
+                    <div class="code-terminal enhanced" id="term-scene4" style="max-width: 800px; margin-bottom: 1.5rem;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 cuda_kernel.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s4-l1"><span class="op">@</span>cuda.<span class="fn">jit</span></span>
+<span class="code-line" id="s4-l2"><span class="kw">def</span> <span class="fn">vector_add</span>(a, b, result):</span>
+<span class="code-line" id="s4-l3">    <span class="cm"># Calculate absolute thread index in grid</span></span>
+<span class="code-line" id="s4-l4">    <span class="var">tx</span> = cuda.threadIdx.x</span>
+<span class="code-line" id="s4-l5">    <span class="var">ty</span> = cuda.blockIdx.x</span>
+<span class="code-line" id="s4-l6">    <span class="var">bw</span> = cuda.blockDim.x</span>
+<span class="code-line" id="s4-l7">    <span class="var">pos</span> = tx + ty * bw</span>
+<span class="code-line" id="s4-l8"></span>
+<span class="code-line" id="s4-l9">    <span class="cm"># SIMT Execution: Threads in a Warp execute this line in lockstep!</span></span>
+<span class="code-line" id="s4-l10">    <span class="kw">if</span> pos < a.size:</span>
+<span class="code-line" id="s4-l11">        result[pos] = a[pos] + b[pos]</span></code></pre>
+                    </div>
+
                     <div class="gpu-grid">
                         <div class="sm-card">
                             <div class="sm-title">Streaming Multiprocessor (SM 0)</div>
@@ -251,6 +274,23 @@
             
             <div class="massive-diagram">
                 <div class="coalesced-stage">
+                    <div class="code-terminal enhanced" id="term-scene5" style="max-width: 800px; margin-bottom: 1.5rem;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 memory_fetch.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s5-l1"><span class="kw">import</span> torch</span>
+<span class="code-line" id="s5-l2"><span class="cm"># 1. Contiguous Memory (Coalesced)</span></span>
+<span class="code-line" id="s5-l3"><span class="var">t_contig</span> = torch.<span class="fn">arange</span>(<span class="num">128</span>, device=<span class="str">'cuda'</span>)</span>
+<span class="code-line" id="s5-l4"><span class="var">out1</span> = t_contig * <span class="num">2</span></span>
+<span class="code-line output-line" id="s5-out1" style="display:none"></span>
+<span class="code-line" id="s5-l5"><span class="cm"># 2. Strided Memory (Uncoalesced)</span></span>
+<span class="code-line" id="s5-l6"><span class="var">t_strided</span> = torch.<span class="fn">empty</span>(<span class="num">128</span>, <span class="num">128</span>, device=<span class="str">'cuda'</span>)[:, <span class="num">0</span>]</span>
+<span class="code-line" id="s5-l7"><span class="var">out2</span> = t_strided * <span class="num">2</span></span>
+<span class="code-line err-line" id="s5-err1" style="display:none"></span></code></pre>
+                    </div>
+                    
                     <div class="mode-selector">
                         <button class="mode-btn active" id="btn-mode-coal">🟢 Coalesced Access (Contiguous Strides)</button>
                         <button class="mode-btn" id="btn-mode-uncoal">🔴 Uncoalesced Access (Strided/Transposed)</button>
@@ -285,15 +325,23 @@
             
             <div class="massive-diagram">
                 <div class="value-anatomy-stage">
-                    <div class="struct-card">
-                        <div class="struct-head">class Value (Autograd Node)</div>
-                        <div class="struct-fields">
-                            <div class="sf-item"><code>self.data: float</code> ➔ Raw scalar numerical value</div>
-                            <div class="sf-item"><code>self.grad: float</code> ➔ Accumulated derivative dLoss/dValue (Initialized to 0.0)</div>
-                            <div class="sf-item"><code>self._prev: Set[Value]</code> ➔ Set of direct parent operand nodes</div>
-                            <div class="sf-item"><code>self._op: str</code> ➔ Operation symbol ('+', '*', '**', 'ReLU')</div>
-                            <div class="sf-item"><code>self._backward: Callable</code> ➔ Local chain-rule derivative closure</div>
+                    <div class="code-terminal enhanced" id="term-scene6" style="width: 700px;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 micrograd_engine.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
                         </div>
+                        <pre><code><span class="code-line" id="s6-l1"><span class="kw">class</span> <span class="typ">Value</span>:</span>
+<span class="code-line" id="s6-l2">    <span class="cm">""" stores a single scalar value and its gradient """</span></span>
+<span class="code-line" id="s6-l3">    <span class="kw">def</span> <span class="fn">__init__</span>(self, data, _children=(), _op=<span class="str">''</span>):</span>
+<span class="code-line" id="s6-l4">        self.data = data</span>
+<span class="code-line" id="s6-l5">        self.grad = <span class="num">0.0</span></span>
+<span class="code-line" id="s6-l6">        self._backward = <span class="kw">lambda</span>: <span class="kw">None</span></span>
+<span class="code-line" id="s6-l7">        self._prev = set(_children)</span>
+<span class="code-line" id="s6-l8">        self._op = _op</span>
+<span class="code-line" id="s6-l9"></span>
+<span class="code-line" id="s6-l10" style="display:none"><span class="op">>>></span> <span class="var">v</span> = Value(<span class="num">5.0</span>)</span>
+<span class="code-line output-line" id="s6-out1" style="display:none"></span></code></pre>
                     </div>
                 </div>
             </div>
@@ -314,8 +362,24 @@
             <p class="scene-subtitle">As Python executes operations, the Directed Acyclic Graph (DAG) builds itself dynamically in memory on the autograd tape.</p>
             
             <div class="massive-diagram">
-                <div class="dag-wrapper">
-                    <div class="dag-canvas" id="forward-dag-b"></div>
+                <div class="dag-wrapper" style="display: flex; flex-direction: column; gap: 2rem; align-items: center; width: 100%;">
+                    <div class="code-terminal enhanced" id="term-scene7" style="width: 100%; max-width: 800px;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 dag_builder.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s7-l1"><span class="op">>>></span> <span class="var">a</span> = Value(<span class="num">2.0</span>, label=<span class="str">'a'</span>)</span>
+<span class="code-line" id="s7-l2"><span class="op">>>></span> <span class="var">b</span> = Value(<span class="num">-3.0</span>, label=<span class="str">'b'</span>)</span>
+<span class="code-line" id="s7-l3"><span class="op">>>></span> <span class="var">c</span> = Value(<span class="num">10.0</span>, label=<span class="str">'c'</span>)</span>
+<span class="code-line" id="s7-l4"></span>
+<span class="code-line" id="s7-l5"><span class="op">>>></span> <span class="var">e</span> = a * b; e.label = <span class="str">'e'</span></span>
+<span class="code-line" id="s7-l6"><span class="op">>>></span> <span class="var">d</span> = e + c; d.label = <span class="str">'d'</span></span>
+<span class="code-line" id="s7-l7"></span>
+<span class="code-line" id="s7-l8"><span class="op">>>></span> <span class="var">L</span> = d ** <span class="num">2</span>; L.label = <span class="str">'L'</span></span>
+<span class="code-line output-line" id="s7-out1" style="display:none"></span></code></pre>
+                    </div>
+                    <div class="dag-canvas" id="forward-dag-b" style="width: 100%; max-width: 880px; min-width: 880px; height: 260px; position: relative; margin: 0 auto;"></div>
                 </div>
             </div>
 
@@ -336,12 +400,33 @@
             
             <div class="massive-diagram">
                 <div class="topo-stage">
+                    <div class="code-terminal enhanced" id="term-scene8" style="width: 100%; max-width: 900px; margin-bottom: 1.5rem;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 topo_sort.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s8-l1"><span class="kw">def</span> <span class="fn">backward</span>(self):</span>
+<span class="code-line" id="s8-l2">    <span class="var">topo</span> = []</span>
+<span class="code-line" id="s8-l3">    <span class="var">visited</span> = set()</span>
+<span class="code-line" id="s8-l4">    <span class="kw">def</span> <span class="fn">build_topo</span>(v):</span>
+<span class="code-line" id="s8-l5">        <span class="kw">if</span> v <span class="kw">not in</span> visited:</span>
+<span class="code-line" id="s8-l6">            visited.add(v)</span>
+<span class="code-line" id="s8-l7">            <span class="kw">for</span> child <span class="kw">in</span> v._prev:</span>
+<span class="code-line" id="s8-l8">                build_topo(child)</span>
+<span class="code-line" id="s8-l9">            topo.append(v)  <span class="cm"># Add after children (Post-order DFS)</span></span>
+<span class="code-line" id="s8-l10">    build_topo(self)</span>
+<span class="code-line" id="s8-l11">    self.grad = <span class="num">1.0</span></span>
+<span class="code-line" id="s8-l12">    <span class="kw">for</span> node <span class="kw">in</span> reversed(topo):</span>
+<span class="code-line" id="s8-l13">        node._backward()</span></code></pre>
+                    </div>
+
                     <div class="huge-equation">y = x + x &nbsp;|&nbsp; Loss = y × 3 &nbsp;(x branches into 2 paths)</div>
                     <div class="dag-canvas topo-dag-canvas" id="topo-dag-b"></div>
                     <div class="topo-monitor-bar">
                         <div class="mon-item">🔍 DFS Stack: <span class="mon-val" id="tb-stack-text">[]</span></div>
                         <div class="mon-item">🧠 Visited Set: <span class="mon-val" id="tb-visited-text">{}</span></div>
-                        <div class="mon-item">⚡ Topo Order: <span class="mon-val highlight" id="tb-order-text">[]</span></div>
+                        <div class="mon-item">⚡ Topo Order: <span class="mon-val highlight" id="tb-order-text" style="font-weight: 900; font-size: 1.05rem;">[]</span></div>
                     </div>
                     <div class="topo-timeline" id="tb-topo-timeline">
                         <div class="tl-empty">Click an execution order below to test gradient accumulation</div>
@@ -366,31 +451,49 @@
             <p class="scene-subtitle">First-principles derivatives for Addition, Multiplication, Power Rule, ReLU, Sigmoid, Exp, and Tanh.</p>
             
             <div class="massive-diagram">
-                <div class="ops-catalog-grid">
-                    <div class="op-card active" data-op="add">
-                        <div class="op-symbol">+</div>
-                        <div class="op-name">Addition</div>
-                        <div class="op-formula">out = a + b</div>
+                <div class="ops-stage" style="display: flex; flex-direction: column; width: 100%; align-items: center; gap: 2rem;">
+                    <div class="code-terminal enhanced" id="term-scene9" style="width: 100%; max-width: 800px;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 ops_test.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s9-l1"><span class="op">>>></span> <span class="var">a</span> = torch.<span class="fn">tensor</span>([<span class="num">2.0</span>], requires_grad=<span class="kw">True</span>)</span>
+<span class="code-line" id="s9-l2"><span class="op">>>></span> <span class="var">b</span> = torch.<span class="fn">tensor</span>([<span class="num">3.0</span>], requires_grad=<span class="kw">True</span>)</span>
+<span class="code-line" id="s9-l3"></span>
+<span class="code-line" id="s9-l4"><span class="cm"># Dynamically executing selected operation:</span></span>
+<span class="code-line" id="s9-l5"><span class="op">>>></span> <span class="var">out</span> = a + b</span>
+<span class="code-line" id="s9-l6"><span class="op">>>></span> out.<span class="fn">backward</span>()</span>
+<span class="code-line" id="s9-l7"><span class="op">>>></span> a.grad</span>
+<span class="code-line output-line" id="s9-out1" style="display:none"></span></code></pre>
                     </div>
-                    <div class="op-card" data-op="mul">
-                        <div class="op-symbol">×</div>
-                        <div class="op-name">Multiplication</div>
-                        <div class="op-formula">out = a * b</div>
-                    </div>
-                    <div class="op-card" data-op="pow">
-                        <div class="op-symbol">xⁿ</div>
-                        <div class="op-name">Power Rule</div>
-                        <div class="op-formula">out = xⁿ</div>
-                    </div>
-                    <div class="op-card" data-op="relu">
-                        <div class="op-symbol">ReLU</div>
-                        <div class="op-name">ReLU Activation</div>
-                        <div class="op-formula">max(0, x)</div>
-                    </div>
-                </div>
 
-                <div class="op-detail-box" id="op-detail-box">
-                    <!-- Injected via JS -->
+                    <div class="ops-catalog-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; width: 100%;">
+                        <div class="op-card active" data-op="add">
+                            <div class="op-symbol">+</div>
+                            <div class="op-name">Addition</div>
+                            <div class="op-formula">out = a + b</div>
+                        </div>
+                        <div class="op-card" data-op="mul">
+                            <div class="op-symbol">×</div>
+                            <div class="op-name">Multiplication</div>
+                            <div class="op-formula">out = a * b</div>
+                        </div>
+                        <div class="op-card" data-op="pow">
+                            <div class="op-symbol">xⁿ</div>
+                            <div class="op-name">Power Rule</div>
+                            <div class="op-formula">out = xⁿ</div>
+                        </div>
+                        <div class="op-card" data-op="relu">
+                            <div class="op-symbol">ReLU</div>
+                            <div class="op-name">ReLU Activation</div>
+                            <div class="op-formula">max(0, x)</div>
+                        </div>
+                    </div>
+
+                    <div class="op-detail-box" id="op-detail-box" style="width: 100%; max-width: 800px; background: #FFFFFF; border: 2px solid #1A1D20; border-radius: 10px; padding: 1.5rem; box-shadow: 4px 4px 0px #1A1D20; text-align: center;">
+                        <!-- Injected via JS -->
+                    </div>
                 </div>
             </div>
 
@@ -411,6 +514,22 @@
             
             <div class="massive-diagram">
                 <div class="jacobian-stage">
+                    <div class="code-terminal enhanced" id="term-scene10" style="max-width: 800px; margin-bottom: 1.5rem;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 jacobian.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s10-l1"><span class="kw">import</span> torch</span>
+<span class="code-line" id="s10-l2"><span class="kw">def</span> <span class="fn">f</span>(x):</span>
+<span class="code-line" id="s10-l3">    <span class="kw">return</span> torch.<span class="fn">stack</span>([x[<span class="num">0</span>]**<span class="num">2</span>, <span class="num">3</span>*x[<span class="num">1</span>]])</span>
+<span class="code-line" id="s10-l4"></span>
+<span class="code-line" id="s10-l5"><span class="op">>>></span> <span class="var">x</span> = torch.<span class="fn">tensor</span>([<span class="num">2.0</span>, <span class="num">4.0</span>], requires_grad=<span class="kw">True</span>)</span>
+<span class="code-line" id="s10-l6"><span class="op">>>></span> <span class="var">J</span> = torch.autograd.functional.<span class="fn">jacobian</span>(f, x)</span>
+<span class="code-line" id="s10-l7"><span class="op">>>></span> J</span>
+<span class="code-line output-line" id="s10-out1" style="display:none"></span></code></pre>
+                    </div>
+
                     <div class="j-eq">
                         $$\mathbf{y} = f(\mathbf{x}), \quad J = \begin{bmatrix} \frac{\partial y_1}{\partial x_1} & \frac{\partial y_1}{\partial x_2} \\ \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2} \end{bmatrix}$$
                     </div>
@@ -437,6 +556,25 @@
             
             <div class="massive-diagram">
                 <div class="chain-stage">
+                    <div class="code-terminal enhanced" id="term-scene11" style="max-width: 800px; margin-bottom: 1.5rem;">
+                        <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                            <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                            <span class="code-filename">💻 matmul_chain.py</span>
+                            <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                        </div>
+                        <pre><code><span class="code-line" id="s11-l1"><span class="op">>>></span> <span class="var">W1</span> = torch.<span class="fn">randn</span>(<span class="num">128</span>, <span class="num">256</span>, requires_grad=<span class="kw">True</span>)</span>
+<span class="code-line" id="s11-l2"><span class="op">>>></span> <span class="var">x</span>  = torch.<span class="fn">randn</span>(<span class="num">256</span>, <span class="num">64</span>)</span>
+<span class="code-line" id="s11-l3"><span class="op">>>></span> <span class="var">W2</span> = torch.<span class="fn">randn</span>(<span class="num">64</span>, <span class="num">10</span>, requires_grad=<span class="kw">True</span>)</span>
+<span class="code-line" id="s11-l4"></span>
+<span class="code-line" id="s11-l5"><span class="cm"># Forward Pass</span></span>
+<span class="code-line" id="s11-l6"><span class="op">>>></span> <span class="var">hidden</span> = W1 <span class="op">@</span> x    <span class="cm"># shape: (128, 64)</span></span>
+<span class="code-line" id="s11-l7"><span class="op">>>></span> <span class="var">out</span> = hidden <span class="op">@</span> W2  <span class="cm"># shape: (128, 10)</span></span>
+<span class="code-line" id="s11-l8"></span>
+<span class="code-line" id="s11-l9"><span class="cm"># The gradient dL/d(hidden) MUST perfectly match hidden's shape to be added back.</span></span>
+<span class="code-line" id="s11-l10"><span class="op">>>></span> hidden.grad.<span class="fn">shape</span></span>
+<span class="code-line output-line" id="s11-out1" style="display:none"></span></code></pre>
+                    </div>
+
                     <div class="gear-visualizer">
                         <div class="gear" id="gear-a">⚙️ Gear A (d B/d A = 2)</div>
                         <div class="gear-conn">➔</div>
@@ -465,8 +603,35 @@
             <h1 class="scene-title">The Full Micrograd Engine Laboratory</h1>
             <p class="scene-subtitle">Step through forward pass, loss calculation, and backward pass on a live 2-input neuron with weights w1, w2, bias b!</p>
             
-            <div class="massive-diagram">
-                <div class="micrograd-lab">
+            <div class="massive-diagram" style="display: flex; gap: 2rem; align-items: stretch; margin-bottom: 2rem;">
+                <div class="code-terminal enhanced" id="term-scene12" style="flex: 1.2;">
+                    <div class="code-header-bar" style="border-radius: 8px 8px 0 0; margin: -1.2rem -1.5rem 1rem -1.5rem;">
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                        <span class="code-filename">💻 forward_backward.py</span>
+                        <span class="code-lang-badge">PYTORCH INTERACTIVE</span>
+                    </div>
+                    <pre><code><span class="code-line" id="s12-l1"><span class="var">x1</span> = Value(<span class="num">2.0</span>); <span class="var">w1</span> = Value(<span class="num">-3.0</span>)</span>
+<span class="code-line" id="s12-l2"><span class="var">x2</span> = Value(<span class="num">1.0</span>); <span class="var">w2</span> = Value(<span class="num">1.0</span>)</span>
+<span class="code-line" id="s12-l3"><span class="var">b</span>  = Value(<span class="num">6.88137</span>)</span>
+<span class="code-line" id="s12-l4"></span>
+<span class="code-line" id="s12-l5"><span class="cm"># --- FORWARD PASS ---</span></span>
+<span class="code-line" id="s12-l6"><span class="var">x1w1</span> = x1 * w1</span>
+<span class="code-line" id="s12-l7"><span class="var">x2w2</span> = x2 * w2</span>
+<span class="code-line" id="s12-l8"><span class="var">x1w1x2w2</span> = x1w1 + x2w2</span>
+<span class="code-line" id="s12-l9"><span class="var">n</span> = x1w1x2w2 + b</span>
+<span class="code-line" id="s12-l10"><span class="kw">print</span>(<span class="str">f"n = {n.data}"</span>)</span>
+<span class="code-line output-line" id="s12-out1" style="display:none"></span>
+<span class="code-line" id="s12-l11"><span class="var">o</span> = n.<span class="fn">tanh</span>()</span>
+<span class="code-line" id="s12-l12"><span class="kw">print</span>(<span class="str">f"o = {o.data}"</span>)</span>
+<span class="code-line output-line" id="s12-out2" style="display:none"></span>
+<span class="code-line" id="s12-l13"><span class="cm"># --- BACKWARD PASS ---</span></span>
+<span class="code-line" id="s12-l14">o.<span class="fn">backward</span>()</span>
+<span class="code-line" id="s12-l15"></span>
+<span class="code-line" id="s12-l16"><span class="kw">print</span>(<span class="str">f"w1.grad: {w1.grad}, w2.grad: {w2.grad}"</span>)</span>
+<span class="code-line output-line" id="s12-out3" style="display:none"></span></code></pre>
+                </div>
+                
+                <div class="micrograd-lab" style="flex: 1;">
                     <div class="lab-inputs">
                         <label>x1: <input type="number" id="inp-x1" value="2.0" step="0.1"></label>
                         <label>w1: <input type="number" id="inp-w1" value="-3.0" step="0.1"></label>

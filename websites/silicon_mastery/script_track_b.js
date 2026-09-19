@@ -513,7 +513,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="sim-inputs">
                     <label>Set $a.data$: <input type="number" id="sim-val-a" value="2.0" step="0.5"></label>
                     <label>Set $b.data$: <input type="number" id="sim-val-b" value="3.0" step="0.5"></label>
-                    <button class="sim-run-btn" id="btn-run-sim-6">▶ EVALUATE FORWARD & BACKWARD</button>
+                    <button class="sim-run-btn purple-btn" id="btn-instantiate-value">▶ INSTANTIATE VALUE(data=5.0)</button>
+                    <button class="sim-run-btn green-btn" id="btn-run-sim-6" style="display:none">▶ EVALUATE FORWARD & BACKWARD</button>
                 </div>
                 <div class="sim-output" id="sim-out-6">
                     <div class="sim-partial-steps">
@@ -1274,22 +1275,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sceneIdx === 3) {
             const btnView = document.getElementById('btn-try-view');
             const btnContig = document.getElementById('btn-fix-contiguous');
-            const errText = document.getElementById('err-code-text');
             const reallocBox = document.getElementById('ram-realloc');
 
             if (btnView) {
                 btnView.onclick = () => {
-                    errText.style.display = 'block';
                     reallocBox.style.display = 'none';
-                    gsap.from(errText, { x: -10, duration: 0.1, repeat: 3, yoyo: true });
+                    runTerminalExecution(3, [
+                        { lines: ['s3-l1', 's3-l2'], delay: 0 },
+                        { lines: ['s3-l3'], delay: 0.5 },
+                        { output: { id: 's3-out1', text: 'False' }, delay: 0.5 },
+                        { lines: ['s3-l4'], delay: 0.5 },
+                        { output: { id: 's3-err1', text: 'RuntimeError: view size is not compatible...', isError: true }, delay: 0.5, onStart: () => {
+                            gsap.from('#s3-err1', { x: -10, duration: 0.1, repeat: 3, yoyo: true });
+                        }}
+                    ]);
                 };
             }
 
             if (btnContig) {
                 btnContig.onclick = () => {
-                    errText.style.display = 'none';
-                    reallocBox.style.display = 'block';
-                    gsap.from('#realloc-cells .ram-cell', { scale: 0, duration: 0.4, stagger: 0.05 });
+                    runTerminalExecution(3, [
+                        { lines: ['s3-l5'], delay: 0, onStart: () => {
+                            reallocBox.style.display = 'block';
+                            gsap.fromTo('#realloc-cells .ram-cell', { scale: 0 }, { scale: 1, duration: 0.4, stagger: 0.05 });
+                        }},
+                        { lines: ['s3-l6'], delay: 0.8 },
+                        { output: { id: 's3-out2', text: 'tensor([...]) # SUCCESS!' }, delay: 0.5 }
+                    ]);
                 };
             }
         }
@@ -1310,10 +1322,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btnExec) {
                 btnExec.onclick = () => {
                     const threads = tGrid.querySelectorAll('.t-cell');
-                    gsap.timeline()
-                        .to(threads, { className: 't-cell active', duration: 0.3, stagger: 0.02 })
-                        .to('.pipe-particle', { opacity: 1, x: 280, duration: 1, repeat: 2, ease: "linear" })
-                        .to(threads, { className: 't-cell', duration: 0.3 });
+                    runTerminalExecution(4, [
+                        { lines: ['s4-l1', 's4-l2'], delay: 0 },
+                        { lines: ['s4-l3', 's4-l4', 's4-l5', 's4-l6', 's4-l7'], delay: 0.6 },
+                        { lines: ['s4-l9', 's4-l10', 's4-l11'], delay: 0.8, onStart: () => {
+                            gsap.timeline()
+                                .to(threads, { className: 't-cell active', duration: 0.3, stagger: 0.02 })
+                                .to('.pipe-particle', { opacity: 1, x: 280, duration: 1, repeat: 2, ease: "linear" })
+                                .to(threads, { className: 't-cell', duration: 0.3, delay: 0.5 });
+                        }}
+                    ]);
                 };
             }
         }
@@ -1330,10 +1348,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnCoal.onclick = () => {
                     btnCoal.classList.add('active');
                     btnUncoal.classList.remove('active');
-                    count.innerText = '1 Transaction';
-                    bytes.innerText = '128 Bytes';
-                    bw.innerText = '100% (3,350 GB/s)';
-                    bw.style.color = '#2E7D4E';
+                    runTerminalExecution(5, [
+                        { lines: ['s5-l1', 's5-l2', 's5-l3'], delay: 0 },
+                        { lines: ['s5-l4'], delay: 0.5 },
+                        { output: { id: 's5-out1', text: '[1 Transaction, 100% BW]' }, delay: 0.5, onStart: () => {
+                            count.innerText = '1 Transaction';
+                            bytes.innerText = '128 Bytes';
+                            bw.innerText = '100% (3,350 GB/s)';
+                            bw.style.color = '#2E7D4E';
+                        }}
+                    ]);
                 };
             }
 
@@ -1341,10 +1365,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnUncoal.onclick = () => {
                     btnUncoal.classList.add('active');
                     btnCoal.classList.remove('active');
-                    count.innerText = '32 Transactions';
-                    bytes.innerText = '4,096 Bytes';
-                    bw.innerText = '3.1% (104 GB/s - 97% DROP!)';
-                    bw.style.color = '#C93B3B';
+                    runTerminalExecution(5, [
+                        { lines: ['s5-l5', 's5-l6'], delay: 0 },
+                        { lines: ['s5-l7'], delay: 0.5 },
+                        { output: { id: 's5-err1', text: 'WARNING: 32 Transactions! 97% BANDWIDTH DROP!', isError: true }, delay: 0.5, onStart: () => {
+                            count.innerText = '32 Transactions';
+                            bytes.innerText = '4,096 Bytes';
+                            bw.innerText = '3.1% (104 GB/s - 97% DROP!)';
+                            bw.style.color = '#C93B3B';
+                        }}
+                    ]);
+                };
+            }
+
+            const btnRunGPU = document.getElementById('btn-run-gpu-mem');
+            if (btnRunGPU) {
+                btnRunGPU.onclick = () => {
+                    if (btnCoal.classList.contains('active')) btnCoal.onclick();
+                    else if (btnUncoal.classList.contains('active')) btnUncoal.onclick();
+                };
+            }
+        }
+
+        // SCENE 6: VALUE ANATOMY
+        if (sceneIdx === 6) {
+            const btnInst = document.getElementById('btn-instantiate-value');
+            if (btnInst) {
+                btnInst.onclick = () => {
+                    runTerminalExecution(6, [
+                        { lines: ['s6-l1', 's6-l2', 's6-l3', 's6-l4', 's6-l5', 's6-l6', 's6-l7', 's6-l8'], delay: 0 },
+                        { lines: ['s6-l10'], delay: 0.8 },
+                        { output: { id: 's6-out1', text: '&lt;Value data=5.0, grad=0.0&gt;' }, delay: 0.5 }
+                    ]);
                 };
             }
         }
@@ -1359,11 +1411,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 cv.innerHTML = '';
                 const nodes = [
                     { id: 'nb-a', l: 'a=2.0', x: 60, y: 40 },
-                    { id: 'nb-b', l: 'b=3.0', x: 60, y: 180 },
-                    { id: 'nb-c', l: 'c=4.0', x: 300, y: 180 },
-                    { id: 'nb-prod', l: 'a*b = 6.0', x: 300, y: 40 },
-                    { id: 'nb-sum', l: 'a*b+c = 10.0', x: 520, y: 110 },
-                    { id: 'nb-loss', l: 'L = 100.0', x: 740, y: 110 }
+                    { id: 'nb-b', l: 'b=-3.0', x: 60, y: 180 },
+                    { id: 'nb-c', l: 'c=10.0', x: 300, y: 180 },
+                    { id: 'nb-prod', l: 'e=a*b = -6.0', x: 300, y: 40 },
+                    { id: 'nb-sum', l: 'd=e+c = 4.0', x: 520, y: 110 },
+                    { id: 'nb-loss', l: 'L=d**2 = 16.0', x: 740, y: 110 }
                 ];
 
                 nodes.forEach(n => {
@@ -1373,21 +1425,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.innerText = n.l;
                     el.style.left = n.x + 'px';
                     el.style.top = n.y + 'px';
+                    el.style.transform = 'scale(0)';
                     cv.appendChild(el);
                 });
 
-                setTimeout(() => {
-                    drawDagEdges(cv, [
-                        ['nb-a', 'nb-prod'],
-                        ['nb-b', 'nb-prod'],
-                        ['nb-prod', 'nb-sum'],
-                        ['nb-c', 'nb-sum'],
-                        ['nb-sum', 'nb-loss']
-                    ]);
-                }, 50);
+                // Edges drawn hidden initially
+                drawDagEdges(cv, [
+                    ['nb-a', 'nb-prod'],
+                    ['nb-b', 'nb-prod'],
+                    ['nb-prod', 'nb-sum'],
+                    ['nb-c', 'nb-sum'],
+                    ['nb-sum', 'nb-loss']
+                ]);
+                const svg = cv.querySelector('svg');
+                if (svg) svg.style.opacity = '0';
             }
 
-            if (btn) btn.onclick = buildForwardDAG;
+            if (btn) {
+                btn.onclick = () => {
+                    buildForwardDAG();
+                    const svg = cv.querySelector('svg');
+                    runTerminalExecution(7, [
+                        { lines: ['s7-l1', 's7-l2', 's7-l3'], delay: 0, onStart: () => {
+                            gsap.to(['#nb-a', '#nb-b', '#nb-c'], { scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out' });
+                        }},
+                        { lines: ['s7-l5'], delay: 0.8, onStart: () => {
+                            if (svg) svg.style.opacity = '1';
+                            gsap.to('#nb-prod', { scale: 1, duration: 0.4, ease: 'back.out' });
+                        }},
+                        { lines: ['s7-l6'], delay: 0.8, onStart: () => {
+                            gsap.to('#nb-sum', { scale: 1, duration: 0.4, ease: 'back.out' });
+                        }},
+                        { lines: ['s7-l8'], delay: 0.8, onStart: () => {
+                            gsap.to('#nb-loss', { scale: 1, duration: 0.4, ease: 'back.out' });
+                        }},
+                        { output: { id: 's7-out1', text: 'Loss L computed: 16.0! Graph fully constructed in memory.' }, delay: 0.5 }
+                    ]);
+                };
+            }
             buildForwardDAG();
         }
 
@@ -1451,22 +1526,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     const ny = document.getElementById('tb-y');
                     const nloss = document.getElementById('tb-loss');
 
-                    const tl = gsap.timeline();
-                    tl.to({}, {
-                        duration: 0.4,
-                        onStart: () => {
+                    runTerminalExecution(8, [
+                        { lines: ['s8-l1', 's8-l2', 's8-l3', 's8-l4', 's8-l5', 's8-l6', 's8-l7', 's8-l8', 's8-l9', 's8-l10'], delay: 0 },
+                        { lines: ['s8-l11'], delay: 1.0, onStart: () => {
                             if (stackText) stackText.innerText = '[Loss, y, x]';
                             if (visitedText) visitedText.innerText = '{Loss, y, x}';
                             if (orderText) { orderText.innerText = '[Loss ➔ y ➔ x]'; orderText.className = 'mon-val highlight'; }
-                        }
-                    }).to([nloss, ny, nx], {
-                        duration: 0.5,
-                        onStart: () => {
-                            if (nx) { nx.className = 'math-node node-success'; nx.innerText = 'x = 2.0\nx.grad += 3 + 3 = 6.0'; }
-                            if (ny) { ny.className = 'math-node node-success'; ny.innerText = 'y = 4.0\ny.grad = 3.0'; }
                             if (nloss) { nloss.className = 'math-node node-success'; nloss.innerText = 'Loss = 12.0\nLoss.grad = 1.0'; }
-                        }
-                    });
+                        }},
+                        { lines: ['s8-l12', 's8-l13'], delay: 0.8, onStart: () => {
+                            if (ny) { ny.className = 'math-node node-success'; ny.innerText = 'y = 4.0\ny.grad = 3.0'; }
+                        }},
+                        { delay: 0.8, onStart: () => {
+                            if (nx) { nx.className = 'math-node node-success'; nx.innerText = 'x = 2.0\nx.grad += 3 + 3 = 6.0'; }
+                        }}
+                    ]);
                 };
             }
         }
@@ -1475,24 +1549,58 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sceneIdx === 9) {
             const detailBox = document.getElementById('op-detail-box');
             const opCards = document.querySelectorAll('.op-card');
+            const btnTest = document.getElementById('btn-test-op-calc');
 
             const opInfo = {
-                'add': `<h3>Addition (+) Derivative</h3><p>out = a + b ➔ d(out)/da = 1.0, d(out)/db = 1.0. Gradients distribute 1:1 to both inputs.</p>`,
-                'mul': `<h3>Multiplication (*) Derivative</h3><p>out = a * b ➔ d(out)/da = b, d(out)/db = a. Gradients swap input multipliers!</p>`,
-                'pow': `<h3>Power Rule (xⁿ) Derivative</h3><p>out = xⁿ ➔ d(out)/dx = n * xⁿ⁻¹. Proof: lim (h->0) [(x+h)ⁿ - xⁿ]/h = n * xⁿ⁻¹.</p>`,
-                'relu': `<h3>ReLU Activation Derivative</h3><p>out = max(0, x) ➔ d(out)/dx = 1.0 if x > 0 else 0.0.</p>`
+                'add': `<h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.8rem; color: #1A1D20;">Addition (+) Derivative</h3>
+                        <div style="background: #F9F6F0; border: 1.5px dashed #1A1D20; padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #D96B27; margin-bottom: 0.8rem;">out = a + b &nbsp;➔&nbsp; d(out)/da = 1.0, &nbsp; d(out)/db = 1.0</div>
+                        <p style="font-size: 0.95rem; color: #4B5563;">Gradients distribute 1:1 to both inputs.</p>`,
+                'mul': `<h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.8rem; color: #1A1D20;">Multiplication (×) Derivative</h3>
+                        <div style="background: #F9F6F0; border: 1.5px dashed #1A1D20; padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #D96B27; margin-bottom: 0.8rem;">out = a * b &nbsp;➔&nbsp; d(out)/da = b, &nbsp; d(out)/db = a</div>
+                        <p style="font-size: 0.95rem; color: #4B5563;">Gradients swap input multipliers!</p>`,
+                'pow': `<h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.8rem; color: #1A1D20;">Power Rule (xⁿ) Derivative</h3>
+                        <div style="background: #F9F6F0; border: 1.5px dashed #1A1D20; padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #D96B27; margin-bottom: 0.8rem;">out = xⁿ &nbsp;➔&nbsp; d(out)/dx = n * xⁿ⁻¹</div>
+                        <p style="font-size: 0.95rem; color: #4B5563;">Proof: lim (h->0) [(x+h)ⁿ - xⁿ]/h = n * xⁿ⁻¹.</p>`,
+                'relu': `<h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 0.8rem; color: #1A1D20;">ReLU Activation Derivative</h3>
+                         <div style="background: #F9F6F0; border: 1.5px dashed #1A1D20; padding: 1rem; border-radius: 8px; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #D96B27; margin-bottom: 0.8rem;">out = max(0, x) &nbsp;➔&nbsp; d(out)/dx = 1.0 if x > 0 else 0.0</div>
+                         <p style="font-size: 0.95rem; color: #4B5563;">Passes gradient if active (x > 0), zeroes it out otherwise.</p>`
             };
+            
+            let selectedOp = 'add';
 
             opCards.forEach(card => {
                 card.onclick = () => {
                     opCards.forEach(c => c.classList.remove('active'));
                     card.classList.add('active');
                     const opKey = card.getAttribute('data-op');
+                    selectedOp = opKey;
                     if (detailBox && opInfo[opKey]) {
                         detailBox.innerHTML = opInfo[opKey];
                     }
                 };
             });
+
+            if (btnTest) {
+                btnTest.onclick = () => {
+                    let outVal = "";
+                    let gradVal = "";
+                    if (selectedOp === 'add') { outVal = "a + b"; gradVal = "tensor([1.0])"; }
+                    if (selectedOp === 'mul') { outVal = "a * b"; gradVal = "tensor([3.0])"; }
+                    if (selectedOp === 'pow') { outVal = "a ** 3"; gradVal = "tensor([12.0])"; } // 3*a^2 = 3*4 = 12
+                    if (selectedOp === 'relu') { outVal = "torch.relu(a)"; gradVal = "tensor([1.0])"; }
+
+                    runTerminalExecution(9, [
+                        { lines: ['s9-l1', 's9-l2', 's9-l3'], delay: 0 },
+                        { lines: ['s9-l5'], delay: 0.5, onStart: () => {
+                            const l5 = document.getElementById('s9-l5');
+                            if (l5) l5.innerHTML = `out = ${outVal}`;
+                        }},
+                        { lines: ['s9-l6'], delay: 0.6 },
+                        { lines: ['s9-l7'], delay: 0.8 },
+                        { output: { id: 's9-out1', text: gradVal }, delay: 0.5 }
+                    ]);
+                };
+            }
         }
 
         // SCENE 10: JACOBIAN
@@ -1502,10 +1610,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (btn && display) {
                 btn.onclick = () => {
-                    display.innerHTML = `
-                        <div style="color:#2E7D4E; font-weight:800; margin-bottom:0.5rem;">Jacobian Matrix J computed for y1 = 2x1 + 3x2, y2 = x1*x2:</div>
-                        <code>J = [[ ∂y1/∂x1=2.0, ∂y1/∂x2=3.0 ], [ ∂y2/∂x1=x2, ∂y2/∂x2=x1 ]]</code>
-                    `;
+                    runTerminalExecution(10, [
+                        { lines: ['s10-l1', 's10-l2', 's10-l3', 's10-l5'], delay: 0 },
+                        { lines: ['s10-l6'], delay: 1.0 },
+                        { lines: ['s10-l7'], delay: 0.6 },
+                        { output: { id: 's10-out1', text: 'tensor([[4., 0.],\n        [0., 3.]])' }, delay: 0.5, onStart: () => {
+                            display.innerHTML = `
+                                <div style="color:#2E7D4E; font-weight:800; margin-bottom:0.5rem;">Jacobian Matrix J computed for y1 = x1², y2 = 3*x2:</div>
+                                <code>J = [[ ∂y1/∂x1=4.0, ∂y1/∂x2=0.0 ], [ ∂y2/∂x1=0.0, ∂y2/∂x2=3.0 ]]</code>
+                            `;
+                            gsap.from(display, { opacity: 0, y: 10, duration: 0.5 });
+                        }}
+                    ]);
                 };
             }
         }
@@ -1515,9 +1631,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('btn-spin-gears');
             if (btn) {
                 btn.onclick = () => {
-                    gsap.to('#gear-a', { rotation: 360, duration: 1 });
-                    gsap.to('#gear-b', { rotation: 720, duration: 1 });
-                    gsap.to('#gear-c', { rotation: 2160, duration: 1 });
+                    runTerminalExecution(11, [
+                        { lines: ['s11-l1', 's11-l2', 's11-l3'], delay: 0 },
+                        { lines: ['s11-l5'], delay: 0.8 },
+                        { lines: ['s11-l6', 's11-l7'], delay: 0.8, onStart: () => {
+                            gsap.to('#gear-a', { rotation: 360, duration: 1.2, ease: "power2.inOut" });
+                            gsap.to('#gear-b', { rotation: 720, duration: 1.2, ease: "power2.inOut" });
+                            gsap.to('#gear-c', { rotation: 2160, duration: 1.2, ease: "power2.inOut" });
+                        }},
+                        { lines: ['s11-l9', 's11-l10'], delay: 1.2 },
+                        { output: { id: 's11-out1', text: 'torch.Size([128, 64])' }, delay: 0.5 }
+                    ]);
                 };
             }
         }
@@ -1541,10 +1665,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     const w1grad = x1 * dodn;
                     const w2grad = x2 * dodn;
 
-                    document.getElementById('res-n').innerText = n.toFixed(4);
-                    document.getElementById('res-o').innerText = o.toFixed(4);
-                    document.getElementById('res-w1grad').innerText = w1grad.toFixed(4);
-                    document.getElementById('res-w2grad').innerText = w2grad.toFixed(4);
+                    runTerminalExecution(12, [
+                        { lines: ['s12-l1', 's12-l2', 's12-l3', 's12-l4'], delay: 0 },
+                        { lines: ['s12-l6', 's12-l7', 's12-l8', 's12-l9', 's12-l10'], delay: 1.0 },
+                        { output: { id: 's12-out1', text: `n = ${n.toFixed(4)}` }, delay: 0.5, onStart: () => {
+                            document.getElementById('res-n').innerText = n.toFixed(4);
+                            gsap.from('#res-n', { backgroundColor: '#FBBF24', duration: 0.5 });
+                        }},
+                        { lines: ['s12-l11', 's12-l12'], delay: 0.6 },
+                        { output: { id: 's12-out2', text: `o = ${o.toFixed(4)}` }, delay: 0.5, onStart: () => {
+                            document.getElementById('res-o').innerText = o.toFixed(4);
+                            gsap.from('#res-o', { backgroundColor: '#FBBF24', duration: 0.5 });
+                        }},
+                        { lines: ['s12-l13', 's12-l14'], delay: 0.6 },
+                        { lines: ['s12-l16'], delay: 0.8 },
+                        { output: { id: 's12-out3', text: `w1.grad: ${w1grad.toFixed(4)}\nw2.grad: ${w2grad.toFixed(4)}` }, delay: 0.5, onStart: () => {
+                            document.getElementById('res-w1grad').innerText = w1grad.toFixed(4);
+                            document.getElementById('res-w2grad').innerText = w2grad.toFixed(4);
+                            gsap.from(['#res-w1grad', '#res-w2grad'], { backgroundColor: '#2E7D4E', color: 'white', duration: 0.8 });
+                        }}
+                    ]);
                 };
             }
         }
@@ -1608,4 +1748,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateScene();
+    
+    // --- GSAP INTERACTIVE TERMINAL ENGINE ---
+    function runTerminalExecution(sceneId, executionSteps) {
+        const terminal = document.getElementById(`term-scene${sceneId}`);
+        if (!terminal) return;
+        
+        // Reset all lines
+        const allLines = terminal.querySelectorAll('.code-line');
+        allLines.forEach(l => {
+            l.classList.remove('executing-line', 'executed-line', 'output-line', 'err-line', 'dimmed');
+            if (l.id && (l.id.includes('out') || l.id.includes('err') || l.style.display === 'none')) {
+                l.style.display = 'none';
+            }
+        });
+
+        // Dim all lines initially
+        const codeLines = terminal.querySelectorAll('.code-line:not(.output-line):not(.err-line)');
+        codeLines.forEach(l => l.classList.add('dimmed'));
+
+        const tl = gsap.timeline();
+        
+        executionSteps.forEach((step, idx) => {
+            tl.add(() => {
+                // Clear previous executing highlights
+                terminal.querySelectorAll('.executing-line').forEach(el => {
+                    el.classList.remove('executing-line');
+                    el.classList.add('executed-line');
+                });
+                
+                if (step.lines) {
+                    step.lines.forEach(lineId => {
+                        const el = document.getElementById(lineId);
+                        if (el) {
+                            el.style.display = 'block';
+                            el.classList.remove('dimmed');
+                            el.classList.add('executing-line');
+                        }
+                    });
+                }
+                
+                if (step.output) {
+                    const outEl = document.getElementById(step.output.id);
+                    if (outEl) {
+                        outEl.style.display = 'block';
+                        outEl.innerHTML = step.output.text;
+                        if (step.output.isError) outEl.classList.add('err-line');
+                        else outEl.classList.add('output-line');
+                    }
+                }
+
+                if (step.onStart) step.onStart();
+                
+            }, `+=${step.delay !== undefined ? step.delay : 0.4}`);
+        });
+
+        tl.add(() => {
+            terminal.querySelectorAll('.executing-line').forEach(el => {
+                el.classList.remove('executing-line');
+                el.classList.add('executed-line');
+            });
+        }, '+=0.5');
+        
+        return tl;
+    }
 });
